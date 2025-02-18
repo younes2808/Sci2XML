@@ -1,26 +1,27 @@
 # Sci2XML
 ## Overview  
-This repository provides a pipeline for converting research PDFs into structured XML using **Grobid**, a **custom classification model**, and specialized OCR tools. It supports multiple execution modes: **Streamlit UI**, **terminal**, and **code integration**.  
+This repository provides a pipeline for converting research PDFs into structured XML using [**Grobid**](https://github.com/kermitt2/grobid), a **custom classification model**, and specialized OCR tools. It supports multiple execution modes: **Streamlit UI**, **terminal**, and **code integration**.  
 
-Developed as part of our **bachelor’s project in collaboration with Sintef** for the **enRichMyData** initiative.  
+Developed as part of our **bachelor’s project in collaboration with Sintef** for the [**enRichMyData**](https://www.sintef.no/en/projects/2022/enrichmydata/) initiative.  
 
 ## Features  
 - **Preprocessing with Grobid** to extract metadata and structure.  
 - **Custom classification model** to validate extracted sections.  
 - **Specialized OCR and data extraction tools**:  
-  - **Sumen** – Converts formulas to LaTeX.  
-  - **Unichart** – Extracts and summarizes chart data.  
-  - **pdfplumber** – Parses tables accurately.  
+  - [**Sumen**](https://github.com/hoang-quoc-trung/sumen) – Converts formulas to LaTeX.  
+  - [**Unichart**](https://github.com/vis-nlp/UniChart) – Extracts and summarizes chart data.  
+  - [**pdfplumber**](https://github.com/jsvine/pdfplumber) – Parses tables accurately.  
 - **Multiple execution modes**: Streamlit UI, terminal, and direct code usage.  
 
 ## Installation  
 
 ## Contributors  
 
-- Morten Nilsen  
+- [Morten Nilsen](https://github.com/SameNilsen)  
 - Jan Axel Støre Ørmen
-- Rafey Ul-Islam Afzal  
-- Shoeb Mohammadi  
+- [Rafey Ul-Islam Afzal](https://github.com/R4f3y)  
+- [Shoeb Mohammadi](https://github.com/shoeb03)  
 - [Younes Benhaida](https://github.com/younes2808)
 
 ## Acknowledgements  
+We thank the developers and contributors of [pdfplumber](https://github.com/jsvine/pdfplumber), [Grobid](https://github.com/kermitt2/grobid), [Sumen](https://github.com/hoang-quoc-trung/sumen), and [Unichart](https://github.com/vis-nlp/UniChart) for their invaluable tools and contributions to document processing. This project would not have been possible without their dedication to open-source innovation. Thank you!
