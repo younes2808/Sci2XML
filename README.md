@@ -21,6 +21,6 @@ Developed as part of our **bachelor’s project in collaboration with Sintef** f
 - Jan Axel Støre Ørmen
 - Rafey Ul-Islam Afzal  
 - Shoeb Mohammadi  
-- Younes Benhaida
+- [Younes Benhaida](https://github.com/younes2808)
 
 ## Acknowledgements  
