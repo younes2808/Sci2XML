@@ -14,3 +14,14 @@ Developed as part of our **bachelor’s project in collaboration with Sintef** f
 - **Multiple execution modes**: Streamlit UI, terminal, and direct code usage.  
 
 ## Installation  
+---
+
+## Contributors  
+
+- Morten Nilsen  
+- Jan Axel Støre Ørmen
+- Rafey Ul-Islam Afzal  
+- Shoeb Mohammadi  
+- Younes Benhaida
+
+---
