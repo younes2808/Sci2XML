@@ -14,7 +14,6 @@ Developed as part of our **bachelor’s project in collaboration with Sintef** f
 - **Multiple execution modes**: Streamlit UI, terminal, and direct code usage.  
 
 ## Installation  
----
 
 ## Contributors  
 
@@ -24,4 +23,4 @@ Developed as part of our **bachelor’s project in collaboration with Sintef** f
 - Shoeb Mohammadi  
 - Younes Benhaida
 
----
+## Acknowledgements  
