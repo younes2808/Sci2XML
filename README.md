@@ -21,7 +21,7 @@ Developed as part of our **bachelor’s project in collaboration with Sintef** f
 ## Contributors  
 
 - [Morten Nilsen](https://github.com/SameNilsen)  
-- Jan Axel Støre Ørmen
+- [Jan Axel Støre Ørmen](https://github.com/axelsormen)
 - [Rafey Ul-Islam Afzal](https://github.com/R4f3y)  
 - [Shoeb Mohammadi](https://github.com/shoeb03)  
 - [Younes Benhaida](https://github.com/younes2808)
