@@ -1,5 +1,4 @@
 # Sci2XML
-
 ## Overview  
 This repository provides a pipeline for converting research PDFs into structured XML using **Grobid**, a **custom classification model**, and specialized OCR tools. It supports multiple execution modes: **Streamlit UI**, **terminal**, and **code integration**.  
 
