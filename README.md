@@ -1,6 +1,5 @@
-# Sci2XML
 ![Skjermbilde 2025-02-18 142502](https://github.com/user-attachments/assets/b2e499ca-9391-4b74-b18a-2029ea8e5284)
-
+---
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Streamlit](https://img.shields.io/badge/Framework-Streamlit-red)](https://streamlit.io/)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
