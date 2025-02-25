@@ -21,6 +21,7 @@ import xml.etree.ElementTree as ET
 from streamlit_pdf_viewer import pdf_viewer
 from annotated_text import annotated_text, annotation
 from stqdm import stqdm
+import xml.dom.minidom as minidom
 
 # Configure logging to store logs in a file
 logging.basicConfig(
@@ -139,20 +140,49 @@ def main():
 
             time.sleep(0.3)  # Sleep for 0.3 seconds after each addition
         
-        # Generate XML structure
+        # Define TEI root element with required namespaces
         root = ET.Element("Document")
 
+        # Create <teiHeader> section
+        tei_header = ET.SubElement(root, "teiHeader", {"xml:lang": "en"})
+        file_desc = ET.SubElement(tei_header, "fileDesc")
+        title_stmt = ET.SubElement(file_desc, "titleStmt")
+        ET.SubElement(title_stmt, "title", {"level": "a", "type": "main"})
+
+        pub_stmt = ET.SubElement(file_desc, "publicationStmt")
+        ET.SubElement(pub_stmt, "publisher")
+        availability = ET.SubElement(pub_stmt, "availability", {"status": "unknown"})
+        ET.SubElement(availability, "licence")
+        ET.SubElement(pub_stmt, "date", {"type": "published", "when": "2013-11-25"}).text = "25/11/2013"
+
+        source_desc = ET.SubElement(file_desc, "sourceDesc")
+        ET.SubElement(source_desc, "biblStruct")
+
+        # Add extracted elements (e.g., formulas, tables, figures) to <text> section
+        text_section = ET.SubElement(root, "text")
+        body = ET.SubElement(text_section, "body")
+
         for element in elements:
-            elem = ET.SubElement(root, element["element_type"])
+            elem = ET.SubElement(body, element["element_type"])
             ET.SubElement(elem, "ElementNumber").text = str(element["element_number"])
             ET.SubElement(elem, "PageNumber").text = str(element["page_number"])
-            if element["csv"]:
+            
+            if element.get("csv"):
                 ET.SubElement(elem, "CSV").text = element["csv"]
-            if element["formula"]:
+            
+            if element.get("formula"):
                 ET.SubElement(elem, "Formula").text = element["formula"]
+            
             ET.SubElement(elem, "Description").text = element["NL"]
 
-        st.session_state.interpreted_xml_text = ET.tostring(root, encoding="utf-8").decode()
+        # Convert to string with XML declaration
+        xml_string = ET.tostring(root, encoding="utf-8")
+        
+        # Prettify using minidom
+        parsed_xml = minidom.parseString(xml_string)
+        pretty_xml = parsed_xml.toprettyxml(indent="    ", encoding="utf-8").decode()
+
+        st.session_state.interpreted_xml_text = pretty_xml
 
         logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
 
