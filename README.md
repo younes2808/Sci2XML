@@ -6,7 +6,7 @@
 ## Overview  
 This repository provides a pipeline for converting research PDFs into structured XML using [**Grobid**](https://github.com/kermitt2/grobid), a **custom classification model**, and specialized OCR tools. It supports multiple execution modes: **Streamlit UI**, **terminal**, and **code integration**.  
 
-Developed as part of our **bachelor’s project in collaboration with Sintef** for the [**enRichMyData**](https://www.sintef.no/en/projects/2022/enrichmydata/) initiative.  
+Developed as part of our **bachelor’s project in collaboration with SINTEF** for the [**enRichMyData**](https://www.sintef.no/en/projects/2022/enrichmydata/) initiative.  
 
 ## Features  
 - **Preprocessing with Grobid** to extract metadata and structure.  
