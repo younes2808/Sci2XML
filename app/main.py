@@ -138,11 +138,6 @@ def main():
                 st.text(f"{element.get('NL', 'No description available.')}")
 
             time.sleep(0.3)  # Sleep for 0.3 seconds after each addition
-
-            print(st.session_state.formulas_results_array)
-            print(st.session_state.figures_results_array)
-            print(st.session_state.charts_results_array)
-            print(st.session_state.tables_results_array)
         
         # Generate XML structure
         root = ET.Element("Document")
@@ -326,10 +321,11 @@ def main():
 
             # Reset interpretation results visibility when a new file is uploaded
             if "pdf_ref" in st.session_state and uploaded_pdf != st.session_state.pdf_ref:
-                logging.info("Uploaded PDF differs from the stored reference. Resetting interpretation results.")
+                logging.info("Uploaded PDF differs from the stored reference. Resetting session states.")
                 st.session_state.show_interpretation_results = False
                 st.session_state.xml_text = None
                 st.session_state.interpreted_xml_text = None
+                st.session_state.results_placeholder = None
 
             # Backup uploaded file
             st.session_state.pdf_ref = uploaded_pdf  
@@ -380,11 +376,9 @@ def main():
                 # Initialize the xml_text in session_state if not already set
                 if "xml_text" not in st.session_state or st.session_state.xml_text is None:
                     st.session_state.xml_text = result  # Initial XML content from GROBID
-                    print(f"xml: {st.session_state.xml_text}")
 
                 if "show_grobid_results" not in st.session_state:
                     st.session_state.show_grobid_results = True  # Set session state flag
-                    print(f"grobid result: {st.session_state.show_grobid_results}")
 
         pdf_upload()
        
@@ -437,19 +431,24 @@ def main():
                         
                     grobid_results_view()
 
-                    if st.button("Process file"):
-                        with col3:
-                            st.header("Interpretation Results", divider="gray")  # Always stays aligned with col1
-                            results_placeholder = st.empty()
-                            
-                            with results_placeholder.container():
-                                if 'interpretation_results_view_option' not in st.session_state:
-                                    st.session_state.interpretation_results_view_option = "XML"
-                                                        
-                            results_placeholder.empty()
+                    @st.fragment
+                    def classify():
+                        if st.button("Process file"):
+                            with col3:
+                                if 'results_placeholder' not in st.session_state or st.session_state.results_placeholder == None:
+                                    st.header("Interpretation Results", divider="gray")  # Always stays aligned with col1
+                                    st.session_state.results_placeholder = st.empty()
+                                    print("results_placeholder created")
+                                else:
+                                    st.session_state.results_placeholder.empty()
+                                    print("results_placeholder emptied")
+                                
+                                with st.session_state.results_placeholder.container():
+                                    if 'interpretation_results_view_option' not in st.session_state:
+                                        st.session_state.interpretation_results_view_option = "XML"
+                                                            
+                                st.session_state.results_placeholder.empty()
 
-                            @st.fragment
-                            def classify():
                                 # Create a placeholder for the container
                                 container_placeholder = st.empty()
                                 
@@ -458,76 +457,72 @@ def main():
 
                                 container_placeholder.empty()
 
-                                if "show_interpretation_results" not in st.session_state or st.session_state.show_interpretation_results == False:
-                                    st.session_state.show_interpretation_results = True
+                                with col3:
+                                    with st.session_state.results_placeholder.container():
+                                        @st.fragment
+                                        def interpretation_results_view():
+                                            """
+                                            Render different interpretation results based on user selection.
+                                            """
+                                            st.session_state.interpretation_results_view_option = st.radio("Select Non-Textual Element", ["XML", "Formulas", "Figures", "Charts", "Table"], horizontal=True, key='interpretation_toggle', label_visibility="collapsed")
+                                            
+                                            if st.session_state.interpretation_results_view_option == "XML":
+                                                st.text_area(
+                                                    "Edit Interpreted XML File", 
+                                                    value=st.session_state.interpreted_xml_text,  # Initial content from session state
+                                                    height=725, 
+                                                    key="interpreted_xml_editor",  # Key for the text area
+                                                    on_change=update_interpreted_xml,  # Update xml_text when changes are made
+                                                    label_visibility="collapsed" # Hide the label properly
+                                                )
+                                            
+                                            elif st.session_state.interpretation_results_view_option == "Formulas":
+                                                with st.container(height=725, border=True):
+                                                    if len(st.session_state.formulas_results_array) > 0:
+                                                        for formula in st.session_state.formulas_results_array:  # Use session state variable
+                                                            st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}")
+                                                            st.markdown(rf"$$ {formula.get('formula', 'N/A')} $$")
+                                                            st.text(f"{formula.get('NL', 'No description available.')}")
+                                                    else:
+                                                        st.warning("No formulas detected in PDF file.")
 
-                            classify()
+                                            elif st.session_state.interpretation_results_view_option == "Figures":
+                                                with st.container(height=725, border=True):
+                                                    if len(st.session_state.figures_results_array) > 0:
+                                                        for figure in st.session_state.figures_results_array:  # Use session state variable
+                                                            st.subheader(f"Page {figure.get('page_number', 'N/A')}: Figure #{figure.get('element_number', 'N/A')}")
+                                                            st.text(f"{figure.get('NL', 'No description available.')}")
+                                                    else:
+                                                        st.warning("No figures detected in PDF file.")
+                                            
+                                            elif st.session_state.interpretation_results_view_option == "Charts":
+                                                with st.container(height=725, border=True):
+                                                    if len(st.session_state.charts_results_array) > 0:
+                                                        for chart in st.session_state.charts_results_array:  # Use session state variable
+                                                            st.subheader(f"Page {chart.get('page_number', 'N/A')}: Chart #{chart.get('element_number', 'N/A')}")
+                                                            st.text(f"{chart.get('NL', 'No description available.')}")
+                                                    else:
+                                                        st.warning("No charts detected in PDF file.")
+                                            
+                                            elif st.session_state.interpretation_results_view_option == "Table":
+                                                with st.container(height=725, border=True):
+                                                    if len(st.session_state.tables_results_array) > 0:
+                                                        for table in st.session_state.tables_results_array:  # Use session state variable
+                                                            st.subheader(f"Page {table.get('page_number', 'N/A')}: Table #{table.get('element_number', 'N/A')}")
+                                                            st.text(f"{table.get('NL', 'No description available.')}")
+                                                    else:
+                                                        st.warning("No tables detected in PDF file.")
+                                                    
+                                            st.download_button(
+                                                label="Download XML",
+                                                data=st.session_state.interpreted_xml_text.encode("utf-8"),  # Convert text to bytes
+                                                file_name="interpreted_results.xml",
+                                                mime="application/xml"
+                                            )
 
-                if st.session_state.show_interpretation_results:
-                    with col3:
-                        with results_placeholder.container():
-                            @st.fragment
-                            def interpretation_results_view():
-                                """
-                                Render different interpretation results based on user selection.
-                                """
-                                st.session_state.interpretation_results_view_option = st.radio("Select Non-Textual Element", ["XML", "Formulas", "Figures", "Charts", "Table"], horizontal=True, key='interpretation_toggle', label_visibility="collapsed")
-                                
-                                if st.session_state.interpretation_results_view_option == "XML":
-                                    st.text_area(
-                                        "Edit Interpreted XML File", 
-                                        value=st.session_state.interpreted_xml_text,  # Initial content from session state
-                                        height=725, 
-                                        key="interpreted_xml_editor",  # Key for the text area
-                                        on_change=update_interpreted_xml,  # Update xml_text when changes are made
-                                        label_visibility="collapsed" # Hide the label properly
-                                    )
-                                
-                                elif st.session_state.interpretation_results_view_option == "Formulas":
-                                    with st.container(height=725, border=True):
-                                        if len(st.session_state.formulas_results_array) > 0:
-                                            for formula in st.session_state.formulas_results_array:  # Use session state variable
-                                                st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}")
-                                                st.markdown(rf"$$ {formula.get('formula', 'N/A')} $$")
-                                                st.text(f"{formula.get('NL', 'No description available.')}")
-                                        else:
-                                            st.warning("No formulas detected in PDF file.")
+                                        interpretation_results_view()
 
-                                elif st.session_state.interpretation_results_view_option == "Figures":
-                                    with st.container(height=725, border=True):
-                                        if len(st.session_state.figures_results_array) > 0:
-                                            for figure in st.session_state.figures_results_array:  # Use session state variable
-                                                st.subheader(f"Page {figure.get('page_number', 'N/A')}: Figure #{figure.get('element_number', 'N/A')}")
-                                                st.text(f"{figure.get('NL', 'No description available.')}")
-                                        else:
-                                            st.warning("No figures detected in PDF file.")
-                                
-                                elif st.session_state.interpretation_results_view_option == "Charts":
-                                    with st.container(height=725, border=True):
-                                        if len(st.session_state.charts_results_array) > 0:
-                                            for chart in st.session_state.charts_results_array:  # Use session state variable
-                                                st.subheader(f"Page {chart.get('page_number', 'N/A')}: Chart #{chart.get('element_number', 'N/A')}")
-                                                st.text(f"{chart.get('NL', 'No description available.')}")
-                                        else:
-                                            st.warning("No charts detected in PDF file.")
-                                
-                                elif st.session_state.interpretation_results_view_option == "Table":
-                                    with st.container(height=725, border=True):
-                                        if len(st.session_state.tables_results_array) > 0:
-                                            for table in st.session_state.tables_results_array:  # Use session state variable
-                                                st.subheader(f"Page {table.get('page_number', 'N/A')}: Table #{table.get('element_number', 'N/A')}")
-                                                st.text(f"{table.get('NL', 'No description available.')}")
-                                        else:
-                                            st.warning("No tables detected in PDF file.")
-                                        
-                                st.download_button(
-                                    label="Download XML",
-                                    data=st.session_state.interpreted_xml_text.encode("utf-8"),  # Convert text to bytes
-                                    file_name="interpreted_results.xml",
-                                    mime="application/xml"
-                                )
-
-                            interpretation_results_view()
+                    classify()
 
     else:
         # Prompt user to upload a PDF file
