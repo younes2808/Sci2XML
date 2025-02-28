@@ -13,6 +13,7 @@
 import streamlit as st
 import logging
 import os
+import re
 import math
 import sys
 import time
@@ -330,6 +331,16 @@ def main():
         except Exception as e:
             logging.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area: {e}", exc_info=True)
 
+    def clean_latex(latex_str):
+        # Remove \hskip followed by numbers, pt, and a parenthetical number (allowing for more flexible space handling)
+        latex_str = re.sub(r"\\hskip\s*\d+(\.\d+)?\s*pt\s*\(\s*\d+\s*\)\s*", "", latex_str)
+        
+        # Remove \tag{x} at the end of the expression
+        latex_str = re.sub(r"\\tag\s*\{\s*\d+\s*\}\s*", "", latex_str)
+        
+        # Return the cleaned LaTeX expression
+        return latex_str.strip()  # Trim any extra spaces
+
     # Title and logo on the page
     st.image("images/Sci2XML_logo.png")
 
@@ -511,7 +522,7 @@ def main():
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
                                                             st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}")
-                                                            st.markdown(rf"$$ {formula.get('formula', 'N/A')} $$")
+                                                            st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$")
                                                             st.text(f"{formula.get('NL', 'No description available.')}")
                                                     else:
                                                         st.warning("No formulas detected in PDF file.")
