@@ -388,7 +388,7 @@ def main():
                 result = None  # Ensure result is always defined
 
                 # Process file as soon as it's uploaded
-                with st.status(label="🔄 Waiting for GROBID to process the file...", expanded=False, state="running") as status:
+                with st.status(label="Waiting for GROBID to process the file... 🔄", expanded=False, state="running") as status:
                     result = process_pdf(st.session_state.pdf_ref, params=params)
 
                     if result is not None and result.startswith("Error when processing file"):
@@ -415,7 +415,7 @@ def main():
         if st.session_state.show_grobid_results: 
         # Layout container to maintain column structure
             with st.container():
-                col1, col2, col3 = st.columns([0.4, 0.2, 0.4])  # Ensures both columns have equal width
+                col1, col2, col3 = st.columns([0.42, 0.16, 0.42])  # Ensures both columns have equal width
             
                 with col1:  
                     @st.fragment
@@ -428,7 +428,7 @@ def main():
                         if 'grobid_results_view_option' not in st.session_state:
                             st.session_state.grobid_results_view_option = "PDF"
 
-                        st.session_state.grobid_results_view_option = st.radio("Select View", ["PDF", "XML"], horizontal=True, key='view_toggle', label_visibility="collapsed")
+                        st.session_state.grobid_results_view_option = st.radio("Select View", ["PDF 📄", "XML 📝"], horizontal=True, key='view_toggle', label_visibility="collapsed")
 
                         # PDF View with annotations
                         if st.session_state.grobid_results_view_option == "PDF":
@@ -494,7 +494,7 @@ def main():
                                             """
                                             Render different interpretation results based on user selection.
                                             """
-                                            st.session_state.interpretation_results_view_option = st.radio("Select Non-Textual Element", ["XML", "Formulas", "Figures", "Charts", "Table"], horizontal=True, key='interpretation_toggle', label_visibility="collapsed")
+                                            st.session_state.interpretation_results_view_option = st.radio("Select Non-Textual Element", ["XML 📝", "Formulas 🔢", "Figures 🖼️", "Charts 📊", "Tables 📋"], horizontal=True, key='interpretation_toggle', label_visibility="collapsed")
                                             
                                             if st.session_state.interpretation_results_view_option == "XML":
                                                 st.text_area(
