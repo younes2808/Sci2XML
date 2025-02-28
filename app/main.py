@@ -388,7 +388,7 @@ def main():
                 result = None  # Ensure result is always defined
 
                 # Process file as soon as it's uploaded
-                with st.status(label=None, expanded=False, state="running") as status:
+                with st.status(label="🔄 Waiting for GROBID to process the file...", expanded=False, state="running") as status:
                     result = process_pdf(st.session_state.pdf_ref, params=params)
 
                     if result is not None and result.startswith("Error when processing file"):
