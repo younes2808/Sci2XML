@@ -13,6 +13,7 @@
 import streamlit as st
 import logging
 import os
+import re
 import math
 import sys
 import time
@@ -330,6 +331,16 @@ def main():
         except Exception as e:
             logging.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area: {e}", exc_info=True)
 
+    def clean_latex(latex_str):
+        # Remove \hskip followed by numbers, pt, and a parenthetical number (allowing for more flexible space handling)
+        latex_str = re.sub(r"\\hskip\s*\d+(\.\d+)?\s*pt\s*\(\s*\d+\s*\)\s*", "", latex_str)
+        
+        # Remove \tag{x} at the end of the expression
+        latex_str = re.sub(r"\\tag\s*\{\s*\d+\s*\}\s*", "", latex_str)
+        
+        # Return the cleaned LaTeX expression
+        return latex_str.strip()  # Trim any extra spaces
+
     # Title and logo on the page
     st.image("images/Sci2XML_logo.png")
 
@@ -388,7 +399,7 @@ def main():
                 result = None  # Ensure result is always defined
 
                 # Process file as soon as it's uploaded
-                with st.status(label=None, expanded=False, state="running") as status:
+                with st.status(label="Waiting for GROBID to process the file... 🔄", expanded=False, state="running") as status:
                     result = process_pdf(st.session_state.pdf_ref, params=params)
 
                     if result is not None and result.startswith("Error when processing file"):
@@ -415,7 +426,7 @@ def main():
         if st.session_state.show_grobid_results: 
         # Layout container to maintain column structure
             with st.container():
-                col1, col2, col3 = st.columns([0.4, 0.2, 0.4])  # Ensures both columns have equal width
+                col1, col2, col3 = st.columns([0.45, 0.1, 0.45])  # Ensures both columns have equal width
             
                 with col1:  
                     @st.fragment
@@ -428,7 +439,7 @@ def main():
                         if 'grobid_results_view_option' not in st.session_state:
                             st.session_state.grobid_results_view_option = "PDF"
 
-                        st.session_state.grobid_results_view_option = st.radio("Select View", ["PDF", "XML"], horizontal=True, key='view_toggle', label_visibility="collapsed")
+                        st.session_state.grobid_results_view_option = st.radio("Select View", ["PDF 📄", "XML 📝"], horizontal=True, key='view_toggle', label_visibility="collapsed")
 
                         # PDF View with annotations
                         if st.session_state.grobid_results_view_option == "PDF":
@@ -494,7 +505,7 @@ def main():
                                             """
                                             Render different interpretation results based on user selection.
                                             """
-                                            st.session_state.interpretation_results_view_option = st.radio("Select Non-Textual Element", ["XML", "Formulas", "Figures", "Charts", "Table"], horizontal=True, key='interpretation_toggle', label_visibility="collapsed")
+                                            st.session_state.interpretation_results_view_option = st.radio("Select Non-Textual Element", ["XML 📝", "Formulas 🔢", "Figures 🖼️", "Charts 📊", "Tables 📋"], horizontal=True, key='interpretation_toggle', label_visibility="collapsed")
                                             
                                             if st.session_state.interpretation_results_view_option == "XML":
                                                 st.text_area(
@@ -511,7 +522,7 @@ def main():
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
                                                             st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}")
-                                                            st.markdown(rf"$$ {formula.get('formula', 'N/A')} $$")
+                                                            st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$")
                                                             st.text(f"{formula.get('NL', 'No description available.')}")
                                                     else:
                                                         st.warning("No formulas detected in PDF file.")
