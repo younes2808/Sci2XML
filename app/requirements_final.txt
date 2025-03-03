@@ -1,0 +1,10 @@
+htbuilder==0.9.0
+pdf2image==1.17.0
+pydeck==0.9.1
+skorch==1.1.0
+st-annotated-text==4.0.2
+stqdm==0.0.5
+streamlit==1.42.2
+streamlit-pdf-viewer==0.0.21
+watchdog==6.0.0
+transformers==4.49.0
