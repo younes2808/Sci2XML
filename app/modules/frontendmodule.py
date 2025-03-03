@@ -36,6 +36,7 @@ def startLocaltunnel():
         break
     else:
       print("No match found")
+      public_url = "URL NOT FOUND"
       break
   print("done")
   #print(URL.stdout.read())

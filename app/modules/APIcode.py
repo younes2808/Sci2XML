@@ -21,9 +21,12 @@ from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcesso
 from io import BytesIO
 
 ## Our own modules ##
-import Sci2XML.app.modules.classifiermodel as classifier
-import Sci2XML.app.modules.chartparser as charter
-import Sci2XML.app.modules.formulaparser as formula
+# import Sci2XML.app.modules.classifiermodel as classifier
+import modules.classifiermodel as classifier
+# import Sci2XML.app.modules.chartparser as charter
+import modules.chartparser as charter
+# import Sci2XML.app.modules.formulaparser as formula
+import modules.formulaparser as formula
 
 ML = classifier.loadML()
 charter.load_UniChart()
@@ -314,7 +317,7 @@ def API():
       from PIL import Image
       image_path = "chart3.png"  # Replace with the path to your image
       image = Image.open(image_path)
-      import Sci2XML.app.modules.classifiermodel as classifier
+      import modules.classifiermodel as classifier
       predicted_class_name = classifier.callML(ML, image)
 
       print(f"Predicted class: {predicted_class_name}")
