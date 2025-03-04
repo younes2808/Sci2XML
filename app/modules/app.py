@@ -434,17 +434,17 @@ def processFormulas(formulas, images, mode):
 
 #----------------------- ##### FRONTEND ##### -----------------------#
 
-"""
-    This script is a Streamlit-based application that processes PDF files using the GROBID API
-    and provides options to view annotated results for figures and formulas or raw XML data.
-
-    Modules Used:
-    - Streamlit: For building the web interface.
-    - Requests: For making HTTP requests to the GROBID API.
-    - xml.etree.ElementTree: For parsing the XML response from GROBID.
-    - annotated_text: For highlighting elements like figures and formulas.
-    - streamlit_pdf_viewer: For displaying annotated PDFs.
-"""
+#"""
+#    This script is a Streamlit-based application that processes PDF files using the GROBID API
+#    and provides options to view annotated results for figures and formulas or raw XML data.
+#
+#    Modules Used:
+#    - Streamlit: For building the web interface.
+#    - Requests: For making HTTP requests to the GROBID API.
+#    - xml.etree.ElementTree: For parsing the XML response from GROBID.
+#    - annotated_text: For highlighting elements like figures and formulas.
+#    - streamlit_pdf_viewer: For displaying annotated PDFs.
+#"""
 
 import streamlit as st
 import logging
