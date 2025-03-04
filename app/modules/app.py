@@ -46,6 +46,9 @@ def clean_latex(latex_str):
     # Remove everything after (and including) \tag
     latex_str = re.sub(r"\\tag.*", "", latex_str)
 
+    # Remove everything after (and including) \eqno
+    latex_str = re.sub(r"\\eqno.*", "", latex_str)
+
     return latex_str.strip()  # Trim any extra spaces
 
 def openXMLfile(XMLfile, PDFfile):
