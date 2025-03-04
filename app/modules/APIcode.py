@@ -27,10 +27,12 @@ import modules.classifiermodel as classifier
 import modules.chartparser as charter
 # import Sci2XML.app.modules.formulaparser as formula
 import modules.formulaparser as formula
+import modules.figureparser as figure
 
 ML = classifier.loadML()
 charter.load_UniChart()
 formula.load_Sumen()
+figureParserModel, figureParserTokenizer = figure.load()
 
 with open("apiinit.txt", "a") as file:
       file.write("\n api init now")
@@ -162,7 +164,7 @@ def API():
 
       return structured_table_data, summary
 
-  def processFigure(image):
+  def processFigure(file):
       """
       Processes the figure. More specifically redirects to the VLM model.
 
@@ -176,7 +178,21 @@ def API():
       ###
       # Send to VLM or something
       ###
-      NLdata = "some NL"
+      if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+      try:
+        # Ensure the image is loaded as a proper PIL Image
+        image = Image.open(BytesIO(file.read())).convert('RGB')
+      except Exception as e:
+        return jsonify({"error": f"Invalid image file: {str(e)}"}), 400
+
+      try:
+        answer = figureParserModel.query(image, "Describe this image deeply. Caption it")["answer"]
+      except Exception as e:
+        return jsonify({"error": f"Model query failed: {str(e)}"}), 500
+
+      NLdata = answer
       return NLdata
 
   def processTable(image):
