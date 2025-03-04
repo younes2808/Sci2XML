@@ -437,12 +437,12 @@ def main():
                         st.header("GROBID Results", divider="gray")  # Always renders first
 
                         if 'grobid_results_view_option' not in st.session_state:
-                            st.session_state.grobid_results_view_option = "PDF"
+                            st.session_state.grobid_results_view_option = "PDF 📄"
 
                         st.session_state.grobid_results_view_option = st.radio("Select View", ["PDF 📄", "XML 📝"], horizontal=True, key='view_toggle', label_visibility="collapsed")
 
                         # PDF View with annotations
-                        if st.session_state.grobid_results_view_option == "PDF":
+                        if st.session_state.grobid_results_view_option == "PDF 📄":
                             pdf_viewer(input=st.session_state.pdf_ref.getvalue(), height=725, annotations=st.session_state.rectangles, render_text=True, annotation_outline_size=2)
                             if st.session_state.count_formulas > 0 and st.session_state.count_figures > 0:
                                 annotated_text(
@@ -459,7 +459,7 @@ def main():
                                 )
 
                         # XML View with raw content
-                        elif st.session_state.grobid_results_view_option == "XML":
+                        elif st.session_state.grobid_results_view_option == "XML 📝":
                             # Text area bound to session_state with on_change callback
                             st.text_area(
                                 "Edit GROBID XML File", 
@@ -486,7 +486,7 @@ def main():
                                 
                                 with st.session_state.results_placeholder.container():
                                     if 'interpretation_results_view_option' not in st.session_state:
-                                        st.session_state.interpretation_results_view_option = "XML"
+                                        st.session_state.interpretation_results_view_option = "XML 📝"
                                                             
                                 st.session_state.results_placeholder.empty()
 
@@ -507,7 +507,7 @@ def main():
                                             """
                                             st.session_state.interpretation_results_view_option = st.radio("Select Non-Textual Element", ["XML 📝", "Formulas 🔢", "Figures 🖼️", "Charts 📊", "Tables 📋"], horizontal=True, key='interpretation_toggle', label_visibility="collapsed")
                                             
-                                            if st.session_state.interpretation_results_view_option == "XML":
+                                            if st.session_state.interpretation_results_view_option == "XML 📝":
                                                 st.text_area(
                                                     "Edit Interpreted XML File", 
                                                     value=st.session_state.interpreted_xml_text,  # Initial content from session state
@@ -517,7 +517,7 @@ def main():
                                                     label_visibility="collapsed" # Hide the label properly
                                                 )
                                             
-                                            elif st.session_state.interpretation_results_view_option == "Formulas":
+                                            elif st.session_state.interpretation_results_view_option == "Formulas 🔢":
                                                 with st.container(height=725, border=True):
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
@@ -527,7 +527,7 @@ def main():
                                                     else:
                                                         st.warning("No formulas detected in PDF file.")
 
-                                            elif st.session_state.interpretation_results_view_option == "Figures":
+                                            elif st.session_state.interpretation_results_view_option == "Figures 🖼️":
                                                 with st.container(height=725, border=True):
                                                     if len(st.session_state.figures_results_array) > 0:
                                                         for figure in st.session_state.figures_results_array:  # Use session state variable
@@ -536,7 +536,7 @@ def main():
                                                     else:
                                                         st.warning("No figures detected in PDF file.")
                                             
-                                            elif st.session_state.interpretation_results_view_option == "Charts":
+                                            elif st.session_state.interpretation_results_view_option == "Charts 📊":
                                                 with st.container(height=725, border=True):
                                                     if len(st.session_state.charts_results_array) > 0:
                                                         for chart in st.session_state.charts_results_array:  # Use session state variable
@@ -545,7 +545,7 @@ def main():
                                                     else:
                                                         st.warning("No charts detected in PDF file.")
                                             
-                                            elif st.session_state.interpretation_results_view_option == "Table":
+                                            elif st.session_state.interpretation_results_view_option == "Tables 📋":
                                                 with st.container(height=725, border=True):
                                                     if len(st.session_state.tables_results_array) > 0:
                                                         for table in st.session_state.tables_results_array:  # Use session state variable
