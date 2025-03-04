@@ -380,7 +380,6 @@ def processFigures(figures, images):
         figurnr+=1
         print("----------")
 
-
 def processFormulas(formulas, images, mode):
     """
     Crops the formulas from the PDF file into images and sends them to the classifier for classification.
@@ -433,23 +432,19 @@ def processFormulas(formulas, images, mode):
         formulanr+=1
         print("----------")
 
-
-
-
 #----------------------- ##### FRONTEND ##### -----------------------#
 
+"""
+    This script is a Streamlit-based application that processes PDF files using the GROBID API
+    and provides options to view annotated results for figures and formulas or raw XML data.
 
-#"""
-#    This script is a Streamlit-based application that processes PDF files using the GROBID API
-#    and provides options to view annotated results for figures and formulas or raw XML data.
-#
-#    Modules Used:
-#    - Streamlit: For building the web interface.
-#    - Requests: For making HTTP requests to the GROBID API.
-#    - xml.etree.ElementTree: For parsing the XML response from GROBID.
-#    - annotated_text: For highlighting elements like figures and formulas.
-#    - streamlit_pdf_viewer: For displaying annotated PDFs.
-#"""
+    Modules Used:
+    - Streamlit: For building the web interface.
+    - Requests: For making HTTP requests to the GROBID API.
+    - xml.etree.ElementTree: For parsing the XML response from GROBID.
+    - annotated_text: For highlighting elements like figures and formulas.
+    - streamlit_pdf_viewer: For displaying annotated PDFs.
+"""
 
 import streamlit as st
 import logging
@@ -479,7 +474,6 @@ def main():
     """
     Main function to handle the Streamlit application logic.
     """
-
     try:
         st.set_page_config(layout="wide") # Configure the page layout to be wide
         logging.info("Streamlit page configuration set successfully.")
@@ -533,20 +527,12 @@ def main():
         if "tables_results_array" not in st.session_state or len(st.session_state.tables_results_array) != 0:
             st.session_state.tables_results_array = []
 
-
-        images, figures, formulas =openXMLfile(xml_input, pdf_file)
+        images, figures, formulas = openXMLfile(xml_input, pdf_file)
         processFigures(figures, images)
         processFormulas(formulas, images, mode="regex")
 
-
-
         # Convert to string with XML declaration
         xml_string = str(st.session_state.Bs_data)
-
-
-        # Prettify using minidom
-        #parsed_xml = minidom.parseString(xml_string)
-        #pretty_xml = parsed_xml.toprettyxml(indent="    ", encoding="utf-8").decode()
 
         st.session_state.interpreted_xml_text = xml_string
 
@@ -721,6 +707,7 @@ def main():
                 st.session_state.show_interpretation_results = False
                 st.session_state.xml_text = None
                 st.session_state.interpreted_xml_text = None
+                st.session_state.results_placeholder = None
 
             # Backup uploaded file
             st.session_state.pdf_ref = uploaded_pdf
