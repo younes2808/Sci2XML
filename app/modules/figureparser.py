@@ -1,9 +1,7 @@
-
 import torch
 from PIL import Image
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from io import BytesIO
-
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

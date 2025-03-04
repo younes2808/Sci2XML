@@ -1,4 +1,3 @@
-
 ## API ##
 import subprocess
 import requests
@@ -80,7 +79,6 @@ def API():
       ## PROCESS IMAGE
       processedChartCSV, processedChartNL = processChart(file)
 
-
       return jsonify({'element_type':"chart", 'NL': processedChartNL, "csv": processedChartCSV, "preferred": processedChartNL})
 
   @app.route('/parseFigure', methods=['POST'])
@@ -105,8 +103,6 @@ def API():
       processedTableCSV, processedTableNL = processTable(file)
 
       return jsonify({'element_type':"table", 'NL': processedTableNL, "csv": processedTableCSV, "preferred": processedTableCSV})
-
-
 
   def processFormula(file):
       """
@@ -214,9 +210,6 @@ def API():
       NLdata = "some NL"
       return CSVdata, NLdata
 
-
-
-
   def callVLM(pipe, image, query): # NOT IN USE, WE USE ML FOR CLASSIFICATION INSTEAD.
     """
     Calls the VLM model.
@@ -236,8 +229,6 @@ def API():
     #print(response.text)
     return response.text
 
-
-
   def callML(model, image):
     """
     Calls the ML model that will classify the image.
@@ -256,7 +247,6 @@ def API():
     image = image.convert("RGB")  # Ensure the image is in RGB format
 
     img_size = 224
-
 
     # Define the same transformations used during training
     data_transforms = A.Compose([
@@ -286,7 +276,6 @@ def API():
     print(f"Predicted class: {predicted_class_name}")
     return predicted_class_name
 
-
   @app.route("/loadVLM")
   def load_vlm(): # NOT IN USE
       print("API endpoint: Loading VLM...")
@@ -306,7 +295,6 @@ def API():
       ## PROCESS IMAGE
       response = callVLM(VLM, image, query.getvalue().decode("utf-8"))
       #response = "VLMresponse"
-
 
       return jsonify({'VLMresponse':response})
 

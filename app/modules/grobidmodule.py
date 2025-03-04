@@ -1,4 +1,3 @@
-
 def loadGrobidPythonway():
   import subprocess
   print("Loading Grobid")
@@ -13,7 +12,6 @@ def loadGrobidPythonway():
   grobidrunlogfile = open("grobidrunlog.txt", "w")
   n = subprocess.Popen(["./gradlew", "run"], stdout=grobidrunlogfile, stderr=grobidrunlogfile, text=True, cwd="/content/grobid-0.8.1/")
   # Check grobidrunlog.txt to see when it is ready. Should be > 46 lines when ready.
-
 
   import time
   import requests

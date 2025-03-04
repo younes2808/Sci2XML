@@ -1,4 +1,3 @@
-
 ## Load-modules ##
 from skorch import NeuralNetClassifier
 import torch.nn as nn
@@ -24,7 +23,6 @@ def loadML():
   densenet: The ML model.
   """
   print("\n--- Loading ML ---")
-
 
   n_classes = 9
   batch_size = 128
@@ -97,7 +95,6 @@ def loadML():
   ML = densenet
   print("ML loaded")
   return densenet
-
 
 def callML(model, image):
   """

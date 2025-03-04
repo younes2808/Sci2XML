@@ -1,4 +1,3 @@
-
 import subprocess
 import requests
 import re
@@ -42,7 +41,6 @@ def startLocaltunnel():
   #print(URL.stdout.read())
 
   return public_url, passw
-
 
 def startStreamlit():
   """

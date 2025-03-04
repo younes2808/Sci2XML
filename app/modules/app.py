@@ -37,13 +37,15 @@ import re
 apiURL = "http://172.28.0.12:8000/"
 
 def clean_latex(latex_str):
-    # Remove \hskip followed by numbers, pt, and a parenthetical number (allowing for more flexible space handling)
-    latex_str = re.sub(r"\\hskip\s*\d+(\.\d+)?\s*pt\s*\(\s*\d+\s*\)\s*", "", latex_str)
-    
-    # Remove \tag{x} at the end of the expression
-    latex_str = re.sub(r"\\tag\s*\{\s*\d+\s*\}\s*", "", latex_str)
-    
-    # Return the cleaned LaTeX expression
+    """
+    Removes everything after (and including) \hskip or \tag.
+    """
+    # Remove everything after (and including) \hskip
+    latex_str = re.sub(r"\\hskip.*", "", latex_str)
+
+    # Remove everything after (and including) \tag
+    latex_str = re.sub(r"\\tag.*", "", latex_str)
+
     return latex_str.strip()  # Trim any extra spaces
 
 def openXMLfile(XMLfile, PDFfile):
