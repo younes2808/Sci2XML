@@ -298,7 +298,7 @@ def start_localtunnel():
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        shell=True
+        shell=True #Remove this if you are not running on local computer e.g. if you are running on colab
     )
 
     public_url = None
