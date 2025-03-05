@@ -7,6 +7,7 @@ import io
 from io import StringIO
 import time
 import xml.etree.ElementTree as ET
+import xml.dom.minidom
 
 #import sys
 #sys.stdout = open("streamlitlog", "w")
@@ -29,6 +30,7 @@ import os
 import json
 import time
 import requests
+import xml.dom.minidom
 import io
 import re
 
@@ -501,7 +503,7 @@ def main():
         st.session_state.metrics["codelistings"] = 0
 
         if "elements" not in st.session_state or len(st.session_state.elements) != 0:
-          st.session_state.elements = []
+            st.session_state.elements = []
 
         # Ensure arrays exist in session state
         if "formulas_results_array" not in st.session_state or len(st.session_state.formulas_results_array) != 0:
@@ -527,9 +529,12 @@ def main():
         logging.info(f'response text: {response.text}')
         xml_input = response.text
 
+        # Parse the XML string and make it pretty
+        xml_doc = xml.dom.minidom.parseString(xml_input)
+        pretty_xml = xml_doc.toprettyxml()
+
         # Parse XML and extract tables
-        tables = []
-        root = ET.fromstring(xml_input)
+        root = ET.fromstring(pretty_xml)
         for table in root.findall(".//table"):
             page_number = table.get("page")
             table_number = table.get("table_number")
@@ -539,18 +544,14 @@ def main():
                 cells = [cell.text if cell.text is not None else "NAN" for cell in row.findall("cell")]
                 rows.append(" | ".join(cells))
             table_info = "\n".join(rows)
-            
-            tables.append({
+
+            processClassifierResponse({
                 "element_type": 'table',
                 "page_number": page_number,
                 "table_number": table_number,
                 "context": context,
                 "table_info": table_info
             })
-
-        # Store extracted tables in session state
-        for table in tables:
-            processClassifierResponse(table)
              
         ## Process XML ##
         images, figures, formulas = openXMLfile(xml_input, pdf_file)
