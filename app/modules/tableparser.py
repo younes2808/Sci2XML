@@ -156,7 +156,15 @@ def insert_pdfplumber_content(grobid_xml, pdfplumber_xml, insert_position):
     if insert_position is not None:
         updated_grobid_xml = grobid_xml[:insert_position] + table_section + grobid_xml[insert_position:]
     else:
-        updated_grobid_xml = grobid_xml + "\n" + table_section
+        # No <table> tag found, adding it to the end of document:
+        TEImatches = list(re.finditer(r'</TEI>', grobid_xml, flags=re.DOTALL))
+        if TEImatches:
+            # Get the position of the end TEI tag
+            first_table_position = TEImatches[0].start()
+            updated_grobid_xml = grobid_xml[:first_table_position] + table_section + grobid_xml[first_table_position:]
+        else:
+            first_table_position = None
+            updated_grobid_xml = grobid_xml + "\n" + table_section
     
     return updated_grobid_xml
 
