@@ -516,6 +516,21 @@ def main():
         if "tables_results_array" not in st.session_state or len(st.session_state.tables_results_array) != 0:
             st.session_state.tables_results_array = []
 
+        ## Table Parser ##
+        ### Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
+        print("Initiating table parser")
+        # Ready the files
+        files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
+
+        # Send to API endpoint for processing of tables
+        response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
+
+        print(response)
+        print(response.content)
+        xml_input = response.text
+ 
+        ## Process XML ##
+
         images, figures, formulas = openXMLfile(xml_input, pdf_file)
         processFigures(figures, images)
         processFormulas(formulas, images, mode="regex")
