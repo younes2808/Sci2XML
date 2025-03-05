@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 import pdfplumber
 import re
 import logging
+import streamlit as st
 
 # Configure logging to display timestamp and message
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
@@ -80,6 +81,16 @@ def extract_tables_from_pdf(pdf_path, max_margin=50):
                         # Add the context as a child element
                         context_node = ET.SubElement(table_node, "context")
                         context_node.text = context
+
+                        # Convert table into a markdown-style string
+                        table_info = "\n".join([" | ".join(str(cell).strip() if cell else "NAN" for cell in row) for row in table])
+
+                        # Store table data in session state
+                        st.session_state.tables_results_array.append({
+                            "page_number": page_number,
+                            "element_number": table_index,
+                            "table_info": table_info  # Store formatted table text
+                        })
 
                         # Add each row of the table as an XML element
                         for row in table:

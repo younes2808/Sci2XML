@@ -115,7 +115,6 @@ def callML(model, image):
 
   img_size = 224
 
-
   # Define the same transformations used during training
   data_transforms = A.Compose([
       A.Resize(img_size, img_size),

@@ -98,7 +98,6 @@ def openXMLfile(XMLfile, PDFfile):
 
     return images, figures, formulas
 
-
 def addToXMLfile(type, name, newContent):
     """
     Adds a new element to the XML file. When a non-textual element has been processed it should be placed back into the XML file at the correct location.
@@ -132,7 +131,6 @@ def addToXMLfile(type, name, newContent):
 
     print(parentTag)
 
-
 def saveXMLfile(pathToXML):
     """
     FOR TESTING! Saves the XML file.
@@ -147,7 +145,6 @@ def saveXMLfile(pathToXML):
     with open(pathToXML, "w", encoding="utf-8") as file:
         file.write(str(Bs_data))
     return Bs_data
-
 
 def classify(XMLtype, image, elementNr, pagenr, regex):
     """
@@ -165,7 +162,6 @@ def classify(XMLtype, image, elementNr, pagenr, regex):
     """
     print("\n -- Classifier... --")
 
-
     ## Redirecting to correct endpoint in API...
 
     subtype = "unknown"
@@ -173,7 +169,6 @@ def classify(XMLtype, image, elementNr, pagenr, regex):
     ## API request header:
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     APIresponse = ""
-
 
     ## For formulas:
     if (XMLtype == "formula"):
@@ -202,7 +197,6 @@ def classify(XMLtype, image, elementNr, pagenr, regex):
           print("NO: ", "Formula: ", elementNr, " ->", regex)
           print("The formula is NOT identified as an actual formula. Aborting...")
           return
-
 
     ## For figures:
     else:
@@ -279,12 +273,10 @@ def classify(XMLtype, image, elementNr, pagenr, regex):
 
         print("Response from formulaParser: --> ", APIresponse["preferred"])
 
-
     ## If subtype is unknown its better to abort and not add anything back into the XML.
     if (subtype == "unknown"):
       print("Identified as other/unknown. Aborting...")
       return
-
 
     print("Received response about image nr ", elementNr, ". Will now paste response back into the XML-file.")
     if (XMLtype == "figure"):
@@ -298,7 +290,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex):
     ## Adds to arrays:
     processClassifierResponse(APIresponse)
 
-def processClassifierResponse(APIresponse):
+def processClassifierResponse(element):
     """
     Processes the response from the classifier and adds it to the correct array.
 
@@ -310,16 +302,11 @@ def processClassifierResponse(APIresponse):
     """
     print("Adding to array...")
 
-    #elements = []
-    #st.session_state.elements.append(APIresponse)
-    element = APIresponse
-
     #for element in stqdm(elements):
     if element['element_type'] == 'formula':
         st.session_state.formulas_results_array.append(element)
         st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}")
         st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$")
-        st.text(f"{element.get('NL', 'No description available.')}")
 
     elif element['element_type'] == "figure":
         st.session_state.figures_results_array.append(element)
@@ -334,8 +321,6 @@ def processClassifierResponse(APIresponse):
     elif element['element_type'] == "table":
         st.session_state.tables_results_array.append(element)
         st.subheader(f"Page {element.get('page_number', 'N/A')}: Table #{element.get('element_number', 'N/A')}")
-        st.text(f"{element.get('NL', 'No description available.')}")
-
 
 def processFigures(figures, images):
     """
@@ -532,20 +517,6 @@ def main():
         if "tables_results_array" not in st.session_state or len(st.session_state.tables_results_array) != 0:
             st.session_state.tables_results_array = []
 
-        ## Table Parser ##
-        ### Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
-        print("Initiating table parser")
-        # Ready the files
-        files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
-
-        # Send to API endpoint for processing of tables
-        response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
-
-        print(response)
-        print(response.content)
-        xml_input = response.text
-
-        ## Process XML ##
         images, figures, formulas = openXMLfile(xml_input, pdf_file)
         processFigures(figures, images)
         processFormulas(formulas, images, mode="regex")
@@ -885,7 +856,6 @@ def main():
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
                                                             st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}")
                                                             st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$")
-                                                            st.text(f"{formula.get('NL', 'No description available.')}")
                                                     else:
                                                         st.warning("No formulas detected in PDF file.")
 
@@ -912,7 +882,7 @@ def main():
                                                     if len(st.session_state.tables_results_array) > 0:
                                                         for table in st.session_state.tables_results_array:  # Use session state variable
                                                             st.subheader(f"Page {table.get('page_number', 'N/A')}: Table #{table.get('element_number', 'N/A')}")
-                                                            st.text(f"{table.get('NL', 'No description available.')}")
+                                                            st.dataframe({table.get('table_info')})  # Displays table in interactive format
                                                     else:
                                                         st.warning("No tables detected in PDF file.")
 
