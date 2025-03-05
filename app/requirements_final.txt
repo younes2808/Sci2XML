@@ -9,3 +9,4 @@ streamlit-pdf-viewer==0.0.21
 watchdog==6.0.0
 transformers==4.49.0
 pyvips==2.2.3
+pdfplumber

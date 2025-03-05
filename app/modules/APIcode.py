@@ -2,13 +2,15 @@
 import subprocess
 import requests
 import re
+import os
 
 import threading
 import socket
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request, Response
 from io import StringIO
 from PIL import Image
 import io
+from tempfile import NamedTemporaryFile
 
 import nest_asyncio
 nest_asyncio.apply()
@@ -27,6 +29,7 @@ import modules.chartparser as charter
 # import Sci2XML.app.modules.formulaparser as formula
 import modules.formulaparser as formula
 import modules.figureparser as figure
+import modules.tableparser as tableParser
 
 ML = classifier.loadML()
 charter.load_UniChart()
@@ -97,12 +100,24 @@ def API():
   def handle_table():
       print("-- You have reached endpoint for table --")
 
-      file = request.files['image']
+      # Check if both required files are provided
+      if 'pdf' not in request.files or 'grobid_xml' not in request.files:
+        return jsonify({"error": "Both PDF and Grobid XML files are required."}), 400
 
-      ## PROCESS IMAGE
-      processedTableCSV, processedTableNL = processTable(file)
+      # Retrieve the uploaded files from the request
+      pdf_file = request.files['pdf']
+      grobid_xml_file = request.files['grobid_xml']
 
-      return jsonify({'element_type':"table", 'NL': processedTableNL, "csv": processedTableCSV, "preferred": processedTableCSV})
+      ## PROCESS TABLES
+      # processedTableCSV, processedTableNL = processTable(pdf_file, grobid_xml_file) # Doesnt return a single tabledata+NL, but instead the entire XML with all tables processed.
+      processedTablesXML = processTable(pdf_file, grobid_xml_file)
+
+      #Return the final Grobid XML as a downloadable file (with content type "application/xml")
+      return Response(
+          processedTablesXML,
+          mimetype="application/xml",
+          headers={"Content-Disposition": "attachment; filename=updated_grobid.xml"}
+      )
 
   def processFormula(file):
       """
@@ -191,24 +206,56 @@ def API():
       NLdata = answer
       return NLdata
 
-  def processTable(image):
-      """
-      Processes the table. More specifically redirects to the tableParser model.
+  def processTable(pdf_file, grobid_xml_file):
+        """
+        API endpoint that expects two files:
+        - 'pdf': A PDF file to be processed with PDFplumber.
+        - 'grobid_xml': A Grobid XML file in which the tables will be replaced.
 
-      Paramaters:
-      image: The file/image to be processed.
+        Process:
+        1. Save the uploaded files temporarily.
+        2. Extract tables from the PDF file (using PDFplumber) and get the XML content directly.
+        3. Remove existing table figures from the Grobid XML and get the position of the first removed table.
+        4. Insert the PDFplumber XML content into the Grobid XML at that position (or append if no tables are found).
+        5. Remove empty lines and return the updated Grobid XML as a downloadable file.
+        
+        Returns:
+            Response: A Flask Response object with the updated Grobid XML, served as an XML file.
+        """
+        print("Processing table...")
+        
+        
+        # Save the PDF file temporarily
+        with NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+            pdf_file.save(temp_pdf)
+            pdf_path = temp_pdf.name
+        # Save the Grobid XML file temporarily
+        with NamedTemporaryFile(delete=False, suffix=".xml") as temp_grobid:
+            grobid_xml_file.save(temp_grobid)
+            grobid_path = temp_grobid.name
+        
+        # Read the content of the Grobid XML file
+        with open(grobid_path, "r", encoding="utf-8") as file:
+            grobid_content = file.read()
+        
+        # Remove existing table figures from the Grobid XML and get the insert position
+        grobid_updated, insert_position = tableParser.remove_tables_from_grobid_xml(grobid_path)
+        
+        # Extract tables from the PDF and obtain the XML content and table count
+        pdfplumber_xml, table_count = tableParser.extract_tables_from_pdf(pdf_path)
+        
+        # Insert the PDFplumber XML content into the Grobid XML content
+        final_grobid_xml = tableParser.insert_pdfplumber_content(grobid_updated, pdfplumber_xml, insert_position)
+        # Remove any empty lines from the final XML
+        final_grobid_xml = tableParser.remove_empty_lines(final_grobid_xml)
+        
+        # Remove the temporary files
+        os.remove(pdf_path)
+        os.remove(grobid_path)
+        
 
-      Returns:
-      CSVdata: The generated CSV table data.
-      NLdata: The generated NL data.
-      """
-      print("Processing table...")
-      ###
-      # Send to OCR or VLM or tableParser or something
-      ###
-      CSVdata = ["some CSV data stuff", "22"]
-      NLdata = "some NL"
-      return CSVdata, NLdata
+        data = final_grobid_xml
+        return data
 
   def callVLM(pipe, image, query): # NOT IN USE, WE USE ML FOR CLASSIFICATION INSTEAD.
     """
