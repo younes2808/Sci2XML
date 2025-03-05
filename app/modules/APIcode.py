@@ -350,7 +350,7 @@ def API():
       image = Image.open(image)
 
       ## PROCESS IMAGE
-      response = classifier.callML(ML, image)
+      response = callML(ML, image)
       #response = "VLMresponse"
 
       return jsonify({'ClassifierResponse':response})
@@ -364,7 +364,7 @@ def API():
       image_path = "chart3.png"  # Replace with the path to your image
       image = Image.open(image_path)
       import modules.classifiermodel as classifier
-      predicted_class_name = classifier.callML(ML, image)
+      predicted_class_name = callML(ML, image)
 
       print(f"Predicted class: {predicted_class_name}")
       return "API endpoint: Loading VLM..."+str(g) + str(predicted_class_name)
