@@ -110,7 +110,7 @@ def API():
 
       ## PROCESS TABLES
       # processedTableCSV, processedTableNL = processTable(pdf_file, grobid_xml_file) # Doesnt return a single tabledata+NL, but instead the entire XML with all tables processed.
-      processedTablesXML = processTable(pdf_file.getvalue(), grobid_xml_file)
+      processedTablesXML = processTable(pdf_file, grobid_xml_file)
 
       #Return the final Grobid XML as a downloadable file (with content type "application/xml")
       return Response(

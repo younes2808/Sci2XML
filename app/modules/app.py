@@ -536,7 +536,7 @@ def main():
         ### Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
         print("Initiating table parser")
         # Ready the files
-        files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file)}
+        files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
 
         # Send to API endpoint for processing of tables
         response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
