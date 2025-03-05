@@ -6,6 +6,7 @@ from PIL import Image
 import io
 from io import StringIO
 import time
+import xml.etree.ElementTree as ET
 
 #import sys
 #sys.stdout = open("streamlitlog", "w")
@@ -321,6 +322,7 @@ def processClassifierResponse(element):
     elif element['element_type'] == "table":
         st.session_state.tables_results_array.append(element)
         st.subheader(f"Page {element.get('page_number', 'N/A')}: Table #{element.get('element_number', 'N/A')}")
+        st.dataframe({element.get('table_info')})  # Displays table in interactive format
 
 def processFigures(figures, images):
     """
@@ -530,17 +532,31 @@ def main():
         print(f'response text: {response.text}')
         xml_input = response.text
 
-        # Convert table into a markdown-style string
-        #table_info = "\n".join([" | ".join(str(cell).strip() if cell else "NAN" for cell in row) for row in table])
-        #print(f'table_info: {table_info}')
+        # Parse XML and extract tables
+        tables = []
+        root = ET.fromstring(xml_input)
+        for table in root.findall(".//table"):
+            page_number = table.get("page")
+            table_number = table.get("table_number")
+            context = table.find("context").text if table.find("context") is not None else ""
+            rows = []
+            for row in table.findall("row"):
+                cells = [cell.text if cell.text is not None else "NAN" for cell in row.findall("cell")]
+                rows.append(" | ".join(cells))
+            table_info = "\n".join(rows)
+            
+            tables.append({
+                "page_number": page_number,
+                "table_number": table_number,
+                "context": context,
+                "table_info": table_info
+            })
 
-        # Store table data in session state
-        #st.session_state.tables_results_array.append({
-        #    "page_number": page_number,
-        #    "element_number": table_index,
-        #    "table_info": table_info  # Store formatted table text
-        #})
-        #print(f'st.session_state.tables_results_array: {st.session_state.tables_results_array}')
+        # Store extracted tables in session state
+        for table in tables:
+            st.session_state.tables_results_array.append(table)
+            
+        print(f'st.session_state.tables_results_array: {st.session_state.tables_results_array}')
  
         ## Process XML ##
         images, figures, formulas = openXMLfile(xml_input, pdf_file)
