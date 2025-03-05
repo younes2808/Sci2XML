@@ -56,7 +56,6 @@ def API():
 
   app = Flask(__name__)
 
-
   @app.route("/")
   def hello():
       return "I am alive!"
@@ -354,9 +353,7 @@ def API():
       response = classifier.callML(ML, image)
       #response = "VLMresponse"
 
-
       return jsonify({'ClassifierResponse':response})
-
 
   @app.route("/test2")
   def test2(): # NOT IN USE

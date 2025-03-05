@@ -336,7 +336,6 @@ def processFigures(figures, images):
     print("\n-------- Cropping Figures --------")
     figurnr = 0
     for figure in figures:
-        # print("---")
         # print(figure.get("coords"))
         coords = ""
         try:
@@ -522,9 +521,7 @@ def main():
         processFormulas(formulas, images, mode="regex")
 
         # Convert to string with XML declaration
-        xml_string = str(st.session_state.Bs_data)
-
-        st.session_state.interpreted_xml_text = xml_string
+        st.session_state.interpreted_xml_text = str(st.session_state.Bs_data)
 
         logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
 

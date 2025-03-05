@@ -1,4 +1,3 @@
-
 import xml.etree.ElementTree as ET
 import pdfplumber
 import re
@@ -21,6 +20,7 @@ def extract_tables_from_pdf(pdf_path, max_margin=50):
         tuple: A tuple (xml_str, table_count) where xml_str is the XML string of extracted tables,
                and table_count is the number of tables extracted. In case of an error, returns an error message and 0.
     """
+    print(f'extract_tables_from_pdf running...')
     try:
         # Open the PDF file using pdfplumber
         with pdfplumber.open(pdf_path) as pdf:
@@ -71,6 +71,7 @@ def extract_tables_from_pdf(pdf_path, max_margin=50):
                                 distance = word_y0 - y1
                                 if distance <= max_margin:
                                     words_below.append(word['text'])
+
                         # Create context text from the collected words
                         above_text = " ".join(words_above) if words_above else ""
                         below_text = " ".join(words_below) if words_below else ""
@@ -125,6 +126,7 @@ def remove_tables_from_grobid_xml(grobid_file):
         tuple: A tuple (updated_content, first_table_position) where updated_content is the Grobid XML without table figures,
                and first_table_position is the position (offset) of the first removed table (or None if not found).
     """
+    print(f'remove_tables_from_grobid_xml running...')
     with open(grobid_file, 'r', encoding='utf-8') as file:
         grobid_content = file.read()
     
@@ -158,6 +160,7 @@ def insert_pdfplumber_content(grobid_xml, pdfplumber_xml, insert_position):
     Returns:
         str: The final Grobid XML content with the PDFplumber tables inserted.
     """
+    print(f'insert_pdfplumber_content running...')
     # Create a section to mark the beginning and end of the inserted tables
     table_section = (
         "\n<!-- ======== START: Tables from PDFplumber ======== -->\n"
@@ -191,4 +194,5 @@ def remove_empty_lines(xml_content):
     Returns:
         str: The XML content without any empty lines.
     """
+    print(f'remove_empty_lines running...')
     return "\n".join([line for line in xml_content.splitlines() if line.strip()])
