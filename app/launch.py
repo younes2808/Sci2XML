@@ -1,5 +1,7 @@
+import time
+
 def startEverything():
-  print("HELOOO")
+  start_time = time.time()
   """
   Starts the entire application.
 
@@ -23,7 +25,6 @@ def startEverything():
   print("-> npm installs:")
   n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
 
-
   ## Launch API ##
   #API()
   # import Sci2XML.app.modules.APIcode as API
@@ -38,7 +39,6 @@ def startEverything():
   import modules.grobidmodule as grobidmod
   grobidmod.loadGrobidPythonway()
 
-
   ## Start Streamlit and host using Localtunnel ##
   #startStreamlit()
   print("# Starting Streamlit through Localtunnel... #")
@@ -46,6 +46,9 @@ def startEverything():
   import modules.frontendmodule as front
   front.startStreamlit()
 
-
+  end_time = time.time()  # End the timer
+  elapsed_time = end_time - start_time
+  minutes, seconds = divmod(elapsed_time, 60)
+  print(f"Total startup time: {int(minutes)} minutes and {seconds:.2f} seconds")
 
 startEverything()

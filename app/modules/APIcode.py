@@ -285,7 +285,7 @@ def API():
     Returns:
     predicted_class_name: The name of the predicted class.
     """
-
+    print(f'callML is running with model: {model} and image: {image}')
     # Load the image
     #image_path = image  # Replace with the path to your image
     #image = Image.open(image_path)
