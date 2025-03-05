@@ -84,6 +84,7 @@ def extract_tables_from_pdf(pdf_path, max_margin=50):
 
                         # Convert table into a markdown-style string
                         table_info = "\n".join([" | ".join(str(cell).strip() if cell else "NAN" for cell in row) for row in table])
+                        print(f'table_info: {table_info}')
 
                         # Store table data in session state
                         st.session_state.tables_results_array.append({
@@ -91,6 +92,7 @@ def extract_tables_from_pdf(pdf_path, max_margin=50):
                             "element_number": table_index,
                             "table_info": table_info  # Store formatted table text
                         })
+                        print(f'st.session_state.tables_results_array: {st.session_state.tables_results_array}')
 
                         # Add each row of the table as an XML element
                         for row in table:

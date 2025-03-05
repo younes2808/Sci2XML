@@ -224,7 +224,6 @@ def API():
         """
         print("Processing table...")
         
-        
         # Save the PDF file temporarily
         with NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
             pdf_file.save(temp_pdf)
@@ -253,7 +252,6 @@ def API():
         os.remove(pdf_path)
         os.remove(grobid_path)
         
-
         data = final_grobid_xml
         return data
 
