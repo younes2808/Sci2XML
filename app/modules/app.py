@@ -525,12 +525,24 @@ def main():
         # Send to API endpoint for processing of tables
         response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
 
-        print(response)
-        print(response.content)
+        print(f'response: {response}')
+        print(f'response content: {response.content}')
+        print(f'response text: {response.text}')
         xml_input = response.text
+
+        # Convert table into a markdown-style string
+        #table_info = "\n".join([" | ".join(str(cell).strip() if cell else "NAN" for cell in row) for row in table])
+        #print(f'table_info: {table_info}')
+
+        # Store table data in session state
+        #st.session_state.tables_results_array.append({
+        #    "page_number": page_number,
+        #    "element_number": table_index,
+        #    "table_info": table_info  # Store formatted table text
+        #})
+        #print(f'st.session_state.tables_results_array: {st.session_state.tables_results_array}')
  
         ## Process XML ##
-
         images, figures, formulas = openXMLfile(xml_input, pdf_file)
         processFigures(figures, images)
         processFormulas(formulas, images, mode="regex")

@@ -20,7 +20,6 @@ def extract_tables_from_pdf(pdf_path, max_margin=50):
         tuple: A tuple (xml_str, table_count) where xml_str is the XML string of extracted tables,
                and table_count is the number of tables extracted. In case of an error, returns an error message and 0.
     """
-    print(f'extract_tables_from_pdf running...')
     try:
         # Open the PDF file using pdfplumber
         with pdfplumber.open(pdf_path) as pdf:
@@ -83,18 +82,6 @@ def extract_tables_from_pdf(pdf_path, max_margin=50):
                         context_node = ET.SubElement(table_node, "context")
                         context_node.text = context
 
-                        # Convert table into a markdown-style string
-                        table_info = "\n".join([" | ".join(str(cell).strip() if cell else "NAN" for cell in row) for row in table])
-                        print(f'table_info: {table_info}')
-
-                        # Store table data in session state
-                        st.session_state.tables_results_array.append({
-                            "page_number": page_number,
-                            "element_number": table_index,
-                            "table_info": table_info  # Store formatted table text
-                        })
-                        print(f'st.session_state.tables_results_array: {st.session_state.tables_results_array}')
-
                         # Add each row of the table as an XML element
                         for row in table:
                             row_node = ET.SubElement(table_node, "row")
@@ -126,7 +113,6 @@ def remove_tables_from_grobid_xml(grobid_file):
         tuple: A tuple (updated_content, first_table_position) where updated_content is the Grobid XML without table figures,
                and first_table_position is the position (offset) of the first removed table (or None if not found).
     """
-    print(f'remove_tables_from_grobid_xml running...')
     with open(grobid_file, 'r', encoding='utf-8') as file:
         grobid_content = file.read()
     
@@ -160,7 +146,6 @@ def insert_pdfplumber_content(grobid_xml, pdfplumber_xml, insert_position):
     Returns:
         str: The final Grobid XML content with the PDFplumber tables inserted.
     """
-    print(f'insert_pdfplumber_content running...')
     # Create a section to mark the beginning and end of the inserted tables
     table_section = (
         "\n<!-- ======== START: Tables from PDFplumber ======== -->\n"
@@ -194,5 +179,4 @@ def remove_empty_lines(xml_content):
     Returns:
         str: The XML content without any empty lines.
     """
-    print(f'remove_empty_lines running...')
     return "\n".join([line for line in xml_content.splitlines() if line.strip()])
