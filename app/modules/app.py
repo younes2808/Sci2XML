@@ -301,9 +301,6 @@ def processClassifierResponse(element):
     Returns:
     None
     """
-    print("Adding to array...")
-
-    #for element in stqdm(elements):
     if element['element_type'] == 'formula':
         st.session_state.formulas_results_array.append(element)
         st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}")
@@ -492,8 +489,6 @@ def main():
         logging.info(f"XML received in classifier:\n{xml_input}")
         logging.info(f"PDF received in classifier:\n{pdf_file}")
 
-        print("------ Starting test run ------")
-
         ##  Metrics used for benchmarking:
         global metrics
         st.session_state.metrics = {}
@@ -520,16 +515,16 @@ def main():
 
         ## Table Parser ##
         ### Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
-        print("Initiating table parser")
+        logging.info("Initiating table parser")
         # Ready the files
         files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
 
         # Send to API endpoint for processing of tables
         response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
 
-        print(f'response: {response}')
-        print(f'response content: {response.content}')
-        print(f'response text: {response.text}')
+        logging.info(f'response: {response}')
+        logging.info(f'response content: {response.content}')
+        logging.info(f'response text: {response.text}')
         xml_input = response.text
 
         # Parse XML and extract tables
@@ -546,6 +541,7 @@ def main():
             table_info = "\n".join(rows)
             
             tables.append({
+                "element_type": 'table',
                 "page_number": page_number,
                 "table_number": table_number,
                 "context": context,
@@ -554,10 +550,8 @@ def main():
 
         # Store extracted tables in session state
         for table in tables:
-            st.session_state.tables_results_array.append(table)
-            
-        print(f'st.session_state.tables_results_array: {st.session_state.tables_results_array}')
- 
+            processClassifierResponse(table)
+             
         ## Process XML ##
         images, figures, formulas = openXMLfile(xml_input, pdf_file)
         processFigures(figures, images)
