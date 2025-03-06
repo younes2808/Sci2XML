@@ -7,7 +7,6 @@ import io
 from io import StringIO
 import time
 import xml.etree.ElementTree as ET
-import xml.dom.minidom
 
 #import sys
 #sys.stdout = open("streamlitlog", "w")
@@ -30,7 +29,7 @@ import os
 import json
 import time
 import requests
-import xml.dom.minidom
+import pandas as pd
 import io
 import re
 
@@ -320,8 +319,18 @@ def processClassifierResponse(element):
 
     elif element['element_type'] == "table":
         st.session_state.tables_results_array.append(element)
-        st.subheader(f"Page {element.get('page_number', 'N/A')}: Table #{element.get('element_number', 'N/A')}")
-        st.dataframe({element.get('table_info')})  # Displays table in interactive format
+        page_number = st.session_state.tables_results_array[-1].get("page_number", "Unknown Page")
+        table_data = st.session_state.tables_results_array[-1].get("table_data", [])
+
+        st.subheader(f"Page {page_number}: Table #X")
+        if table_data:
+            # Convert table data to DataFrame
+            df = pd.DataFrame(table_data)
+
+            # Display table
+            st.dataframe(df)
+        else:
+            st.write(f"No data found in table on page {page_number}.")
 
 def processFigures(figures, images):
     """
@@ -520,32 +529,60 @@ def main():
         # Send to API endpoint for processing of tables
         response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
 
-        st.write(f'response: {response}')
-        st.write(f'response content: {response.content}')
-        st.write(f'response text: {response.text}')
+        logging.info(f'response: {response}')
+        logging.info(f'response content: {response.content}')
+        logging.info(f'response text: {response.text}')
         xml_input = response.text
 
-        #annotations = []
+        # Define the XML namespace
+        namespace = {"tei": "http://www.tei-c.org/ns/1.0"}
 
-        # Parse the XML content
-        #namespace = {"tei": "http://www.tei-c.org/ns/1.0"}  # Define the XML namespace
-        #root = ET.fromstring(xml_content)
+        # Parse XML
+        root = ET.fromstring(xml_input)
 
-        # Find all <figure> and <formula> elements in the XML
-        #tables = root.findall(".//tei:table coords", namespace)
+        # Find all <table> elements
+        tables = root.findall(".//tei:table", namespace)
 
-        #row
-        #cell
+        for table in tables:
+            # Extract coordinates if available
+            coords = table.attrib.get("coords", None)
+            page_number = None
 
-        # Parse XML and extract tables
-        """for table in tables:
-            processClassifierResponse({
-                "element_type": 'table',
-                "page_number": page_number,
-                "table_number": table_number,
-                "context": context,
-                "table_info": table_info
-            })"""
+            if coords:
+                try:
+                    values = list(map(float, coords.split(',')))
+                    if len(values) >= 5:
+                        page, x0, y0, x1, y1 = values[:5]  
+                        page_number = int(page)
+                except ValueError as e:
+                    print(f"Error parsing table coordinates '{coords}': {e}")
+
+            # Extract rows *inside this specific table*
+            table_rows = table.findall("tei:row", namespace)
+
+            if table_rows:
+                # Extract headers from the first row of *this table*
+                headers = [cell.text.strip() if cell.text else "" for cell in table_rows[0].findall("tei:cell", namespace)]
+
+                # Ensure headers are not empty before processing rows
+                if headers:
+                    table_data = []  # Reset table data for each table
+
+                    # Extract data rows for *this table only*
+                    for row in table_rows[1:]:  # Skip header row
+                        row_data = {}
+                        cells = row.findall("tei:cell", namespace)  # Get only this row's cells
+                        for i, cell in enumerate(cells):
+                            if i < len(headers):  # Ensure index is within bounds
+                                row_data[headers[i]] = cell.text.strip() if cell.text else ""
+                        table_data.append(row_data)
+
+                    # Store table details (ensuring only this table's rows are processed)
+                    processClassifierResponse({
+                        "element_type": 'table',
+                        "page_number": page_number,
+                        "table_data": table_data
+                    })
              
         ## Process XML ##
         images, figures, formulas = openXMLfile(xml_input, pdf_file)
@@ -910,8 +947,17 @@ def main():
                                                 with st.container(height=725, border=True):
                                                     if len(st.session_state.tables_results_array) > 0:
                                                         for table in st.session_state.tables_results_array:  # Use session state variable
+                                                            page_number = table.get("page_number", "Unknown Page")
+                                                            table_data = table.get("table_data", [])
                                                             st.subheader(f"Page {table.get('page_number', 'N/A')}: Table #{table.get('element_number', 'N/A')}")
-                                                            st.dataframe({table.get('table_info')})  # Displays table in interactive format
+                                                            if table_data:
+                                                                # Convert table data to DataFrame
+                                                                df = pd.DataFrame(table_data)
+
+                                                                # Display table
+                                                                st.dataframe(df)
+                                                            else:
+                                                                st.write(f"No data found in table on page {page_number}.")
                                                     else:
                                                         st.warning("No tables detected in PDF file.")
 
