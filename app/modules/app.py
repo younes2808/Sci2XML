@@ -320,9 +320,10 @@ def processClassifierResponse(element):
     elif element['element_type'] == "table":
         st.session_state.tables_results_array.append(element)
         page_number = st.session_state.tables_results_array[-1].get("page_number", "Unknown Page")
+        table_context = st.session_state.tables_results_array[-1].get("table_context", "Unknown Table Context")
         table_data = st.session_state.tables_results_array[-1].get("table_data", [])
 
-        st.subheader(f"Page {page_number}: Table #X")
+        st.subheader(f"Page {page_number}: {table_context}")
         if table_data:
             # Convert table data to DataFrame
             df = pd.DataFrame(table_data)
@@ -545,7 +546,9 @@ def main():
 
         for table in tables:
             # Extract coordinates if available
-            coords = table.attrib.get("coords", None)
+            coordinates_element = table.find("tei:coordinates", namespace)
+            coords = coordinates_element.text.strip() if coordinates_element is not None else None
+
             page_number = None
 
             if coords:
@@ -556,6 +559,9 @@ def main():
                         page_number = int(page)
                 except ValueError as e:
                     print(f"Error parsing table coordinates '{coords}': {e}")
+
+            table_context_element = table.find("tei:context", namespace)
+            table_context = table_context_element.text.strip() if table_context_element is not None else "Untitled Table"
 
             # Extract rows *inside this specific table*
             table_rows = table.findall("tei:row", namespace)
@@ -581,6 +587,7 @@ def main():
                     processClassifierResponse({
                         "element_type": 'table',
                         "page_number": page_number,
+                        "table_context": table_context,
                         "table_data": table_data
                     })
              
@@ -949,7 +956,7 @@ def main():
                                                         for table in st.session_state.tables_results_array:  # Use session state variable
                                                             page_number = table.get("page_number", "Unknown Page")
                                                             table_data = table.get("table_data", [])
-                                                            st.subheader(f"Page {table.get('page_number', 'N/A')}: Table #{table.get('element_number', 'N/A')}")
+                                                            st.subheader(f"Page {table.get('page_number', 'N/A')}: {table.get('table_context', 'N/A')}")
                                                             if table_data:
                                                                 # Convert table data to DataFrame
                                                                 df = pd.DataFrame(table_data)
