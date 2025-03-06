@@ -49,6 +49,6 @@ def startEverything():
   end_time = time.time()  # End the timer
   elapsed_time = end_time - start_time
   minutes, seconds = divmod(elapsed_time, 60)
-  print(f"Total startup time: {int(minutes)} minutes and {seconds:.2f} seconds")
+  print(f"Total startup time: {int(minutes)} minutes and {int(seconds)} seconds")
 
 startEverything()

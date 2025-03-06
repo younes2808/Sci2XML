@@ -385,15 +385,11 @@ def processFormulas(formulas, images, mode):
     print("\n-------- Cropping Formulas ---------")
     formulanr = 0
     for formula in formulas:
-        # print("---")
-
         coords = ""
         try:
             coords = formula.get("coords").split(";")[-1]
-            # print(coords)
         except:
             coords = formula.get("coords")
-            # print(coords)
 
         imgside = images[int(coords.split(",")[0])-1]
 
@@ -524,34 +520,32 @@ def main():
         # Send to API endpoint for processing of tables
         response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
 
-        logging.info(f'response: {response}')
-        logging.info(f'response content: {response.content}')
-        logging.info(f'response text: {response.text}')
+        st.write(f'response: {response}')
+        st.write(f'response content: {response.content}')
+        st.write(f'response text: {response.text}')
         xml_input = response.text
 
-        # Parse the XML string and make it pretty
-        xml_doc = xml.dom.minidom.parseString(xml_input)
-        pretty_xml = xml_doc.toprettyxml()
+        #annotations = []
+
+        # Parse the XML content
+        #namespace = {"tei": "http://www.tei-c.org/ns/1.0"}  # Define the XML namespace
+        #root = ET.fromstring(xml_content)
+
+        # Find all <figure> and <formula> elements in the XML
+        #tables = root.findall(".//tei:table coords", namespace)
+
+        #row
+        #cell
 
         # Parse XML and extract tables
-        root = ET.fromstring(pretty_xml)
-        for table in root.findall(".//table"):
-            page_number = table.get("page")
-            table_number = table.get("table_number")
-            context = table.find("context").text if table.find("context") is not None else ""
-            rows = []
-            for row in table.findall("row"):
-                cells = [cell.text if cell.text is not None else "NAN" for cell in row.findall("cell")]
-                rows.append(" | ".join(cells))
-            table_info = "\n".join(rows)
-
+        """for table in tables:
             processClassifierResponse({
                 "element_type": 'table',
                 "page_number": page_number,
                 "table_number": table_number,
                 "context": context,
                 "table_info": table_info
-            })
+            })"""
              
         ## Process XML ##
         images, figures, formulas = openXMLfile(xml_input, pdf_file)

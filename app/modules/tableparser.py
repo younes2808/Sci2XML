@@ -2,7 +2,6 @@ import xml.etree.ElementTree as ET
 import pdfplumber
 import re
 import logging
-import streamlit as st
 
 # Configure logging to display timestamp and message
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
