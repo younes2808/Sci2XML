@@ -148,16 +148,17 @@ def saveXMLfile(pathToXML):
         file.write(str(Bs_data))
     return Bs_data
 
-def classify(XMLtype, image, elementNr, pagenr, regex):
+def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr):
     """
     Classifies a given element as either a formula, table, chart or figure.
 
     Paramaters:
     XMLtype: the type of element. (figure or formula)
     image: the image to be sent to the VLM model.
-    elementNr: the number of the element.
+    elementNr: the number which Grobid gave this figure. Will be used when putting processed content back into the figure tag.
     pagenr: the page number of the element.
     regex: the formula string to be matched against regex.
+    PDFelementNr: the correct number for the figure, as it is in the PDF. Might not exist because Grobid finds un-numbered figures sometimes.
 
     Returns:
     None
@@ -191,7 +192,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex):
 
           APIresponse = requests.post(apiURL+"parseFormula", files={'image': img_byte_arr})
           APIresponse = APIresponse.json()
-          APIresponse["element_number"] = elementNr
+          APIresponse["element_number"] = PDFelementNr
           APIresponse["page_number"] = pagenr
 
           print("Response from formulaParser: --> ", APIresponse["preferred"])
@@ -236,7 +237,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex):
 
           APIresponse = requests.post(apiURL+"parseChart", files={'image': img_byte_arr})
           APIresponse = APIresponse.json()
-          APIresponse["element_number"] = elementNr
+          APIresponse["element_number"] = PDFelementNr
           APIresponse["page_number"] = pagenr
 
           print("Response from chartParser: --> ", APIresponse["preferred"])
@@ -253,7 +254,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex):
 
           APIresponse = requests.post(apiURL+"parseFigure", files={'image': img_byte_arr})
           APIresponse = APIresponse.json()
-          APIresponse["element_number"] = elementNr
+          APIresponse["element_number"] = PDFelementNr
           APIresponse["page_number"] = pagenr
 
           print("Response from figureParser: --> ", APIresponse["preferred"])
@@ -270,7 +271,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex):
 
         APIresponse = requests.post(apiURL+"parseFormula", files={'image': img_byte_arr})
         APIresponse = APIresponse.json()
-        APIresponse["element_number"] = elementNr
+        APIresponse["element_number"] = PDFelementNr
         APIresponse["page_number"] = pagenr
 
         print("Response from formulaParser: --> ", APIresponse["preferred"])
@@ -345,9 +346,32 @@ def processFigures(figures, images):
     None
     """
     print("\n-------- Cropping Figures --------")
-    figurnr = 0
+    figurnr = 0 # The number which Grobid gave this figure. Will be used when putting processed content back into the figure tag.
     for figure in figures:
-        # print(figure.get("coords"))
+
+        ## Getting figure number ##
+        correctFigureNr = 0 # The correct number for the figure, as it is in the PDF. Might not exist because Grobid finds un-numbered figures sometimes.
+        label = figure.find("label")
+        if label is not None:
+            if (re.sub("\D", "", label.text) != ""):
+                correctFigureNr = int(re.sub("\D", "", label.text))
+            else:
+                # Bad/empty label
+                label = None
+        if label is None:
+            print("NO LABEL")
+            # If no label tag, look for (figurnr) in figure.text
+            compare = re.search(r"\(\d+\)$", figure.text)
+            if compare:
+                print("yay, found figurenr in figuretext using regex")
+                correctFigureNr = int(re.sub("\D", "", compare[0]))
+            else:
+                print("nay, could not find figurenr in label or figuretext, using Grobid's number instead...")
+                # If no match, just use xml:id i guess
+                correctFigureNr = int(re.sub("\D", "", figure.get("xml:id"))) + 1
+        print("----------> FOUND FIGURE NR: ", correctFigureNr)
+
+        ## Getting coords ##
         coords = ""
         try:
             coords = figure.get("coords").split(";")[-1]
@@ -367,6 +391,8 @@ def processFigures(figures, images):
 
         imgFigur = imgside.crop((x*const,y*const,(x+x2)*const,(y+y2)*const))
 
+        print("----------> FOUND PAGE NR: ", int(coords.split(",")[0]))
+
         print("\n ---------- Cropping image/figure nr ", figurnr, ". Sending it to ML for classification. ----------")
 
         ## Saving cropped image to file. Should not be done except for testing.
@@ -375,7 +401,7 @@ def processFigures(figures, images):
 
         ## SENDING TO CLASSIFICATION...
 
-        classify("figure", imgFigur, figurnr, int(coords.split(",")[0])-1, None)
+        classify("figure", imgFigur, figurnr, int(coords.split(",")[0]), None, correctFigureNr)
 
         figurnr+=1
         print("----------")
@@ -393,8 +419,29 @@ def processFormulas(formulas, images, mode):
     None
     """
     print("\n-------- Cropping Formulas ---------")
-    formulanr = 0
+    formulanr = 0 # The number which Grobid gave this formula. Will be used when putting processed content back into the formula tag.
     for formula in formulas:
+
+        ## Getting formula number ##
+        correctFigureNr = 0 # The correct number for the formula, as it is in the PDF. Might not exist because Grobid finds un-numbered formulas sometimes.
+        label = formula.find("label")
+        if label is not None:
+            if (re.sub("\D", "", label.text) != ""):
+                correctFigureNr = int(re.sub("\D", "", label.text))
+            else:
+                label = None
+        if label is None:
+            print("NO LABEL")
+            # If no label tag, look for (formulanr) in formula.text
+            compare = re.search(r"\(\d+\)$", formula.text)
+            if compare:
+                correctFigureNr = int(re.sub("\D", "", compare[0]))
+            else:
+                # If no match, just use xml:id i guess
+                correctFigureNr = int(re.sub("\D", "", formula.get("xml:id"))) + 1
+        print("----------> FOUND FORMULA NR: ", correctFigureNr)
+
+        ## Getting coords ##
         coords = ""
         try:
             coords = formula.get("coords").split(";")[-1]
@@ -412,6 +459,8 @@ def processFormulas(formulas, images, mode):
 
         imgFormula = imgside.crop((x*const,y*const,(x+x2)*const,(y+y2)*const))
 
+        print("----------> FOUND PAGE NR: ", int(coords.split(",")[0]))
+
         print("\n ---------- Cropping image/formula nr ", formulanr, ". Sending it to classifier for classification. ----------")
 
         ## Saving cropped image to file. Should not be done except for testing.
@@ -421,9 +470,9 @@ def processFormulas(formulas, images, mode):
         ## SENDING TO CLASSIFICATION...
 
         if (mode == "VLM"):
-          classify("formula", imgFormula, formulanr, int(coords.split(",")[0])-1, None, "Answer with only one word (Yes OR No), is this a formula?")
+          classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), None, "Answer with only one word (Yes OR No), is this a formula?", correctFigureNr)
         elif (mode == "regex"):
-          classify("formula", imgFormula, formulanr, int(coords.split(",")[0])-1, formula.text)
+          classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), formula.text, correctFigureNr)
 
         formulanr+=1
         print("----------")
