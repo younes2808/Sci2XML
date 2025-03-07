@@ -1,0 +1,28 @@
+--- Results: Moondream-VLM--- 
+
+ Total elements tested: 65
+
+ Elapsed time: 55.54317 sec -> avg per element: 0.85451 sek
+ Total correct: 57 / 65 = 87.69 %
+
+-- Figures --
+ Metric: setting&query: VLM / with one word, classify this as one of these: [just_image, bar_chart, diagram, flow_chart, graph, growth_chart, pie_chart, table, text_sentence]?
+ Metric: time: 55.543171882629395
+ Metric: totalNR: 65
+ Metric: totalCorrect: 57
+ Metric: perTypeCorrectChart: 16/18
+ Metric: perTypeCorrectFigure: 9/13
+ Metric: perTypeCorrectOther: 32/34
+ -> avg time per image: 0.8545103366558369 sec
+ -> percentage correct: 57/65 = 87.6923076923077 %
+
+
+-- List of wrongs: --
+figure5.png ->  bar_chart
+figure6.png ->  just_image
+figure3.png ->  just_image
+chart1.png ->  flow_chart
+chart2.png ->  diagram
+figure1.png ->  just_image
+other14.png ->  diagram
+table14.png ->  bar_chart

@@ -1,0 +1,42 @@
+--- Results: PaliGemma2-VLM--- 
+
+ Total elements tested: 65
+
+ Elapsed time: 86.17693 sec -> avg per element: 1.3258 sek
+ Total correct: 44 / 65 = 67.69 %
+
+-- Figures --
+ Metric: setting&query: VLM / answer no Which of these classes [just_image, bar_chart, diagram, flow_chart, graph, growth_chart, pie_chart, table, text_sentence] could this image be classified as?
+
+ Metric: time: 86.17692852020264
+ Metric: totalNR: 65
+ Metric: totalCorrect: 44
+ Metric: perTypeCorrectChart: 18/18
+ Metric: perTypeCorrectFigure: 5/13
+ Metric: perTypeCorrectOther: 21/34
+ -> avg time per image: 1.3257989003108097 sec
+ -> percentage correct: 44/65 = 67.6923076923077 %
+
+
+-- List of wrongs: --
+figure2.png -> none
+figure5.png -> text_sentence
+figure7.png -> text_sentence
+figure6.png -> none
+figure3.png -> text_sentence
+other1.png -> none
+figure1.png -> just_image
+other5.png -> none
+other4.png -> none
+other9.png -> none
+table9.png -> none
+other11.png -> text
+other7.png -> none
+other8.png -> none
+table10.png -> none
+other13.png -> none
+other14.png -> none
+other16.png -> text
+figure12.png -> text_sentence
+figure10.png -> text_sentence
+other15.png -> none

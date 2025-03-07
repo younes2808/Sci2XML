@@ -1,0 +1,26 @@
+--- Results: InternVLM--- 
+
+ Total elements tested: 65
+
+ Elapsed time: 102.45264 sec -> avg per element: 1.57619 sek
+ Total correct: 59 / 65 = 90.77 %
+
+-- Figures --
+ Metric: setting&query: VLM / with one word, classify this as one of these: [just_image - bar_chart - diagram - flow_chart - graph - growth_chart - pie_chart - table - text_sentence]
+ Metric: time: 102.45263934135437
+ Metric: totalNR: 65
+ Metric: totalCorrect: 59
+ Metric: perTypeCorrectChart: 18/18
+ Metric: perTypeCorrectFigure: 12/13
+ Metric: perTypeCorrectOther: 29/34
+ -> avg time per image: 1.5761944514054518 sec
+ -> percentage correct: 59/65 = 90.76923076923077 %
+
+
+-- List of wrongs: --
+other1.png -> \textbf{just image - bar chart}
+other5.png -> and 6. note that the attentions are very sharp for this word.
+other6.png -> \textbf{at layer 5 of 6.} the heads clearly learned to perform different tasks.
+other4.png -> the word `making'. different colors represent different heads. best viewed in color.
+figure8.png -> flow chart
+other12.png -> \textbf{fig. 3. code snippet for loading data and generating a geomagnetic field model, using both the \textit{inputdata} and \textit{fieldinversion-class}.}

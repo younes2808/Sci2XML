@@ -1,0 +1,25 @@
+--- Results: Bunny-VLM--- 
+
+ Total elements tested: 65
+
+ Elapsed time: 114.84347 sec -> avg per element: 1.76682 sek
+ Total correct: 60 / 65 = 92.31 %
+
+-- Figures --
+ Metric: setting&query: VLM / with one word, classify this as one of these: [just_image - bar_chart - diagram - flow_chart - graph - growth_chart - pie_chart - table - text_sentence]
+ Metric: time: 114.84347438812256
+ Metric: totalNR: 65
+ Metric: totalCorrect: 60
+ Metric: perTypeCorrectChart: 16/18
+ Metric: perTypeCorrectFigure: 11/13
+ Metric: perTypeCorrectOther: 33/34
+ -> avg time per image: 1.7668226828941933 sec
+ -> percentage correct: 60/65 = 92.3076923076923 %
+
+
+-- List of wrongs: --
+figure5.png -> text_sentence
+chart2.png -> flow chart.
+figure1.png -> just image
+chart11.png -> growth chart.
+other17.png -> pie chart.

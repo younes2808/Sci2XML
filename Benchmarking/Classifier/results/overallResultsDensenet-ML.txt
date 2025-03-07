@@ -1,0 +1,28 @@
+--- Results: Densenet-ML--- 
+
+ Total elements tested: 65
+
+ Elapsed time: 61.16215 sec -> avg per element: 0.94096 sek
+ Total correct: 57 / 65 = 87.69 %
+
+-- Figures --
+ Metric: setting&query: ML / just_image - bar_chart - diagram - flow_chart - graph - growth_chart - pie_chart - table
+ Metric: time: 61.16214656829834
+ Metric: totalNR: 65
+ Metric: totalCorrect: 57
+ Metric: perTypeCorrectChart: 16/18
+ Metric: perTypeCorrectFigure: 10/13
+ Metric: perTypeCorrectOther: 31/34
+ -> avg time per image: 0.9409561010507437 sec
+ -> percentage correct: 57/65 = 87.6923076923077 %
+
+
+-- List of wrongs: --
+figure2.png -> graph
+figure5.png -> graph
+other2.png -> graph
+figure6.png -> table
+chart4.png -> diagram
+chart7.png -> table
+other17.png -> pie_chart
+other18.png -> growth_chart
