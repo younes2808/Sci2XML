@@ -69,14 +69,10 @@ def openXMLfile(XMLfile, PDFfile):
 
     print("\n----- Opening XML and PDF file... -------")
 
-    #stringio = StringIO(XMLfile.getvalue().decode("utf-8"), newline=None)
-    #XMLfile = stringio.read()
-
     PDFfile = PDFfile.getvalue()
 
     global Bs_data
     st.session_state.Bs_data = BeautifulSoup(XMLfile, "xml")
-    #Bs_data = BeautifulSoup(data, "xml")
     Bs_data = st.session_state.Bs_data
 
     figures = Bs_data.find_all('figure')
@@ -503,7 +499,7 @@ import xml.etree.ElementTree as ET
 from streamlit_pdf_viewer import pdf_viewer
 from annotated_text import annotated_text, annotation
 from stqdm import stqdm
-import xml.dom.minidom as minidom
+import xml.dom.minidom
 
 # Configure logging to store logs in a file
 logging.basicConfig(
@@ -632,8 +628,17 @@ def main():
         processFigures(figures, images)
         processFormulas(formulas, images, mode="regex")
 
-        # Convert to string with XML declaration
-        st.session_state.interpreted_xml_text = str(st.session_state.Bs_data)
+        # Assuming st.session_state.interpreted_xml_text contains your raw XML string
+        raw_xml = str(st.session_state.Bs_data)
+
+        # Parse the raw XML string into a DOM object
+        xml_doc = xml.dom.minidom.parseString(raw_xml)
+
+        # Convert the DOM object to a pretty-printed string
+        pretty_xml = xml_doc.toprettyxml(indent="  ")
+
+        # Now store the pretty XML back into session state
+        st.session_state.interpreted_xml_text = pretty_xml
 
         logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
 
