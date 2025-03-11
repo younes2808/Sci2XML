@@ -628,7 +628,25 @@ def main():
         processFigures(figures, images)
         processFormulas(formulas, images, mode="regex")
 
-        st.session_state.interpreted_xml_text = str(st.session_state.Bs_data)
+        # Assuming st.session_state.interpreted_xml_text contains your raw XML string
+        raw_xml = str(st.session_state.Bs_data)
+
+        # Parse the raw XML string into a DOM object
+        xml_doc = xml.dom.minidom.parseString(raw_xml)
+
+        # Convert the DOM object to a pretty-printed string with a custom indent
+        pretty_xml = xml_doc.toprettyxml(indent="  ")
+
+        # Remove extra newlines between lines to make the output more compact
+        # Split by lines and join back, while skipping any unnecessary empty lines
+        pretty_xml_lines = pretty_xml.splitlines()
+        cleaned_xml_lines = [line for line in pretty_xml_lines if line.strip()]
+
+        # Join the lines back into a single string
+        final_pretty_xml = "\n".join(cleaned_xml_lines)
+
+        # Store the cleaned, prettified XML back into session state
+        st.session_state.interpreted_xml_text = final_pretty_xml
 
         logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
 
