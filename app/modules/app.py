@@ -868,7 +868,7 @@ def main():
         if st.session_state.show_grobid_results:
         # Layout container to maintain column structure
             with st.container():
-                col1, col2, col3 = st.columns([0.45, 0.1, 0.5])  # Ensures both columns have equal width
+                col1, col2, col3 = st.columns([0.4, 0.1, 0.5])  # Ensures both columns have equal width
 
                 with col1:
                     @st.fragment
