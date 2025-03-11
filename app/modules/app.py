@@ -628,17 +628,7 @@ def main():
         processFigures(figures, images)
         processFormulas(formulas, images, mode="regex")
 
-        # Assuming st.session_state.interpreted_xml_text contains your raw XML string
-        raw_xml = str(st.session_state.Bs_data)
-
-        # Parse the raw XML string into a DOM object
-        xml_doc = xml.dom.minidom.parseString(raw_xml)
-
-        # Convert the DOM object to a pretty-printed string
-        pretty_xml = xml_doc.toprettyxml(indent="  ")
-
-        # Now store the pretty XML back into session state
-        st.session_state.interpreted_xml_text = pretty_xml
+        st.session_state.interpreted_xml_text = str(st.session_state.Bs_data)
 
         logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
 
@@ -873,7 +863,7 @@ def main():
         if st.session_state.show_grobid_results:
         # Layout container to maintain column structure
             with st.container():
-                col1, col2, col3 = st.columns([0.4, 0.1, 0.5])  # Ensures both columns have equal width
+                col1, col2, col3 = st.columns([0.4, 0.1, 0.45])
 
                 with col1:
                     @st.fragment
