@@ -33,7 +33,7 @@ import pandas as pd
 import io
 import re
 
-import modules.classifier as classifier
+import classifier
 
 #import sys
 #sys.stdout = open("classifierlog", "w")

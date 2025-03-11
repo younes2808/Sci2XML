@@ -62,3 +62,25 @@ def startStreamlit():
     file.write("\n")
     file.write(passw)
   print(f"\n\n Public URL: {url} \n Password: {passw}")
+
+def startAPI():
+  """
+  Starts only the API. Then calls on function to start localtunnel.
+
+  Paramaters:
+  None
+
+  Returns:
+  None
+  """
+  print("Starting API")
+  #!streamlit run app.py &>/content/logs.txt &
+  logfile = open("logs.txt", "w")
+  # URL = subprocess.Popen(["streamlit", "run", "Sci2XML/app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True)
+  print("Start localtunnel")
+  url, passw = startLocaltunnel()
+  with open("urlpasslog.txt", "w") as file:
+    file.write(url)
+    file.write("\n")
+    file.write(passw)
+  print(f"\n\n Public URL: {url} \n Password: {passw}")

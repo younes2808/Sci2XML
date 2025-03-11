@@ -40,10 +40,10 @@ def openXMLfile(XMLfile, PDFfile, frontend):
     #stringio = StringIO(XMLfile.getvalue().decode("utf-8"), newline=None)
     #XMLfile = stringio.read()
 
-    PDFfile = PDFfile.getvalue()
 
     global Bs_data
     if (frontend):
+      PDFfile = PDFfile.getvalue()
       st.session_state.Bs_data = BeautifulSoup(XMLfile, "xml")
       #Bs_data = BeautifulSoup(data, "xml")
       Bs_data = st.session_state.Bs_data
@@ -104,6 +104,12 @@ def addToXMLfile(type, name, newContent, frontend):
                 parentTag.contents[parentTag.contents.index(text)].replace_with(newContent["preferred"])
 
     print(parentTag)
+
+def getXML(frontend):
+   if (frontend):
+      return st.session_state.Bs_data
+   else:
+      return Bs_data
 
 def saveXMLfile(pathToXML):
     """
