@@ -865,7 +865,7 @@ def main():
                             st.session_state.count_formulas = 0
                             st.session_state.count_figures = 0
                             result = ""
-                    status.update(label="Complete!", state="complete", expanded=False)
+                    status.update(label="The file was processed successfully by GROBID ✅", state="complete", expanded=False)
 
                 # Initialize the xml_text in session_state if not already set
                 if "xml_text" not in st.session_state or st.session_state.xml_text is None:
