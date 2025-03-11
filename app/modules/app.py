@@ -594,20 +594,7 @@ def main():
         tables = root.findall(".//tei:table", namespace)
 
         for table in tables:
-            # Extract coordinates if available
-            coordinates_element = table.find("tei:coordinates", namespace)
-            coords = coordinates_element.text.strip() if coordinates_element is not None else None
-
-            page_number = None
-
-            if coords:
-                try:
-                    values = list(map(float, coords.split(',')))
-                    if len(values) >= 5:
-                        page, x0, y0, x1, y1 = values[:5]  
-                        page_number = int(page)
-                except ValueError as e:
-                    print(f"Error parsing table coordinates '{coords}': {e}")
+            page_number = int(table.get("page"))
 
             table_context_element = table.find("tei:context", namespace)
             table_context = table_context_element.text.strip() if table_context_element is not None else "Untitled Table"
