@@ -20,6 +20,7 @@ def startEverything():
   print("-> pip installs:")
   n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
   print("-> apt-get installs:")
+  n = subprocess.run(["apt", "update"], stdout=log, stderr=log, text=True)
   n = subprocess.run(["apt-get", "install", "poppler-utils"], stdout=log, stderr=log, text=True)
   n = subprocess.run(["apt-get", "install", "-y", "libvips"], stdout=log, stderr=log, text=True)
   print("-> npm installs:")

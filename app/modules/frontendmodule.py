@@ -41,6 +41,31 @@ def startLocaltunnel(port):
 
   return public_url, passw
 
+def startNgrok(port):
+  """
+  Starts a ngrok instance and returns the public URL and password.
+
+  Paramaters:
+  None
+
+  Returns:
+  tuple: A tuple containing the public URL and password.
+  """
+  from pyngrok import ngrok, conf
+  import getpass
+
+
+  #print("Enter your authtoken, which can be copied from https://dashboard.ngrok.com/get-started/your-authtoken")
+  conf.get_default().auth_token = getpass.getpass()
+
+  #app = Flask(__name__)
+  #port = "8000"
+
+  # Open a ngrok tunnel to the HTTP server
+  public_url = ngrok.connect(port).public_url
+  print(f" * ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:{port}\"")
+  return public_url, "ngrok"
+
 def startStreamlit():
   """
   Starts a Streamlit application. Then calls on function to start localtunnel.
@@ -56,7 +81,7 @@ def startStreamlit():
   logfile = open("logs.txt", "w")
   URL = subprocess.Popen(["streamlit", "run", "Sci2XML/app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True)
   print("Start localtunnel")
-  url, passw = startLocaltunnel(8501)
+  url, passw = startLocaltunnel("8501")
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")
@@ -74,11 +99,11 @@ def startAPI():
   None
   """
   print("Starting API")
-  #!streamlit run app.py &>/content/logs.txt &
   logfile = open("logs.txt", "w")
-  # URL = subprocess.Popen(["streamlit", "run", "Sci2XML/app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True)
-  print("Start localtunnel")
-  url, passw = startLocaltunnel(8000)
+  # print("Start localtunnel")
+  # url, passw = startLocaltunnel("8000")
+  print("Start ngrok")
+  url, passw = startNgrok("8000")
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")
