@@ -17,7 +17,7 @@ from pdf2image.exceptions import (
 from PIL import Image, ImageDraw
 import os
 import re
-from app import processClassifierResponse
+#from app import processClassifierResponse
 
 apiURL = "http://172.28.0.12:8000/"
 
@@ -266,7 +266,13 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
 
     if (frontend):
       ## Adds to arrays:
-      processClassifierResponse(APIresponse)
+      import importlib.util
+      import sys
+      spec = importlib.util.spec_from_file_location("appmodule", "/content/Sci2XML/app/modules/app.py")
+      app = importlib.util.module_from_spec(spec)
+      sys.modules["appmodule"] = app
+      spec.loader.exec_module(app)
+      app.processClassifierResponse(APIresponse)
 
 
 

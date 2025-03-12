@@ -22,7 +22,13 @@ from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcesso
 from io import BytesIO
 
 ## Our own modules ##
-import classifier
+#import classifier
+import importlib.util
+import sys
+spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
+classifier = importlib.util.module_from_spec(spec)
+sys.modules["classifiermodule"] = classifier
+spec.loader.exec_module(classifier)
 # import Sci2XML.app.modules.classifiermodel as classifier
 import modules.classifiermodel as classifierML
 # import Sci2XML.app.modules.chartparser as charter
@@ -32,7 +38,7 @@ import modules.formulaparser as formula
 import modules.figureparser as figure
 import modules.tableparser as tableParser
 
-ML = classifier.loadML()
+ML = classifierML.loadML()
 charter.load_UniChart()
 formula.load_Sumen()
 figureParserModel, figureParserTokenizer = figure.load()

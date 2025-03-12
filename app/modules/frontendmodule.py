@@ -5,7 +5,7 @@ import threading
 import socket
 from flask import Flask, jsonify, make_response, request
 
-def startLocaltunnel():
+def startLocaltunnel(port):
   """
   Starts a localtunnel instance and returns the public URL and password.
 
@@ -21,7 +21,7 @@ def startLocaltunnel():
   passw = res.content.decode('utf8')
 
   #URL = subprocess.run(["npx", "localtunnel", "--port", "8501"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-  URL = subprocess.Popen(["npx", "localtunnel", "--port", "8501"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+  URL = subprocess.Popen(["npx", "localtunnel", "--port", port], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
   #URL = subprocess.Popen(["ls"], stdout=subprocess.PIPE)
   print("URL: ", URL)
   print("URL: ", URL.stdout.readline)
@@ -56,7 +56,7 @@ def startStreamlit():
   logfile = open("logs.txt", "w")
   URL = subprocess.Popen(["streamlit", "run", "Sci2XML/app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True)
   print("Start localtunnel")
-  url, passw = startLocaltunnel()
+  url, passw = startLocaltunnel(8501)
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")
@@ -78,7 +78,7 @@ def startAPI():
   logfile = open("logs.txt", "w")
   # URL = subprocess.Popen(["streamlit", "run", "Sci2XML/app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True)
   print("Start localtunnel")
-  url, passw = startLocaltunnel()
+  url, passw = startLocaltunnel(8000)
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")

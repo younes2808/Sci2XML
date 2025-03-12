@@ -33,7 +33,7 @@ import pandas as pd
 import io
 import re
 
-import classifier
+#import classifier
 
 #import sys
 #sys.stdout = open("classifierlog", "w")
@@ -240,6 +240,12 @@ def main():
                     })
              
         ## Process XML ##
+        import importlib.util
+        import sys
+        spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
+        classifier = importlib.util.module_from_spec(spec)
+        sys.modules["classifiermodule"] = classifier
+        spec.loader.exec_module(classifier)
         images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
         classifier.processFigures(figures, images, frontend=True)
         classifier.processFormulas(formulas, images, mode="regex", frontend=True)
