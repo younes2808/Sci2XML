@@ -257,9 +257,9 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
 
     print("Received response about image nr ", elementNr, ". Will now paste response back into the XML-file.")
     if (XMLtype == "figure"):
-      addToXMLfile(XMLtype, "fig_" + str(elementNr), APIresponse, frontend=True)
+      addToXMLfile(XMLtype, "fig_" + str(elementNr), APIresponse, frontend)
     elif (XMLtype == "formula"):
-      addToXMLfile(XMLtype, "formula_" + str(elementNr), APIresponse, frontend=True)
+      addToXMLfile(XMLtype, "formula_" + str(elementNr), APIresponse, frontend)
 
     ## This writes directly to screen. Is used for testing, should only be added to array instead.
     #st.write(f"Received response about {XMLtype}. It was a {subtype}. APIresponse: {APIresponse}")
@@ -343,7 +343,7 @@ def processFigures(figures, images, frontend):
 
         ## SENDING TO CLASSIFICATION...
 
-        classify("figure", imgFigur, figurnr, int(coords.split(",")[0]), None, correctFigureNr, frontend=True)
+        classify("figure", imgFigur, figurnr, int(coords.split(",")[0]), None, correctFigureNr, frontend)
 
         figurnr+=1
         print("----------")
@@ -414,7 +414,7 @@ def processFormulas(formulas, images, mode, frontend):
         if (mode == "VLM"):
           classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), None, "Answer with only one word (Yes OR No), is this a formula?", correctFigureNr)
         elif (mode == "regex"):
-          classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), formula.text, correctFigureNr, frontend=True)
+          classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), formula.text, correctFigureNr, frontend)
 
         formulanr+=1
         print("----------")
