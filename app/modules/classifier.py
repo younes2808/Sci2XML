@@ -95,13 +95,17 @@ def addToXMLfile(type, name, newContent, frontend):
 
     if (len(textWithoutTag) == 0):
         print("Probably a figure...")
-        parentTag.append(newContent["preferred"])
+        newTag = Bs_data.new_tag(newContent["tag"])
+        parentTag.append(newTag)
+        newTag.string = newContent["preferred"]
     else:
         print("Probably a formula...")
         for text in textWithoutTag:
             if (text in parentTag.contents):
                 # print(parentTag.contents.index(text))
-                parentTag.contents[parentTag.contents.index(text)].replace_with(newContent["preferred"])
+                newTag = Bs_data.new_tag(newContent["tag"])
+                parentTag.contents[parentTag.contents.index(text)].replace_with(newTag)
+                newTag.string = newContent["preferred"]
 
     print(parentTag)
 
@@ -171,6 +175,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
           APIresponse = APIresponse.json()
           APIresponse["element_number"] = PDFelementNr
           APIresponse["page_number"] = pagenr
+          APIresponse["tag"] = "latex"
 
           print("Response from formulaParser: --> ", APIresponse["preferred"])
       else:
@@ -215,6 +220,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
           APIresponse = APIresponse.json()
           APIresponse["element_number"] = PDFelementNr
           APIresponse["page_number"] = pagenr
+          APIresponse["tag"] = "tabledata"
 
           print("Response from chartParser: --> ", APIresponse["preferred"])
 
@@ -231,6 +237,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
           APIresponse = APIresponse.json()
           APIresponse["element_number"] = PDFelementNr
           APIresponse["page_number"] = pagenr
+          APIresponse["tag"] = "llmgenerated"
 
           print("Response from figureParser: --> ", APIresponse["preferred"])
 
@@ -247,6 +254,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
         APIresponse = APIresponse.json()
         APIresponse["element_number"] = PDFelementNr
         APIresponse["page_number"] = pagenr
+        APIresponse["tag"] = "latex"
 
         print("Response from formulaParser: --> ", APIresponse["preferred"])
 
