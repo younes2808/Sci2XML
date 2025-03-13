@@ -124,7 +124,7 @@ import xml.etree.ElementTree as ET
 from streamlit_pdf_viewer import pdf_viewer
 from annotated_text import annotated_text, annotation
 from stqdm import stqdm
-import xml.dom.minidom as minidom
+import xml.dom.minidom
 
 # Configure logging to store logs in a file
 logging.basicConfig(
@@ -250,8 +250,25 @@ def main():
         classifier.processFigures(figures, images, frontend=True)
         classifier.processFormulas(formulas, images, mode="regex", frontend=True)
 
-        # Convert to string with XML declaration
-        st.session_state.interpreted_xml_text = str(st.session_state.Bs_data)
+        # Assuming st.session_state.interpreted_xml_text contains your raw XML string
+        raw_xml = str(st.session_state.Bs_data)
+
+        # Parse the raw XML string into a DOM object
+        xml_doc = xml.dom.minidom.parseString(raw_xml)
+
+        # Convert the DOM object to a pretty-printed string with a custom indent
+        pretty_xml = xml_doc.toprettyxml(indent="  ")
+
+        # Remove extra newlines between lines to make the output more compact
+        # Split by lines and join back, while skipping any unnecessary empty lines
+        pretty_xml_lines = pretty_xml.splitlines()
+        cleaned_xml_lines = [line for line in pretty_xml_lines if line.strip()]
+
+        # Join the lines back into a single string
+        final_pretty_xml = "\n".join(cleaned_xml_lines)
+
+        # Store the cleaned, prettified XML back into session state
+        st.session_state.interpreted_xml_text = final_pretty_xml
 
         logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
 
@@ -470,7 +487,7 @@ def main():
                             st.session_state.count_formulas = 0
                             st.session_state.count_figures = 0
                             result = ""
-                    status.update(label="Complete!", state="complete", expanded=False)
+                    status.update(label="The file was processed successfully by GROBID ✅", state="complete", expanded=False)
 
                 # Initialize the xml_text in session_state if not already set
                 if "xml_text" not in st.session_state or st.session_state.xml_text is None:
@@ -486,7 +503,7 @@ def main():
         if st.session_state.show_grobid_results:
         # Layout container to maintain column structure
             with st.container():
-                col1, col2, col3 = st.columns([0.4, 0.1, 0.5])  # Ensures both columns have equal width
+                col1, col2, col3 = st.columns([0.4, 0.15, 0.45])
 
                 with col1:
                     @st.fragment

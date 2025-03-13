@@ -80,8 +80,13 @@ def startStreamlit():
   #!streamlit run app.py &>/content/logs.txt &
   logfile = open("logs.txt", "w")
   URL = subprocess.Popen(["streamlit", "run", "Sci2XML/app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True)
-  print("Start localtunnel")
-  url, passw = startLocaltunnel("8501")
+
+  ## Launch Localtunnel ##
+  # print("Start localtunnel")
+  # url, passw = startLocaltunnel("8501")
+  ## Launch Ngrok ##
+  print("Start ngrok")
+  url, passw = startNgrok("8501")
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")
@@ -104,6 +109,7 @@ def startAPI():
   # url, passw = startLocaltunnel("8000")
   print("Start ngrok")
   url, passw = startNgrok("8000")
+
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")
