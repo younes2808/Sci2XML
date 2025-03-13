@@ -22,8 +22,15 @@ from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcesso
 from io import BytesIO
 
 ## Our own modules ##
+#import classifier
+import importlib.util
+import sys
+spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
+classifier = importlib.util.module_from_spec(spec)
+sys.modules["classifiermodule"] = classifier
+spec.loader.exec_module(classifier)
 # import Sci2XML.app.modules.classifiermodel as classifier
-import modules.classifiermodel as classifier
+import modules.classifiermodel as classifierML
 # import Sci2XML.app.modules.chartparser as charter
 import modules.chartparser as charter
 # import Sci2XML.app.modules.formulaparser as formula
@@ -31,7 +38,7 @@ import modules.formulaparser as formula
 import modules.figureparser as figure
 import modules.tableparser as tableParser
 
-ML = classifier.loadML()
+ML = classifierML.loadML()
 charter.load_UniChart()
 formula.load_Sumen()
 figureParserModel, figureParserTokenizer = figure.load()
@@ -350,10 +357,75 @@ def API():
       image = Image.open(image)
 
       ## PROCESS IMAGE
-      response = classifier.callML(ML, image)
+      response = classifierML.callML(ML, image)
       #response = "VLMresponse"
 
       return jsonify({'ClassifierResponse':response})
+  
+  @app.route('/process', methods=['POST'])
+  def initiate_processing():
+      print("-- You have reached API Endpoint for full processing --")
+
+      ## Opening files: ##
+      """
+      #  XML file:
+      file = request.files['xmlfile']
+
+      stringio = StringIO(file.getvalue().decode("utf-8"), newline=None)
+      #with open("testXML.txt", "a") as file:
+          #file.write(stringio)
+      string_data_XML = stringio.read()
+
+      print("\n----- Saving XML file... -----")
+      with open("TESTING_temp_xmlfile.grobid.tei.xml", "w", encoding="utf-8") as file:
+          file.write(string_data_XML)
+      """
+      #  PDF file:
+      file = request.files['pdffile']
+      byte_data_PDF = file.read()
+
+      print("\n----- Saving PDF file... -----")
+      with open("TESTING_temp_pdffile.pdf", "wb") as file:
+          file.write(byte_data_PDF)
+
+      ## Calling Grobid ##
+      print("-- Calling Grobid --")
+      grobid_url="http://172.28.0.12:8070/api/processFulltextDocument"
+      files = {'input': byte_data_PDF}
+      params = {
+                    "consolidateHeader": 1,
+                    "consolidateCitations": 1,
+                    "consolidateFunders": 1,
+                    "includeRawAffiliations": 1,
+                    "includeRawCitations": 1,
+                    "segmentSentences": 1,
+                    "teiCoordinates": ["ref", "s", "biblStruct", "persName", "figure", "formula", "head", "note", "title", "affiliation"]
+                }
+      response = requests.post(grobid_url, files=files, data=params)  # Use 'data' for form-data
+      response.raise_for_status()  # Raise exception if status is not 200
+      string_data_XML = response.text
+
+      ## Table Parser ##
+      print("-- Table Parser --")
+      ### Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
+      # Ready the files
+      files = {"grobid_xml": ("xmlfile.xml", string_data_XML, "application/json"), "pdf": ("pdffile.pdf", byte_data_PDF)}
+
+      # Send to API endpoint for processing of tables
+      response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
+      print("response", response)
+      string_data_XML = response.text
+
+      ##  Starting classifier ##
+      print("-- Starting Classifier --")
+      images, figures, formulas = classifier.openXMLfile(string_data_XML, byte_data_PDF, frontend=False)
+      classifier.processFigures(figures, images, frontend=False)
+      classifier.processFormulas(formulas, images, mode="regex", frontend=False)
+      # alteredXML = main(string_data_XML, byte_data_PDF)
+      #alteredXML = "alteredXML"
+
+      return str(classifier.getXML(frontend=False))
+      #   return str(alteredXML)
 
   @app.route("/test2")
   def test2(): # NOT IN USE
@@ -363,8 +435,8 @@ def API():
       from PIL import Image
       image_path = "chart3.png"  # Replace with the path to your image
       image = Image.open(image_path)
-      import modules.classifiermodel as classifier
-      predicted_class_name = classifier.callML(ML, image)
+      import modules.classifiermodel as classifierML
+      predicted_class_name = classifierML.callML(ML, image)
 
       print(f"Predicted class: {predicted_class_name}")
       return "API endpoint: Loading VLM..."+str(g) + str(predicted_class_name)

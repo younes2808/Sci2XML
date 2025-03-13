@@ -5,7 +5,7 @@ import threading
 import socket
 from flask import Flask, jsonify, make_response, request
 
-def startLocaltunnel():
+def startLocaltunnel(port):
   """
   Starts a localtunnel instance and returns the public URL and password.
 
@@ -21,7 +21,7 @@ def startLocaltunnel():
   passw = res.content.decode('utf8')
 
   #URL = subprocess.run(["npx", "localtunnel", "--port", "8501"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-  URL = subprocess.Popen(["npx", "localtunnel", "--port", "8501"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+  URL = subprocess.Popen(["npx", "localtunnel", "--port", port], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
   #URL = subprocess.Popen(["ls"], stdout=subprocess.PIPE)
   print("URL: ", URL)
   print("URL: ", URL.stdout.readline)
@@ -83,11 +83,33 @@ def startStreamlit():
 
   ## Launch Localtunnel ##
   # print("Start localtunnel")
-  # url, passw = startLocaltunnel()
+  # url, passw = startLocaltunnel("8501")
   ## Launch Ngrok ##
   print("Start ngrok")
   url, passw = startNgrok("8501")
-  
+  with open("urlpasslog.txt", "w") as file:
+    file.write(url)
+    file.write("\n")
+    file.write(passw)
+  print(f"\n\n Public URL: {url} \n Password: {passw}")
+
+def startAPI():
+  """
+  Starts only the API. Then calls on function to start localtunnel.
+
+  Paramaters:
+  None
+
+  Returns:
+  None
+  """
+  print("Starting API")
+  logfile = open("logs.txt", "w")
+  # print("Start localtunnel")
+  # url, passw = startLocaltunnel("8000")
+  print("Start ngrok")
+  url, passw = startNgrok("8000")
+
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")
