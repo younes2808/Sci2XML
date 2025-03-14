@@ -37,7 +37,7 @@ def extract_tables_from_pdf(pdf_path, max_margin=50):
                         # Create an XML element for the table with page and table number attributes
                         table_node = ET.SubElement(root, "table", {
                             "page": str(page_number),
-                            "table_number": str(table_index)
+                            "table_number": str(table_count)
                         })
 
                         # Retrieve the bounding box for the table if available
