@@ -27,23 +27,17 @@ def startEverything():
   n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
 
   ## Launch API ##
-  #API()
-  # import Sci2XML.app.modules.APIcode as API
   print("# Launching API... #")
   import modules.APIcode as API
   API.API()
 
   ## Load Grobid and launch Grobid server ##
-  #loadGrobid()
   print("# Launching Grobid... #")
-  # import Sci2XML.app.modules.grobidmodule as grobidmod
   import modules.grobidmodule as grobidmod
   grobidmod.loadGrobidPythonway()
 
   ## Start Streamlit and host using Localtunnel ##
-  #startStreamlit()
   print("# Starting Streamlit through Localtunnel... #")
-  # import Sci2XML.app.modules.frontendmodule as front
   import modules.frontendmodule as front
   front.startStreamlit()
 

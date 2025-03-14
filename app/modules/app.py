@@ -112,7 +112,7 @@ def main():
         logging.error(f"Failed to set Streamlit page configuration: {e}", exc_info=True)
 
     try:
-        css_path = os.path.join("Sci2XML/app/modules", "css.html")
+        css_path = os.path.join("app/modules", "css.html")
         with open(css_path, "r") as f:
             css_content = f.read()
         logging.info(f"CSS file '{css_path}' read successfully.")
@@ -389,7 +389,7 @@ def main():
             logging.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area: {e}", exc_info=True)
 
     # Title and logo on the page
-    st.image("Sci2XML/app/images/Sci2XML_logo.png")
+    st.image("app/images/Sci2XML_logo.png")
 
     # Declare variable
     if 'pdf_ref' not in st.session_state:

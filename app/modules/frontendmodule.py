@@ -1,8 +1,6 @@
 import subprocess
 import requests
 import re
-import threading
-import socket
 from flask import Flask, jsonify, make_response, request
 
 def startLocaltunnel(port):
@@ -37,7 +35,6 @@ def startLocaltunnel(port):
       public_url = "URL NOT FOUND"
       break
   print("done")
-  #print(URL.stdout.read())
 
   return public_url, passw
 
@@ -54,11 +51,7 @@ def startNgrok(port):
   from pyngrok import ngrok, conf
   import getpass
 
-  #print("Enter your authtoken, which can be copied from https://dashboard.ngrok.com/get-started/your-authtoken")
   conf.get_default().auth_token = getpass.getpass()
-
-  #app = Flask(__name__)
-  #port = "8000"
 
   # Open a ngrok tunnel to the HTTP server
   public_url = ngrok.connect(port).public_url
@@ -76,13 +69,10 @@ def startStreamlit():
   None
   """
   print("Starting Streamlit")
-  #!streamlit run app.py &>/content/logs.txt &
   logfile = open("logs.txt", "w")
   URL = subprocess.Popen(["streamlit", "run", "app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML")
 
   ## Launch Localtunnel ##
-  # print("Start localtunnel")
-  # url, passw = startLocaltunnel("8501")
   ## Launch Ngrok ##
   print("Start ngrok")
   url, passw = startNgrok("8501")
@@ -104,8 +94,6 @@ def startAPI():
   """
   print("Starting API")
   logfile = open("logs.txt", "w")
-  # print("Start localtunnel")
-  # url, passw = startLocaltunnel("8000")
   print("Start ngrok")
   url, passw = startNgrok("8000")
 
