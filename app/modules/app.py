@@ -214,6 +214,12 @@ def main():
         # Assuming st.session_state.interpreted_xml_text contains your raw XML string
         raw_xml = str(st.session_state.Bs_data)
 
+        # Extract the version and encoding from the XML declaration using a regex
+        version_match = re.search(r'xml version="([^"]+)"', raw_xml)
+        version = version_match.group(1) if version_match else '?'  # Default to ?
+        encoding_match = re.search(r'encoding="([^"]+)"', raw_xml)
+        encoding = encoding_match.group(1) if encoding_match else '?'  # Default to ?
+
         # Parse the raw XML string into a DOM object
         xml_doc = xml.dom.minidom.parseString(raw_xml)
 
@@ -228,8 +234,13 @@ def main():
         # Join the lines back into a single string
         final_pretty_xml = "\n".join(cleaned_xml_lines)
 
+        final_pretty_xml = re.sub(r'<\?xml version="1.0" \?>', '', final_pretty_xml)
+
+        # Add the XML declaration with the correct encoding at the beginning
+        final_xml_with_encoding = f'<?xml version="{version}" encoding="{encoding}"?>{final_pretty_xml}'
+
         # Store the cleaned, prettified XML back into session state
-        st.session_state.interpreted_xml_text = final_pretty_xml
+        st.session_state.interpreted_xml_text = final_xml_with_encoding
 
         logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
 

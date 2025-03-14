@@ -54,7 +54,6 @@ def startNgrok(port):
   from pyngrok import ngrok, conf
   import getpass
 
-
   #print("Enter your authtoken, which can be copied from https://dashboard.ngrok.com/get-started/your-authtoken")
   conf.get_default().auth_token = getpass.getpass()
 
@@ -79,7 +78,7 @@ def startStreamlit():
   print("Starting Streamlit")
   #!streamlit run app.py &>/content/logs.txt &
   logfile = open("logs.txt", "w")
-  URL = subprocess.Popen(["streamlit", "run", "Sci2XML/app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True)
+  URL = subprocess.Popen(["streamlit", "run", "Sci2XML/app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML/")
 
   ## Launch Localtunnel ##
   # print("Start localtunnel")
