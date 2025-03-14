@@ -1,21 +1,18 @@
 print("Starting Streamlit app...")
 
 import streamlit as st
-import requests, json
-from PIL import Image
-import io
-from io import StringIO
-import time
-import xml.etree.ElementTree as ET
-
-#import sys
-#sys.stdout = open("streamlitlog", "w")
-
-##### CLASSIFIER ######
-# Load modules:
-
+import requests
+import os
 import pandas as pd
-from bs4 import BeautifulSoup
+import re
+import xml.etree.ElementTree as ET
+import xml.dom.minidom
+import streamlit as st
+import logging
+import sys
+import importlib.util
+from streamlit_pdf_viewer import pdf_viewer
+from annotated_text import annotated_text, annotation
 
 from pdf2image import convert_from_path, convert_from_bytes
 from pdf2image.exceptions import (
@@ -23,21 +20,6 @@ from pdf2image.exceptions import (
     PDFPageCountError,
     PDFSyntaxError
 )
-
-from PIL import Image, ImageDraw
-import os
-import json
-import time
-import requests
-import pandas as pd
-import io
-import re
-
-#import classifier
-
-#import sys
-#sys.stdout = open("classifierlog", "w")
-
 
 def clean_latex(latex_str):
     """
@@ -53,7 +35,6 @@ def clean_latex(latex_str):
     latex_str = re.sub(r"\\eqno.*", "", latex_str)
 
     return latex_str.strip()  # Trim any extra spaces
-
 
 def processClassifierResponse(element):
     """
@@ -96,8 +77,6 @@ def processClassifierResponse(element):
         else:
             st.write(f"No data found in table on page {page_number}.")
 
-
-
 #----------------------- ##### FRONTEND ##### -----------------------#
 
 #"""
@@ -111,20 +90,6 @@ def processClassifierResponse(element):
 #    - annotated_text: For highlighting elements like figures and formulas.
 #    - streamlit_pdf_viewer: For displaying annotated PDFs.
 #"""
-
-import streamlit as st
-import logging
-import os
-import re
-import math
-import sys
-import time
-import requests
-import xml.etree.ElementTree as ET
-from streamlit_pdf_viewer import pdf_viewer
-from annotated_text import annotated_text, annotation
-from stqdm import stqdm
-import xml.dom.minidom
 
 # Configure logging to store logs in a file
 logging.basicConfig(
@@ -166,8 +131,6 @@ def main():
     def process_classifier(xml_input, pdf_file):
         logging.info(f"XML received in classifier:\n{xml_input}")
         logging.info(f"PDF received in classifier:\n{pdf_file}")
-
-        
 
         if "elements" not in st.session_state or len(st.session_state.elements) != 0:
             st.session_state.elements = []
@@ -240,8 +203,6 @@ def main():
                     })
              
         ## Process XML ##
-        import importlib.util
-        import sys
         spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
         classifier = importlib.util.module_from_spec(spec)
         sys.modules["classifiermodule"] = classifier
@@ -503,7 +464,7 @@ def main():
         if st.session_state.show_grobid_results:
         # Layout container to maintain column structure
             with st.container():
-                col1, col2, col3 = st.columns([0.4, 0.15, 0.45])
+                col1, col2, col3 = st.columns([0.45, 0.1, 0.45])
 
                 with col1:
                     @st.fragment
@@ -520,7 +481,7 @@ def main():
 
                         # PDF View with annotations
                         if st.session_state.grobid_results_view_option == "PDF 📄":
-                            pdf_viewer(input=st.session_state.pdf_ref.getvalue(), height=725, annotations=st.session_state.rectangles, render_text=True, annotation_outline_size=2)
+                            pdf_viewer(input=st.session_state.pdf_ref.getvalue(), height=775, annotations=st.session_state.rectangles, render_text=True, annotation_outline_size=2)
                             if st.session_state.count_formulas > 0 and st.session_state.count_figures > 0:
                                 annotated_text(
                                     annotation("Formulas", "", background="#0000FF", color="#FFFFFF"), " ",
@@ -541,7 +502,7 @@ def main():
                             st.text_area(
                                 "Edit GROBID XML File",
                                 value=st.session_state.xml_text,  # Initial content from session state
-                                height=725,
+                                height=775,
                                 key="xml_editor",  # Key for the text area
                                 on_change=update_xml,  # Update xml_text when changes are made
                                 label_visibility="collapsed" # Hide the label properly
@@ -570,7 +531,7 @@ def main():
                                 # Create a placeholder for the container
                                 container_placeholder = st.empty()
 
-                                with container_placeholder.container(height=725, border=True):
+                                with container_placeholder.container(height=775, border=True):
                                     process_classifier(st.session_state.xml_text, st.session_state.pdf_ref)  # Use PDF file and updated XML file from session state
 
                                 container_placeholder.empty()
@@ -588,14 +549,14 @@ def main():
                                                 st.text_area(
                                                     "Edit Interpreted XML File",
                                                     value=st.session_state.interpreted_xml_text,  # Initial content from session state
-                                                    height=725,
+                                                    height=775,
                                                     key="interpreted_xml_editor",  # Key for the text area
                                                     on_change=update_interpreted_xml,  # Update xml_text when changes are made
                                                     label_visibility="collapsed" # Hide the label properly
                                                 )
 
                                             elif st.session_state.interpretation_results_view_option == "Formulas 🔢":
-                                                with st.container(height=725, border=True):
+                                                with st.container(height=775, border=True):
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
                                                             st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}")
@@ -604,7 +565,7 @@ def main():
                                                         st.warning("No formulas detected in PDF file.")
 
                                             elif st.session_state.interpretation_results_view_option == "Figures 🖼️":
-                                                with st.container(height=725, border=True):
+                                                with st.container(height=775, border=True):
                                                     if len(st.session_state.figures_results_array) > 0:
                                                         for figure in st.session_state.figures_results_array:  # Use session state variable
                                                             st.subheader(f"Page {figure.get('page_number', 'N/A')}: Figure #{figure.get('element_number', 'N/A')}")
@@ -613,7 +574,7 @@ def main():
                                                         st.warning("No figures detected in PDF file.")
 
                                             elif st.session_state.interpretation_results_view_option == "Charts 📊":
-                                                with st.container(height=725, border=True):
+                                                with st.container(height=775, border=True):
                                                     if len(st.session_state.charts_results_array) > 0:
                                                         for chart in st.session_state.charts_results_array:  # Use session state variable
                                                             st.subheader(f"Page {chart.get('page_number', 'N/A')}: Chart #{chart.get('element_number', 'N/A')}")
@@ -622,7 +583,7 @@ def main():
                                                         st.warning("No charts detected in PDF file.")
 
                                             elif st.session_state.interpretation_results_view_option == "Tables 📋":
-                                                with st.container(height=725, border=True):
+                                                with st.container(height=775, border=True):
                                                     if len(st.session_state.tables_results_array) > 0:
                                                         for table in st.session_state.tables_results_array:  # Use session state variable
                                                             page_number = table.get("page_number", "Unknown Page")
