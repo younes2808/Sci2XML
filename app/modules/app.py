@@ -218,7 +218,7 @@ def main():
         xml_doc = xml.dom.minidom.parseString(raw_xml)
 
         # Convert the DOM object to a pretty-printed string with a custom indent
-        pretty_xml = xml_doc.toprettyxml(indent="  ")
+        pretty_xml = xml_doc.toprettyxml(indent="	")
 
         # Remove extra newlines between lines to make the output more compact
         # Split by lines and join back, while skipping any unnecessary empty lines
