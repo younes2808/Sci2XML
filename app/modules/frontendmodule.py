@@ -78,7 +78,7 @@ def startStreamlit():
   print("Starting Streamlit")
   #!streamlit run app.py &>/content/logs.txt &
   logfile = open("logs.txt", "w")
-  URL = subprocess.Popen(["streamlit", "run", "Sci2XML/app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML/")
+  URL = subprocess.Popen(["streamlit", "run", "app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML")
 
   ## Launch Localtunnel ##
   # print("Start localtunnel")
