@@ -318,7 +318,10 @@ def processFigures(figures, images, frontend):
             else:
                 print("nay, could not find figurenr in label or figuretext, using Grobid's number instead...")
                 # If no match, just use xml:id i guess
-                correctFigureNr = int(re.sub("\D", "", figure.get("xml:id"))) + 1
+                if (figure.get("xml:id") != None):
+                    correctFigureNr = int(re.sub("\D", "", figure.get("xml:id"))) + 1
+                else:
+                   correctFigureNr = figurnr + 1
         print("----------> FOUND FIGURE NR: ", correctFigureNr)
 
         ## Getting coords ##
