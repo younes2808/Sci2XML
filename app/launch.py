@@ -43,13 +43,14 @@ def startEverything():
   import modules.grobidmodule as grobidmod
   grobidmod.loadGrobidPythonway()
 
+  end_time = time.time()  # End the timer
+  elapsed_time = end_time - start_time
+
   ## Start Streamlit and host using Localtunnel ##
   print("# Starting Streamlit through Localtunnel... #")
   import modules.frontendmodule as front
   front.startStreamlit(args.tunnel, args.port)
 
-  end_time = time.time()  # End the timer
-  elapsed_time = end_time - start_time
   minutes, seconds = divmod(elapsed_time, 60)
   print(f"Total startup time: {int(minutes)} minutes and {int(seconds)} seconds")
 

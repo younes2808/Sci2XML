@@ -251,7 +251,7 @@ def main():
 
             logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
 
-            st.session_state.progress_bar.progress(percent_complete + 100, text="Non-Textual Elements were interpreted successfully ✅")
+            st.session_state.progress_bar.progress(percent_complete + 100, text="Non-textual elements were interpreted successfully ✅")
         time.sleep(4)
         st.session_state.progress_bar.empty()
 
@@ -461,7 +461,7 @@ def main():
                 st.session_state.grobid_progress_container = st.empty()
                 with st.session_state.grobid_progress_container:
                     # Process file as soon as it's uploaded
-                    with st.status(label="Waiting for GROBID to process the file... 🔄", expanded=False, state="running") as status:
+                    with st.status(label="Waiting for GROBID to process the PDF file... 🔄", expanded=False, state="running") as status:
                         result = process_pdf(st.session_state.pdf_ref, params=params)
 
                         if result is not None and result.startswith("Error when processing file"):
@@ -474,7 +474,7 @@ def main():
                                 st.session_state.count_formulas = 0
                                 st.session_state.count_figures = 0
                                 result = ""
-                        status.update(label="The file was processed successfully by GROBID ✅", state="complete", expanded=False)
+                        status.update(label="The PDF file was processed successfully by GROBID ✅", state="complete", expanded=False)
 
                 # Initialize the xml_text in session_state if not already set
                 if "xml_text" not in st.session_state or st.session_state.xml_text is None:
@@ -536,7 +536,6 @@ def main():
 
                     grobid_results_view()
 
-                    time.sleep(4)
                     st.session_state.grobid_progress_container.empty()
 
                     @st.fragment
