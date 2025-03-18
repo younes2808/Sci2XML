@@ -15,13 +15,6 @@ import importlib.util
 from streamlit_pdf_viewer import pdf_viewer
 from annotated_text import annotated_text, annotation
 
-from pdf2image import convert_from_path, convert_from_bytes
-from pdf2image.exceptions import (
-    PDFInfoNotInstalledError,
-    PDFPageCountError,
-    PDFSyntaxError
-)
-
 def clean_latex(latex_str):
     """
     Removes everything after (and including) \hskip or \tag.

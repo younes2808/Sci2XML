@@ -1,7 +1,7 @@
 import torch
+import re
 from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcessor
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-import re
 
 def load_UniChart():
   """
@@ -21,7 +21,6 @@ def load_UniChart():
   unichart_processor = DonutProcessor.from_pretrained("ahmed-masry/unichart-base-960")
   print("UniChart model loaded successfully!")
   return unichart_model, unichart_processor
-
 
 def is_hallucinated(response):
     """
@@ -99,7 +98,6 @@ def generate_unichart_response(image, prompt):
         return "Unreliable response"
     
     return response
-
 
 def parse_table_data(table_data):
     """
