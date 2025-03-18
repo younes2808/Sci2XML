@@ -1,12 +1,10 @@
 import requests, json
-from PIL import Image
 import io
-from io import StringIO
+import re
 import streamlit as st
-
 import pandas as pd
 from bs4 import BeautifulSoup
-
+from PIL import Image, ImageDraw
 from pdf2image import convert_from_path, convert_from_bytes
 from pdf2image.exceptions import (
     PDFInfoNotInstalledError,
@@ -14,9 +12,6 @@ from pdf2image.exceptions import (
     PDFSyntaxError
 )
 
-from PIL import Image, ImageDraw
-import os
-import re
 #from app import processClassifierResponse
 
 apiURL = "http://172.28.0.12:8000/"

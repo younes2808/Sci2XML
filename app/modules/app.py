@@ -10,6 +10,7 @@ import xml.dom.minidom
 import streamlit as st
 import logging
 import sys
+import time
 import importlib.util
 from streamlit_pdf_viewer import pdf_viewer
 from annotated_text import annotated_text, annotation
@@ -143,106 +144,116 @@ def main():
         if "tables_results_array" not in st.session_state or len(st.session_state.tables_results_array) != 0:
             st.session_state.tables_results_array = []
 
-        ## Table Parser ##
-        ### Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
-        logging.info("Initiating table parser")
-        # Ready the files
-        files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
+        for percent_complete in range(1):
+            ## Table Parser ##
+            ### Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
+            logging.info("Initiating table parser")
+            # Ready the files
+            files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
 
-        # Send to API endpoint for processing of tables
-        response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
+            # Send to API endpoint for processing of tables
+            response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
 
-        logging.info(f'response: {response}')
-        logging.info(f'response content: {response.content}')
-        logging.info(f'response text: {response.text}')
-        xml_input = response.text
+            logging.info(f'response: {response}')
+            logging.info(f'response content: {response.content}')
+            logging.info(f'response text: {response.text}')
+            xml_input = response.text
 
-        # Define the XML namespace
-        namespace = {"tei": "http://www.tei-c.org/ns/1.0"}
+            # Define the XML namespace
+            namespace = {"tei": "http://www.tei-c.org/ns/1.0"}
 
-        # Parse XML
-        root = ET.fromstring(xml_input)
+            # Parse XML
+            root = ET.fromstring(xml_input)
 
-        # Find all <table> elements
-        tables = root.findall(".//tei:table", namespace)
+            # Find all <table> elements
+            tables = root.findall(".//tei:table", namespace)
 
-        for table in tables:
-            page_number = int(table.get("page"))
-            table_number = int(table.get("table_number"))
+            for table in tables:
+                page_number = int(table.get("page"))
+                table_number = int(table.get("table_number"))
 
-            table_context_element = table.find("tei:context", namespace)
-            table_context = table_context_element.text.strip() if table_context_element is not None else "Untitled Table"
+                table_context_element = table.find("tei:context", namespace)
+                table_context = table_context_element.text.strip() if table_context_element is not None else "Untitled Table"
 
-            # Extract rows *inside this specific table*
-            table_rows = table.findall("tei:row", namespace)
+                # Extract rows *inside this specific table*
+                table_rows = table.findall("tei:row", namespace)
 
-            if table_rows:
-                # Extract headers from the first row of *this table*
-                headers = [cell.text.strip() if cell.text else "" for cell in table_rows[0].findall("tei:cell", namespace)]
+                if table_rows:
+                    # Extract headers from the first row of *this table*
+                    headers = [cell.text.strip() if cell.text else "" for cell in table_rows[0].findall("tei:cell", namespace)]
 
-                # Ensure headers are not empty before processing rows
-                if headers:
-                    table_data = []  # Reset table data for each table
+                    # Ensure headers are not empty before processing rows
+                    if headers:
+                        table_data = []  # Reset table data for each table
 
-                    # Extract data rows for *this table only*
-                    for row in table_rows[1:]:  # Skip header row
-                        row_data = {}
-                        cells = row.findall("tei:cell", namespace)  # Get only this row's cells
-                        for i, cell in enumerate(cells):
-                            if i < len(headers):  # Ensure index is within bounds
-                                row_data[headers[i]] = cell.text.strip() if cell.text else ""
-                        table_data.append(row_data)
+                        # Extract data rows for *this table only*
+                        for row in table_rows[1:]:  # Skip header row
+                            row_data = {}
+                            cells = row.findall("tei:cell", namespace)  # Get only this row's cells
+                            for i, cell in enumerate(cells):
+                                if i < len(headers):  # Ensure index is within bounds
+                                    row_data[headers[i]] = cell.text.strip() if cell.text else ""
+                            table_data.append(row_data)
 
-                    # Store table details (ensuring only this table's rows are processed)
-                    processClassifierResponse({
-                        "element_type": 'table',
-                        "page_number": page_number,
-                        "table_number": table_number,
-                        "table_context": table_context,
-                        "table_data": table_data
-                    })
-             
-        ## Process XML ##
-        spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
-        classifier = importlib.util.module_from_spec(spec)
-        sys.modules["classifiermodule"] = classifier
-        spec.loader.exec_module(classifier)
-        images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
-        classifier.processFigures(figures, images, frontend=True)
-        classifier.processFormulas(formulas, images, mode="regex", frontend=True)
+                        # Store table details (ensuring only this table's rows are processed)
+                        processClassifierResponse({
+                            "element_type": 'table',
+                            "page_number": page_number,
+                            "table_number": table_number,
+                            "table_context": table_context,
+                            "table_data": table_data
+                        })
+            
+            st.session_state.progress_bar.progress(percent_complete + 33, text="Classifying and parsing figures & charts... 🔄")
 
-        # Assuming st.session_state.interpreted_xml_text contains your raw XML string
-        raw_xml = str(st.session_state.Bs_data)
+            ## Process XML ##
+            spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
+            classifier = importlib.util.module_from_spec(spec)
+            sys.modules["classifiermodule"] = classifier
+            spec.loader.exec_module(classifier)
+            images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
 
-        # Extract the version and encoding from the XML declaration using a regex
-        version_match = re.search(r'xml version="([^"]+)"', raw_xml)
-        version = version_match.group(1) if version_match else '?'  # Default to ?
-        encoding_match = re.search(r'encoding="([^"]+)"', raw_xml)
-        encoding = encoding_match.group(1) if encoding_match else '?'  # Default to ?
+            classifier.processFigures(figures, images, frontend=True)
 
-        # Parse the raw XML string into a DOM object
-        xml_doc = xml.dom.minidom.parseString(raw_xml)
+            st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and generating XML file... 🔄")
+            classifier.processFormulas(formulas, images, mode="regex", frontend=True)
 
-        # Convert the DOM object to a pretty-printed string with a custom indent
-        pretty_xml = xml_doc.toprettyxml(indent="	")
+            # Assuming st.session_state.interpreted_xml_text contains your raw XML string
+            raw_xml = str(st.session_state.Bs_data)
 
-        # Remove extra newlines between lines to make the output more compact
-        # Split by lines and join back, while skipping any unnecessary empty lines
-        pretty_xml_lines = pretty_xml.splitlines()
-        cleaned_xml_lines = [line for line in pretty_xml_lines if line.strip()]
+            # Extract the version and encoding from the XML declaration using a regex
+            version_match = re.search(r'xml version="([^"]+)"', raw_xml)
+            version = version_match.group(1) if version_match else '?'  # Default to ?
+            encoding_match = re.search(r'encoding="([^"]+)"', raw_xml)
+            encoding = encoding_match.group(1) if encoding_match else '?'  # Default to ?
 
-        # Join the lines back into a single string
-        final_pretty_xml = "\n".join(cleaned_xml_lines)
+            # Parse the raw XML string into a DOM object
+            xml_doc = xml.dom.minidom.parseString(raw_xml)
 
-        final_pretty_xml = re.sub(r'<\?xml version="1.0" \?>', '', final_pretty_xml)
+            # Convert the DOM object to a pretty-printed string with a custom indent
+            pretty_xml = xml_doc.toprettyxml(indent="	")
 
-        # Add the XML declaration with the correct encoding at the beginning
-        final_xml_with_encoding = f'<?xml version="{version}" encoding="{encoding}"?>{final_pretty_xml}'
+            # Remove extra newlines between lines to make the output more compact
+            # Split by lines and join back, while skipping any unnecessary empty lines
+            pretty_xml_lines = pretty_xml.splitlines()
+            cleaned_xml_lines = [line for line in pretty_xml_lines if line.strip()]
 
-        # Store the cleaned, prettified XML back into session state
-        st.session_state.interpreted_xml_text = final_xml_with_encoding
+            # Join the lines back into a single string
+            final_pretty_xml = "\n".join(cleaned_xml_lines)
 
-        logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
+            final_pretty_xml = re.sub(r'<\?xml version="1.0" \?>', '', final_pretty_xml)
+
+            # Add the XML declaration with the correct encoding at the beginning
+            final_xml_with_encoding = f'<?xml version="{version}" encoding="{encoding}"?>{final_pretty_xml}'
+
+            # Store the cleaned, prettified XML back into session state
+            st.session_state.interpreted_xml_text = final_xml_with_encoding
+
+            logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
+
+            st.session_state.progress_bar.progress(percent_complete + 100, text="Non-Textual Elements were interpreted successfully ✅")
+        time.sleep(4)
+        st.session_state.progress_bar.empty()
 
     def process_pdf(file, grobid_url="http://172.28.0.12:8070/api/processFulltextDocument", params=None):
         """
@@ -414,6 +425,8 @@ def main():
                 st.session_state.xml_text = None
                 st.session_state.interpreted_xml_text = None
                 st.session_state.results_placeholder = None
+                st.session_state.grobid_progress_container = None
+                st.session_state.progress_bar = None
 
             # Backup uploaded file
             st.session_state.pdf_ref = uploaded_pdf
@@ -445,21 +458,23 @@ def main():
 
                 result = None  # Ensure result is always defined
 
-                # Process file as soon as it's uploaded
-                with st.status(label="Waiting for GROBID to process the file... 🔄", expanded=False, state="running") as status:
-                    result = process_pdf(st.session_state.pdf_ref, params=params)
+                st.session_state.grobid_progress_container = st.empty()
+                with st.session_state.grobid_progress_container:
+                    # Process file as soon as it's uploaded
+                    with st.status(label="Waiting for GROBID to process the file... 🔄", expanded=False, state="running") as status:
+                        result = process_pdf(st.session_state.pdf_ref, params=params)
 
-                    if result is not None and result.startswith("Error when processing file"):
-                        st.error(result)
-                    else:
-                        if result:
-                            st.session_state.rectangles, st.session_state.count_formulas, st.session_state.count_figures = parse_coords_for_figures(result)
+                        if result is not None and result.startswith("Error when processing file"):
+                            st.error(result)
                         else:
-                            st.session_state.rectangles = []
-                            st.session_state.count_formulas = 0
-                            st.session_state.count_figures = 0
-                            result = ""
-                    status.update(label="The file was processed successfully by GROBID ✅", state="complete", expanded=False)
+                            if result:
+                                st.session_state.rectangles, st.session_state.count_formulas, st.session_state.count_figures = parse_coords_for_figures(result)
+                            else:
+                                st.session_state.rectangles = []
+                                st.session_state.count_formulas = 0
+                                st.session_state.count_figures = 0
+                                result = ""
+                        status.update(label="The file was processed successfully by GROBID ✅", state="complete", expanded=False)
 
                 # Initialize the xml_text in session_state if not already set
                 if "xml_text" not in st.session_state or st.session_state.xml_text is None:
@@ -521,12 +536,16 @@ def main():
 
                     grobid_results_view()
 
+                    time.sleep(4)
+                    st.session_state.grobid_progress_container.empty()
+
                     @st.fragment
                     def classify2():
                         if st.button("Process file"):
                             with col3:
                                 if 'results_placeholder' not in st.session_state or st.session_state.results_placeholder == None:
                                     st.header("Interpretation Results", divider="gray")  # Always stays aligned with col1
+                                    st.session_state.progress_bar = st.progress(0, text="Parsing tables... 🔄")
                                     st.session_state.results_placeholder = st.empty()
                                     print("results_placeholder created")
                                 else:
