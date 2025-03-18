@@ -277,8 +277,6 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
       spec.loader.exec_module(app)
       app.processClassifierResponse(APIresponse)
 
-
-
 def processFigures(figures, images, frontend):
     """
     Crops the figures from the PDF file into images and sends them to the classifier (ML model) for classification.

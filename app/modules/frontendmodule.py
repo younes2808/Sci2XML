@@ -1,7 +1,9 @@
 import subprocess
 import requests
 import re
+import getpass
 from flask import Flask, jsonify, make_response, request
+from pyngrok import ngrok, conf
 
 def startLocaltunnel(port):
   """
@@ -48,8 +50,6 @@ def startNgrok(port):
   Returns:
   tuple: A tuple containing the public URL and password.
   """
-  from pyngrok import ngrok, conf
-  import getpass
 
   conf.get_default().auth_token = getpass.getpass()
 
@@ -65,7 +65,6 @@ def startStreamlit(tunnel, portnr):
   Paramaters:
   tunnel: which tunnel provider. Either Localtunnel or Ngrok
   portnr: port number
-
 
   Returns:
   None

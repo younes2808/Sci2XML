@@ -1,7 +1,10 @@
 import time
+import argparse
+import subprocess
 
 def startEverything():
   start_time = time.time()
+  time_array = []
   """
   Starts the entire application.
 
@@ -11,9 +14,6 @@ def startEverything():
   Returns:
   None
   """
-
-  import argparse
-
   parser = argparse.ArgumentParser()
   parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
   parser.add_argument('--port', dest='port', type=str, help='Set port number', default ="8000")
@@ -22,8 +22,6 @@ def startEverything():
   ## Setup ##
   print("## SETUP ##")
   print("# Installing requirements... #")
-  ## Install requirements ##
-  import subprocess
   log = open("reqlog.txt", "a")
   print("-> pip installs:")
   n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
@@ -34,30 +32,48 @@ def startEverything():
   print("-> npm installs:")
   n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
 
+  requirements_time = time.time()
+  minutes, seconds = divmod(requirements_time - start_time, 60)
+  time_array.append({"name": "Installing requirements", "time": requirements_time - start_time})
+  print(f"Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
+
   ## Launch API ##
-  #API()
-  # import Sci2XML.app.modules.APIcode as API
   print("# Launching API... #")
   import modules.APIcode as API
   API.API(args.port)
 
+  api_time = time.time() 
+  minutes, seconds = divmod(api_time - requirements_time, 60)
+  time_array.append({"name": "Launching APIs", "time": api_time - requirements_time})
+  print(f"Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
+
   ## Load Grobid and launch Grobid server ##
-  #loadGrobid()
   print("# Launching Grobid... #")
-  # import Sci2XML.app.modules.grobidmodule as grobidmod
   import modules.grobidmodule as grobidmod
   grobidmod.loadGrobidPythonway()
 
-  ## Start Streamlit and host using Localtunnel ##
-  #startStreamlit()
+  grobid_time = time.time()
+  minutes, seconds = divmod(grobid_time - api_time, 60)
+  time_array.append({"name": "Launching Grobid", "time": grobid_time - api_time})
+  print(f"Launching Grobid time: {int(minutes)} minutes and {int(seconds)} seconds")
+
+  ## Start API using Localtunnel ##
   print("# Starting API through Localtunnel... #")
-  # import Sci2XML.app.modules.frontendmodule as front
   import modules.frontendmodule as front
   front.startAPI(args.tunnel, args.port)
 
+  localtunnel_api_time = time.time()
+  minutes, seconds = divmod(localtunnel_api_time - api_time, 60)
+  time_array.append({"name": "Launching Localtunnel API", "time": localtunnel_api_time - api_time})
+  print(f"Launching Localtunnel API time: {int(minutes)} minutes and {int(seconds)} seconds")
+
   end_time = time.time()  # End the timer
-  elapsed_time = end_time - start_time
-  minutes, seconds = divmod(elapsed_time, 60)
+  minutes, seconds = divmod(end_time - start_time, 60)
+  time_array.append({"name": "Total startup", "time": end_time - start_time})
   print(f"Total startup time: {int(minutes)} minutes and {int(seconds)} seconds")
+
+  for time_object in time_array:
+    minutes, seconds = divmod(time_object["time"], 60)
+    print(f"{time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")
 
 startEverything()
