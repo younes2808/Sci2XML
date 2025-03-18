@@ -65,12 +65,8 @@ def startEverything():
   localtunnel_api_time = time.time()
   minutes, seconds = divmod(localtunnel_api_time - api_time, 60)
   time_array.append({"name": "Launching Localtunnel API", "time": localtunnel_api_time - api_time})
+  time_array.append({"name": "Total startup", "time": time.time() - start_time})
   print(f"Launching Localtunnel API time: {int(minutes)} minutes and {int(seconds)} seconds")
-
-  end_time = time.time()  # End the timer
-  minutes, seconds = divmod(end_time - start_time, 60)
-  time_array.append({"name": "Total startup", "time": end_time - start_time})
-  print(f"Total startup time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   for time_object in time_array:
     minutes, seconds = divmod(time_object["time"], 60)
