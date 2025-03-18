@@ -204,7 +204,7 @@ def main():
                             "table_data": table_data
                         })
             
-            st.session_state.progress_bar.progress(percent_complete + 20, text="Classifying figures & formulas... 🔄")
+            st.session_state.progress_bar.progress(percent_complete + 33, text="Classifying and parsing figures & charts... 🔄")
 
             ## Process XML ##
             spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
@@ -213,13 +213,11 @@ def main():
             spec.loader.exec_module(classifier)
             images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
 
-            st.session_state.progress_bar.progress(percent_complete + 40, text="Parsing figures... 🔄")
             classifier.processFigures(figures, images, frontend=True)
 
-            st.session_state.progress_bar.progress(percent_complete + 60, text="Parsing formulas... 🔄")
+            st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and generating XML file... 🔄")
             classifier.processFormulas(formulas, images, mode="regex", frontend=True)
 
-            st.session_state.progress_bar.progress(percent_complete + 80, text="Generating XML file... 🔄")
             # Assuming st.session_state.interpreted_xml_text contains your raw XML string
             raw_xml = str(st.session_state.Bs_data)
 
@@ -252,8 +250,9 @@ def main():
             st.session_state.interpreted_xml_text = final_xml_with_encoding
 
             logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
+
             st.session_state.progress_bar.progress(percent_complete + 100, text="Non-Textual Elements were interpreted successfully ✅")
-        time.sleep(5)
+        time.sleep(4)
         st.session_state.progress_bar.empty()
 
     def process_pdf(file, grobid_url="http://172.28.0.12:8070/api/processFulltextDocument", params=None):
@@ -476,8 +475,6 @@ def main():
                                 st.session_state.count_figures = 0
                                 result = ""
                         status.update(label="The file was processed successfully by GROBID ✅", state="complete", expanded=False)
-                    time.sleep(2)
-                    st.session_state.grobid_progress_container.empty()
 
                 # Initialize the xml_text in session_state if not already set
                 if "xml_text" not in st.session_state or st.session_state.xml_text is None:
@@ -538,6 +535,9 @@ def main():
                             )
 
                     grobid_results_view()
+
+                    time.sleep(4)
+                    st.session_state.grobid_progress_container.empty()
 
                     @st.fragment
                     def classify2():
