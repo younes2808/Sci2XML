@@ -1,30 +1,21 @@
 ## API ##
-import subprocess
 import requests
-import re
 import os
-
+import sys
 import threading
 import socket
-from flask import Flask, jsonify, make_response, request, Response
-from io import StringIO
-from PIL import Image
-import io
-from tempfile import NamedTemporaryFile
-
-import nest_asyncio
-nest_asyncio.apply()
-
 import albumentations as A
 import numpy as np
-
+import nest_asyncio
+nest_asyncio.apply()
+from flask import Flask, jsonify, make_response, request, Response
+from PIL import Image
+from tempfile import NamedTemporaryFile
 from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcessor
 from io import BytesIO
 
 ## Our own modules ##
-#import classifier
 import importlib.util
-import sys
 spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
 classifier = importlib.util.module_from_spec(spec)
 sys.modules["classifiermodule"] = classifier
@@ -56,9 +47,6 @@ def API(portnr):
   Returns:
   None
   """
-  import sys
-  #sys.stdout = open("APIlog", "w")
-
   print(socket.gethostbyname(socket.gethostname()))
 
   app = Flask(__name__)

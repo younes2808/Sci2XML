@@ -144,7 +144,6 @@ def main():
         if "tables_results_array" not in st.session_state or len(st.session_state.tables_results_array) != 0:
             st.session_state.tables_results_array = []
 
-        progress_bar = st.progress(0, text="Parsing tables... 🔄")
         for percent_complete in range(1):
             ## Table Parser ##
             ### Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
@@ -204,7 +203,8 @@ def main():
                             "table_context": table_context,
                             "table_data": table_data
                         })
-            progress_bar.progress(percent_complete + 20, text="Classifying figures & formulas... 🔄")
+            
+            st.session_state.progress_bar.progress(percent_complete + 20, text="Classifying figures & formulas... 🔄")
 
             ## Process XML ##
             spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
@@ -213,13 +213,13 @@ def main():
             spec.loader.exec_module(classifier)
             images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
 
-            progress_bar.progress(percent_complete + 40, text="Parsing figures... 🔄")
+            st.session_state.progress_bar.progress(percent_complete + 40, text="Parsing figures... 🔄")
             classifier.processFigures(figures, images, frontend=True)
 
-            progress_bar.progress(percent_complete + 60, text="Parsing formulas... 🔄")
+            st.session_state.progress_bar.progress(percent_complete + 60, text="Parsing formulas... 🔄")
             classifier.processFormulas(formulas, images, mode="regex", frontend=True)
 
-            progress_bar.progress(percent_complete + 80, text="Generating XML file... 🔄")
+            st.session_state.progress_bar.progress(percent_complete + 80, text="Generating XML file... 🔄")
             # Assuming st.session_state.interpreted_xml_text contains your raw XML string
             raw_xml = str(st.session_state.Bs_data)
 
@@ -252,9 +252,9 @@ def main():
             st.session_state.interpreted_xml_text = final_xml_with_encoding
 
             logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
-            progress_bar.progress(percent_complete + 100, text="Non-Textual Elements were interpreted successfully ✅")
-        time.sleep(4)
-        progress_bar.empty()
+            st.session_state.progress_bar.progress(percent_complete + 100, text="Non-Textual Elements were interpreted successfully ✅")
+        time.sleep(5)
+        st.session_state.progress_bar.empty()
 
     def process_pdf(file, grobid_url="http://172.28.0.12:8070/api/processFulltextDocument", params=None):
         """
@@ -426,6 +426,8 @@ def main():
                 st.session_state.xml_text = None
                 st.session_state.interpreted_xml_text = None
                 st.session_state.results_placeholder = None
+                st.session_state.grobid_progress_container = None
+                st.session_state.progress_bar = None
 
             # Backup uploaded file
             st.session_state.pdf_ref = uploaded_pdf
@@ -457,21 +459,25 @@ def main():
 
                 result = None  # Ensure result is always defined
 
-                # Process file as soon as it's uploaded
-                with st.status(label="Waiting for GROBID to process the file... 🔄", expanded=False, state="running") as status:
-                    result = process_pdf(st.session_state.pdf_ref, params=params)
+                st.session_state.grobid_progress_container = st.empty()
+                with st.session_state.grobid_progress_container:
+                    # Process file as soon as it's uploaded
+                    with st.status(label="Waiting for GROBID to process the file... 🔄", expanded=False, state="running") as status:
+                        result = process_pdf(st.session_state.pdf_ref, params=params)
 
-                    if result is not None and result.startswith("Error when processing file"):
-                        st.error(result)
-                    else:
-                        if result:
-                            st.session_state.rectangles, st.session_state.count_formulas, st.session_state.count_figures = parse_coords_for_figures(result)
+                        if result is not None and result.startswith("Error when processing file"):
+                            st.error(result)
                         else:
-                            st.session_state.rectangles = []
-                            st.session_state.count_formulas = 0
-                            st.session_state.count_figures = 0
-                            result = ""
-                    status.update(label="The file was processed successfully by GROBID ✅", state="complete", expanded=False)
+                            if result:
+                                st.session_state.rectangles, st.session_state.count_formulas, st.session_state.count_figures = parse_coords_for_figures(result)
+                            else:
+                                st.session_state.rectangles = []
+                                st.session_state.count_formulas = 0
+                                st.session_state.count_figures = 0
+                                result = ""
+                        status.update(label="The file was processed successfully by GROBID ✅", state="complete", expanded=False)
+                    time.sleep(2)
+                    st.session_state.grobid_progress_container.empty()
 
                 # Initialize the xml_text in session_state if not already set
                 if "xml_text" not in st.session_state or st.session_state.xml_text is None:
@@ -539,6 +545,7 @@ def main():
                             with col3:
                                 if 'results_placeholder' not in st.session_state or st.session_state.results_placeholder == None:
                                     st.header("Interpretation Results", divider="gray")  # Always stays aligned with col1
+                                    st.session_state.progress_bar = st.progress(0, text="Parsing tables... 🔄")
                                     st.session_state.results_placeholder = st.empty()
                                     print("results_placeholder created")
                                 else:
