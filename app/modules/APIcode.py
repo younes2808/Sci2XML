@@ -46,7 +46,7 @@ figureParserModel, figureParserTokenizer = figure.load()
 with open("apiinit.txt", "a") as file:
       file.write("\n api init now")
 
-def API():
+def API(portnr):
   """
   Defines and starts the API.
 
@@ -449,5 +449,5 @@ def API():
       sentiment = "senttttt"
       return jsonify({'predictions ':predictions, 'sentiment ': sentiment})
 
-  port = 8000
+  port = portnr # default 8000
   threading.Thread(target=app.run, kwargs={'host':'0.0.0.0','port':port}).start()

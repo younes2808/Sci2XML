@@ -11,6 +11,13 @@ def startEverything():
   Returns:
   None
   """
+  import argparse
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
+  parser.add_argument('--port', dest='port', type=str, help='Set port number', default ="8000")
+  args = parser.parse_args()
+
   ## Setup ##
   print("## SETUP ##")
   print("# Installing requirements... #")
@@ -29,7 +36,7 @@ def startEverything():
   ## Launch API ##
   print("# Launching API... #")
   import modules.APIcode as API
-  API.API()
+  API.API(args.port)
 
   ## Load Grobid and launch Grobid server ##
   print("# Launching Grobid... #")
@@ -39,7 +46,7 @@ def startEverything():
   ## Start Streamlit and host using Localtunnel ##
   print("# Starting Streamlit through Localtunnel... #")
   import modules.frontendmodule as front
-  front.startStreamlit()
+  front.startStreamlit(args.tunnel, args.port)
 
   end_time = time.time()  # End the timer
   elapsed_time = end_time - start_time

@@ -11,6 +11,14 @@ def startEverything():
   Returns:
   None
   """
+
+  import argparse
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
+  parser.add_argument('--port', dest='port', type=str, help='Set port number', default ="8000")
+  args = parser.parse_args()
+
   ## Setup ##
   print("## SETUP ##")
   print("# Installing requirements... #")
@@ -31,7 +39,7 @@ def startEverything():
   # import Sci2XML.app.modules.APIcode as API
   print("# Launching API... #")
   import modules.APIcode as API
-  API.API()
+  API.API(args.port)
 
   ## Load Grobid and launch Grobid server ##
   #loadGrobid()
@@ -45,7 +53,7 @@ def startEverything():
   print("# Starting API through Localtunnel... #")
   # import Sci2XML.app.modules.frontendmodule as front
   import modules.frontendmodule as front
-  front.startAPI()
+  front.startAPI(args.tunnel, args.port)
 
   end_time = time.time()  # End the timer
   elapsed_time = end_time - start_time

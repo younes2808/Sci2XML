@@ -58,12 +58,14 @@ def startNgrok(port):
   print(f" * ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:{port}\"")
   return public_url, "ngrok"
 
-def startStreamlit():
+def startStreamlit(tunnel, portnr):
   """
   Starts a Streamlit application. Then calls on function to start localtunnel.
 
   Paramaters:
-  None
+  tunnel: which tunnel provider. Either Localtunnel or Ngrok
+  portnr: port number
+
 
   Returns:
   None
@@ -72,30 +74,42 @@ def startStreamlit():
   logfile = open("logs.txt", "w")
   URL = subprocess.Popen(["streamlit", "run", "app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML")
 
-  ## Launch Localtunnel ##
-  ## Launch Ngrok ##
-  print("Start ngrok")
-  url, passw = startNgrok("8501")
+  if (tunnel == "localtunnel"):
+    ## Launch Localtunnel ##
+    print("Start localtunnel")
+    url, passw = startLocaltunnel("8501")
+  elif (tunnel == "ngrok"):
+    ## Launch Ngrok ##
+    print("Start ngrok")
+    url, passw = startNgrok("8501")
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")
     file.write(passw)
   print(f"\n\n Public URL: {url} \n Password: {passw}")
 
-def startAPI():
+def startAPI(tunnel, portnr):
   """
   Starts only the API. Then calls on function to start localtunnel.
 
   Paramaters:
-  None
+  tunnel: which tunnel provider. Either Localtunnel or Ngrok
+  portnr: port number
 
   Returns:
   None
   """
   print("Starting API")
   logfile = open("logs.txt", "w")
-  print("Start ngrok")
-  url, passw = startNgrok("8000")
+
+  if (tunnel == "localtunnel"):
+    ## Localtunnel ##
+    print("Start localtunnel")
+    url, passw = startLocaltunnel(portnr)
+  elif (tunnel == "ngrok"):
+    ## Ngrok ##
+    print("Start ngrok")
+    url, passw = startNgrok(portnr)
 
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
