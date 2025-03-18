@@ -215,7 +215,7 @@ def main():
 
             classifier.processFigures(figures, images, frontend=True)
 
-            st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and generating XML file... 🔄")
+            st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and updating XML file... 🔄")
             classifier.processFormulas(formulas, images, mode="regex", frontend=True)
 
             # Assuming st.session_state.interpreted_xml_text contains your raw XML string
