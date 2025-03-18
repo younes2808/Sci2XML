@@ -36,6 +36,7 @@ def loadGrobidPythonway():
       n = subprocess.run(["./gradlew", "clean", "install"], stdout=grobidinstalllogfile, stderr=grobidinstalllogfile, text=True, cwd="/content/grobid-0.8.1/")
 
   grobidrunlogfile = open("grobidrunlog.txt", "w")
+  print("Still loading Grobid")
   n = subprocess.Popen(["./gradlew", "run"], stdout=grobidrunlogfile, stderr=grobidrunlogfile, text=True, cwd="/content/grobid-0.8.1/")
   # Check grobidrunlog.txt to see when it is ready. Should be > 46 lines when ready.
 
