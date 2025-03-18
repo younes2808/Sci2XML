@@ -2,7 +2,9 @@ import torch
 from transformers import DonutProcessor, VisionEncoderDecoderModel
 import re
 
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 def load_UniChart():
     """Loads the UniChart model."""

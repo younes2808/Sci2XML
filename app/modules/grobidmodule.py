@@ -1,9 +1,11 @@
-def loadGrobidPythonway():
-  import subprocess
-  print("Loading Grobid")
+import subprocess
+import time
+import requests
+import socket
+from pathlib import Path
 
-  from pathlib import Path
-  import requests
+def loadGrobidPythonway():
+  print("Loading Grobid")
 
   serverstatus = "false"
   try:
@@ -40,7 +42,6 @@ def loadGrobidPythonway():
   n = subprocess.Popen(["./gradlew", "run"], stdout=grobidrunlogfile, stderr=grobidrunlogfile, text=True, cwd="/content/grobid-0.8.1/")
   # Check grobidrunlog.txt to see when it is ready. Should be > 46 lines when ready.
 
-  import time
   clock = 0
   while True:
     clock += 1
@@ -63,5 +64,4 @@ def loadGrobidPythonway():
     time.sleep(1)
 
   #!curl http://172.28.0.12:8070/api/isalive
-  import socket
   print("\n Grobid Server adress: ", socket.gethostbyname(socket.gethostname()), "/8070")

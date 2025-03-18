@@ -1,5 +1,6 @@
 import torch
 from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcessor
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 with open("formulaparserinit.txt", "a") as file:
       file.write("\n init now")
