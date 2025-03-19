@@ -65,7 +65,7 @@ def generate_unichart_response(image, prompt):
     # Apply hallucination filter before returning
     if is_hallucinated(response):
         print("❌ Response marked as unreliable")
-        return "Unreliable response"
+        return  response#"Unreliable response"
     
     return response
 
