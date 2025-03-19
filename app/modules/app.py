@@ -15,13 +15,6 @@ import importlib.util
 from streamlit_pdf_viewer import pdf_viewer
 from annotated_text import annotated_text, annotation
 
-from pdf2image import convert_from_path, convert_from_bytes
-from pdf2image.exceptions import (
-    PDFInfoNotInstalledError,
-    PDFPageCountError,
-    PDFSyntaxError
-)
-
 def clean_latex(latex_str):
     """
     Removes everything after (and including) \hskip or \tag.
@@ -215,7 +208,7 @@ def main():
 
             classifier.processFigures(figures, images, frontend=True)
 
-            st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and generating XML file... 🔄")
+            st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and updating XML file... 🔄")
             classifier.processFormulas(formulas, images, mode="regex", frontend=True)
 
             # Assuming st.session_state.interpreted_xml_text contains your raw XML string
@@ -251,7 +244,7 @@ def main():
 
             logging.info("Generated XML:\n" + st.session_state.interpreted_xml_text)
 
-            st.session_state.progress_bar.progress(percent_complete + 100, text="Non-Textual Elements were interpreted successfully ✅")
+            st.session_state.progress_bar.progress(percent_complete + 100, text="Non-textual elements were interpreted successfully ✅")
         time.sleep(4)
         st.session_state.progress_bar.empty()
 
@@ -461,7 +454,7 @@ def main():
                 st.session_state.grobid_progress_container = st.empty()
                 with st.session_state.grobid_progress_container:
                     # Process file as soon as it's uploaded
-                    with st.status(label="Waiting for GROBID to process the file... 🔄", expanded=False, state="running") as status:
+                    with st.status(label="Waiting for GROBID to process the PDF file... 🔄", expanded=False, state="running") as status:
                         result = process_pdf(st.session_state.pdf_ref, params=params)
 
                         if result is not None and result.startswith("Error when processing file"):
@@ -474,7 +467,7 @@ def main():
                                 st.session_state.count_formulas = 0
                                 st.session_state.count_figures = 0
                                 result = ""
-                        status.update(label="The file was processed successfully by GROBID ✅", state="complete", expanded=False)
+                        status.update(label="The PDF file was processed successfully by GROBID ✅", state="complete", expanded=False)
 
                 # Initialize the xml_text in session_state if not already set
                 if "xml_text" not in st.session_state or st.session_state.xml_text is None:
@@ -536,7 +529,6 @@ def main():
 
                     grobid_results_view()
 
-                    time.sleep(4)
                     st.session_state.grobid_progress_container.empty()
 
                     @st.fragment

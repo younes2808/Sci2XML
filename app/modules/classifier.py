@@ -1,10 +1,8 @@
-import requests, json
+import requests
 import io
 import re
 import streamlit as st
-import pandas as pd
 from bs4 import BeautifulSoup
-from PIL import Image, ImageDraw
 from pdf2image import convert_from_path, convert_from_bytes
 from pdf2image.exceptions import (
     PDFInfoNotInstalledError,
@@ -276,8 +274,6 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
       sys.modules["appmodule"] = app
       spec.loader.exec_module(app)
       app.processClassifierResponse(APIresponse)
-
-
 
 def processFigures(figures, images, frontend):
     """
