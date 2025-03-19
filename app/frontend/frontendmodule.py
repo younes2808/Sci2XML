@@ -71,7 +71,7 @@ def startStreamlit(tunnel, portnr):
   """
   print("Starting Streamlit")
   logfile = open("logs.txt", "w")
-  URL = subprocess.Popen(["streamlit", "run", "app/modules/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML")
+  URL = subprocess.Popen(["streamlit", "run", "app/frontend/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML")
 
   if (tunnel == "localtunnel"):
     ## Launch Localtunnel ##

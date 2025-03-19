@@ -16,18 +16,18 @@ from io import BytesIO
 
 ## Our own modules ##
 import importlib.util
-spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
+spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/backend/classifier.py")
 classifier = importlib.util.module_from_spec(spec)
 sys.modules["classifiermodule"] = classifier
 spec.loader.exec_module(classifier)
 # import Sci2XML.app.modules.classifiermodel as classifier
-import modules.classifiermodel as classifierML
+import app.backend.models.classifiermodel as classifierML
 # import Sci2XML.app.modules.chartparser as charter
-import modules.chartparser as charter
+import app.backend.models.chartparser as charter
 # import Sci2XML.app.modules.formulaparser as formula
-import modules.formulaparser as formula
-import modules.figureparser as figure
-import modules.tableparser as tableParser
+import app.backend.models.formulaparser as formula
+import app.backend.models.figureparser as figure
+import app.backend.models.tableparser as tableParser
 
 ML = classifierML.loadML()
 charter.load_UniChart()
@@ -423,7 +423,7 @@ def API(portnr):
       from PIL import Image
       image_path = "chart3.png"  # Replace with the path to your image
       image = Image.open(image_path)
-      import modules.classifiermodel as classifierML
+      import app.backend.models.classifiermodel as classifierML
       predicted_class_name = classifierML.callML(ML, image)
 
       print(f"Predicted class: {predicted_class_name}")
