@@ -122,7 +122,7 @@ def addToXMLfile(type, name, newContent, frontend):
                     parentTag.contents[parentTag.contents.index(text)].replace_with(newTag)
                     textWithoutTag = []
                     break
-        newTag.string = newContent["csv"]
+        newTag.string = str(newContent["csv"])
     
 
     print(parentTag)
