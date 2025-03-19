@@ -21,13 +21,13 @@ classifier = importlib.util.module_from_spec(spec)
 sys.modules["classifiermodule"] = classifier
 spec.loader.exec_module(classifier)
 # import Sci2XML.app.modules.classifiermodel as classifier
-import app.backend.models.classifiermodel as classifierML
+import backend.models.classifiermodel as classifierML
 # import Sci2XML.app.modules.chartparser as charter
-import app.backend.models.chartparser as charter
+import backend.models.chartparser as charter
 # import Sci2XML.app.modules.formulaparser as formula
-import app.backend.models.formulaparser as formula
-import app.backend.models.figureparser as figure
-import app.backend.models.tableparser as tableParser
+import backend.models.formulaparser as formula
+import backend.models.figureparser as figure
+import backend.models.tableparser as tableParser
 
 ML = classifierML.loadML()
 charter.load_UniChart()

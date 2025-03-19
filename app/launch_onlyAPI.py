@@ -39,7 +39,7 @@ def startEverything():
 
   ## Launch API ##
   print("# Launching API... #")
-  import app.backend.APIcode as API
+  import backend.APIcode as API
   API.API(args.port)
 
   api_time = time.time() 
@@ -49,7 +49,7 @@ def startEverything():
 
   ## Load Grobid and launch Grobid server ##
   print("# Launching Grobid... #")
-  import app.backend.grobidmodule as grobidmod
+  import backend.grobidmodule as grobidmod
   grobidmod.loadGrobidPythonway()
 
   grobid_time = time.time()
@@ -59,7 +59,7 @@ def startEverything():
 
   ## Start API using Localtunnel ##
   print("# Starting API through Localtunnel... #")
-  import app.frontend.frontendmodule as front
+  import frontend.frontendmodule as front
   front.startAPI(args.tunnel, args.port)
 
   localtunnel_api_time = time.time()
