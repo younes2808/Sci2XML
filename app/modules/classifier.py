@@ -1,8 +1,10 @@
-import requests
+import requests, json
 import io
 import re
 import streamlit as st
+import pandas as pd
 from bs4 import BeautifulSoup
+from PIL import Image, ImageDraw
 from pdf2image import convert_from_path, convert_from_bytes
 from pdf2image.exceptions import (
     PDFInfoNotInstalledError,
@@ -75,6 +77,7 @@ def addToXMLfile(type, name, newContent, frontend):
     None
     """
     print("\n-- Adding to XML file... --")
+    ## Find parent tag, and the text content of that.
     if (frontend):
       parentTag = st.session_state.Bs_data.find(type, {"xml:id": name})
     else:
@@ -86,19 +89,41 @@ def addToXMLfile(type, name, newContent, frontend):
     textWithoutTag = parentTag.find_all(string=True, recursive=False)
     print("findall", textWithoutTag)
 
-    if (len(textWithoutTag) == 0):
-        print("Probably a figure...")
-        newTag = Bs_data.new_tag(newContent["tag"])
-        parentTag.append(newTag)
-        newTag.string = newContent["preferred"]
-    else:
-        print("Probably a formula...")
-        for text in textWithoutTag:
-            if (text in parentTag.contents):
-                # print(parentTag.contents.index(text))
-                newTag = Bs_data.new_tag(newContent["tag"])
-                parentTag.contents[parentTag.contents.index(text)].replace_with(newTag)
-                newTag.string = newContent["preferred"]
+    ## Add generated content to correct position in new tag
+    if ("formula" in newContent):
+        newTag = Bs_data.new_tag("latex")
+        if (len(textWithoutTag) == 0):
+            parentTag.append(newTag)
+        else:
+            for text in textWithoutTag:
+                if (text in parentTag.contents):
+                    parentTag.contents[parentTag.contents.index(text)].replace_with(newTag)
+                    textWithoutTag = []
+                    break
+        newTag.string = newContent["formula"]
+    if ("NL" in newContent):
+        newTag = Bs_data.new_tag("llmgenerated")
+        if (len(textWithoutTag) == 0):
+            parentTag.append(newTag)
+        else:
+            for text in textWithoutTag:
+                if (text in parentTag.contents):
+                    parentTag.contents[parentTag.contents.index(text)].replace_with(newTag)
+                    textWithoutTag = []
+                    break
+        newTag.string = newContent["NL"]
+    if ("csv" in newContent):
+        newTag = Bs_data.new_tag("tabledata")
+        if (len(textWithoutTag) == 0):
+            parentTag.append(newTag)
+        else:
+            for text in textWithoutTag:
+                if (text in parentTag.contents):
+                    parentTag.contents[parentTag.contents.index(text)].replace_with(newTag)
+                    textWithoutTag = []
+                    break
+        newTag.string = newContent["csv"]
+    
 
     print(parentTag)
 
@@ -274,6 +299,8 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
       sys.modules["appmodule"] = app
       spec.loader.exec_module(app)
       app.processClassifierResponse(APIresponse)
+
+
 
 def processFigures(figures, images, frontend):
     """
