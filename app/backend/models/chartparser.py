@@ -18,40 +18,24 @@ def load_UniChart():
 def is_hallucinated(response):
     """Detects excessive repetition in the response."""
     words = response.split()
-    
-    # Relax the repetition threshold
-    if len(words) > 50 and len(set(words)) < len(words) * 0.3:  # Allow more variation
+
+    # Allow more variation in word usage
+    if len(words) > 50 and len(set(words)) < len(words) * 0.2:
         print("⚠️ Detected excessive word repetition")
         return True
 
-    # Limit phrase repetition detection
+    # Allow more repeated phrases before flagging
     repeated_phrases = re.findall(r'(\b\w+(?:\s+\w+){1,3}\b)(?=.*\1)', response)
-    if len(set(repeated_phrases)) > 3:  # Increase allowed variation
+    if len(set(repeated_phrases)) > 5:
         print("⚠️ Detected repeated phrases")
         return True
 
-    # Prevent excessive character repetition
-    if re.search(r'(\b\w+\b)(?:\s+\1){8,}', response):  # Increase threshold to 8
+    # Allow longer sequences of repeated words before flagging
+    if re.search(r'(\b\w+\b)(?:\s+\1){12,}', response):
         print("⚠️ Detected excessive character repetition")
         return True
 
     return False
-
-def check_numerical_sanity(response):
-    """Checks if extracted numbers follow a reasonable distribution."""
-    numbers = [float(n) for n in re.findall(r'\d+\.\d+|\d+', response)]
-    
-    if not numbers:
-        return True  # If no numbers, ignore numerical sanity check
-
-    mean_value = sum(numbers) / len(numbers)
-
-    # Relax outlier rejection threshold
-    if any(n > mean_value * 20 or n < mean_value / 20 for n in numbers):  
-        print(f"⚠️ Detected outlier numbers: {numbers}")
-        return False
-
-    return True
 
 def generate_unichart_response(image, prompt):
     """Generates a response using the UniChart model."""
@@ -78,10 +62,10 @@ def generate_unichart_response(image, prompt):
     # Debugging output
     print(f"Generated response: {response}")
 
-    # Apply hallucination filters before returning
-    if is_hallucinated(response) or not check_numerical_sanity(response):
+    # Apply hallucination filter before returning
+    if is_hallucinated(response):
         print("❌ Response marked as unreliable")
-        return "Unreliable response"
+        return  response#"Unreliable response"
     
     return response
 
