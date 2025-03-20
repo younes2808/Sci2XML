@@ -89,7 +89,7 @@ def loadML():
   )
 
   densenet.initialize()  # Initialize the model before loading parameters
-  densenet.load_params(f_params='Sci2XML/app/best_model_densenet169_sentence.pkl')
+  densenet.load_params(f_params='Sci2XML/app/backend/models/best_model_densenet169_sentence.pkl')
   # Load the saved model
   global ML
   ML = densenet

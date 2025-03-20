@@ -104,7 +104,7 @@ def main():
         logging.error(f"Failed to set Streamlit page configuration: {e}", exc_info=True)
 
     try:
-        css_path = os.path.join("app/modules", "css.html")
+        css_path = os.path.join("app/frontend", "css.html")
         with open(css_path, "r") as f:
             css_content = f.read()
         logging.info(f"CSS file '{css_path}' read successfully.")
@@ -200,7 +200,7 @@ def main():
             st.session_state.progress_bar.progress(percent_complete + 33, text="Classifying and parsing figures & charts... 🔄")
 
             ## Process XML ##
-            spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/modules/classifier.py")
+            spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/backend/classifier.py")
             classifier = importlib.util.module_from_spec(spec)
             sys.modules["classifiermodule"] = classifier
             spec.loader.exec_module(classifier)

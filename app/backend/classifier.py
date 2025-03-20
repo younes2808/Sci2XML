@@ -294,7 +294,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
       ## Adds to arrays:
       import importlib.util
       import sys
-      spec = importlib.util.spec_from_file_location("appmodule", "/content/Sci2XML/app/modules/app.py")
+      spec = importlib.util.spec_from_file_location("appmodule", "/content/Sci2XML/app/frontend/app.py")
       app = importlib.util.module_from_spec(spec)
       sys.modules["appmodule"] = app
       spec.loader.exec_module(app)

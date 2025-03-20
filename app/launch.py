@@ -39,7 +39,7 @@ def startEverything():
 
   ## Launch API ##
   print("# Launching API... #")
-  import modules.APIcode as API
+  import backend.APIcode as API
   API.API(args.port)
 
   api_time = time.time() 
@@ -49,7 +49,7 @@ def startEverything():
 
   ## Load Grobid and launch Grobid server ##
   print("# Launching Grobid... #")
-  import modules.grobidmodule as grobidmod
+  import backend.grobidmodule as grobidmod
   grobidmod.loadGrobidPythonway()
 
   grobid_time = time.time()
@@ -60,7 +60,7 @@ def startEverything():
 
   ## Start Streamlit and host using Localtunnel ##
   print("# Starting Streamlit through Localtunnel... #")
-  import modules.frontendmodule as front
+  import frontend.frontendmodule as front
   front.startStreamlit(args.tunnel, args.port)
 
   for time_object in time_array:
