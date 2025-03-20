@@ -1,6 +1,7 @@
 import torch
 from transformers import DonutProcessor, VisionEncoderDecoderModel
 import re
+from collections import Counter
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -15,24 +16,13 @@ def load_UniChart():
     print("UniChart model loaded successfully!")
     return unichart_model, unichart_processor
 
-def is_hallucinated(response):
+def is_hallucinated(response, repetition_threshold=20):
     """Detects excessive repetition in the response."""
-    words = response.split()
-
-    # Allow more variation in word usage
-    if len(words) > 50 and len(set(words)) < len(words) * 0.2:
-        print("⚠️ Detected excessive word repetition")
-        return True
-
-    # Allow more repeated phrases before flagging
-    repeated_phrases = re.findall(r'(\b\w+(?:\s+\w+){1,3}\b)(?=.*\1)', response)
-    if len(set(repeated_phrases)) > 5:
-        print("⚠️ Detected repeated phrases")
-        return True
-
-    # Allow longer sequences of repeated words before flagging
-    if re.search(r'(\b\w+\b)(?:\s+\1){12,}', response):
-        print("⚠️ Detected excessive character repetition")
+    words = response.lower().split()
+    word_counts = Counter(words)
+    
+    # Check if any word is repeated more than repetition_threshold times
+    if any(count > repetition_threshold for count in word_counts.values()):
         return True
 
     return False
@@ -65,7 +55,7 @@ def generate_unichart_response(image, prompt):
     # Apply hallucination filter before returning
     if is_hallucinated(response):
         print("❌ Response marked as unreliable")
-        return  response#"Unreliable response"
+        return "Unreliable response"
     
     return response
 
