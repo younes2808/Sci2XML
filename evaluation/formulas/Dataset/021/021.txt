@@ -1,0 +1,1 @@
+I ^ { c } = \mp { \frac { \pi b \sqrt { 1 - \Lambda a ^ { 2 } } } { 2 G } } ,

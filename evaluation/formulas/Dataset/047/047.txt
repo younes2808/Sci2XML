@@ -1,0 +1,1 @@
+\delta \chi _ { \mu \nu } = i b _ { \mu \nu } , \qquad \delta b _ { \mu \nu } = 0 .

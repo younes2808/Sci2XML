@@ -1,0 +1,1 @@
+\int \mathrm { d } ^ { 4 } x _ { 1 } \cdots \mathrm { d } ^ { 4 } x _ { n } P _ { 4 } ( x _ { 1 } , \cdots , x _ { n } ) \Gamma _ { x _ { 1 } \cdots x _ { n } 0 } = 0

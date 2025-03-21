@@ -1,0 +1,1 @@
+\epsilon _ { i } = \tau _ { i } + \rho _ { i } + \rho _ { i - 1 } , \quad ( \tau _ { 3 } = 0 , \: \rho _ { 0 } = \rho _ { 4 } )

@@ -1,0 +1,1 @@
+\mathrm { T r } \log ( 1 - \sum _ { i = 0 } ^ { N } A _ { i } ) = \mathrm { T r } \log ( 1 - \sum _ { k = 1 } ^ { N } \sum _ { m = 0 } ^ { k - 1 } A _ { k } \phi ^ { m } ) + \mathrm { T r } \log ( 1 - \phi ) .

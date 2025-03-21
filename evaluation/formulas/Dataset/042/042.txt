@@ -1,0 +1,1 @@
+\varrho _ { L } - { \cal L } _ { E } = [ 2 \dot { \Phi } ^ { 2 } ] K ^ { \prime } ( \dot { \Phi } ^ { 2 } , \Phi ) - K ( \dot { \Phi } ^ { 2 } , \Phi ) + K ( - \dot { \Phi } ^ { 2 } , \Phi ) .

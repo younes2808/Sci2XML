@@ -1,0 +1,1 @@
+u _ { 0 } ( k , r ) = \sqrt { { \displaystyle { \frac { \pi } { 2 } } } } i \sqrt { r } J _ { 0 } ( k r ) - \sqrt { { \displaystyle { \frac { \pi } { 2 } } } } A ( k ) \sqrt { k r } H _ { 0 } ^ { ( 1 ) } ( k r ) .

@@ -1,0 +1,1 @@
+\mathcal { A } \equiv \exp \left[ \int _ { 0 } ^ { \lambda } d \tilde { \lambda } \theta ( \tilde { \lambda } ) \right] .

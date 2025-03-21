@@ -1,0 +1,1 @@
+{ \tilde { \cal { E } } } _ { m < 0 } = { \cal { E } } _ { m < 0 } ( B ) - { \cal { E } } ( 0 ) = \frac { B ^ { 2 } } { 2 } + \frac { ( e B ) ^ { \frac { 3 } { 2 } } } { 2 \pi } g \left( \frac { e B } { m ^ { 2 } } \right) ,

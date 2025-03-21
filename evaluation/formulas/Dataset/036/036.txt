@@ -1,0 +1,1 @@
+A ( u ) = \mathrm { R e s } \vert _ { v = u } ^ { } \left( { \frac { 1 } { v - u } } R ( u , v ) \cdot L ( v ) \right) + { \textstyle { \frac { 1 } { 2 } } } \zeta ( 2 u ) L ( u )

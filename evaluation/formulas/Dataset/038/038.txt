@@ -1,0 +1,1 @@
+L = \frac { \dot { x } _ { \mu } ^ { 2 } } { 2 e } + \frac { \lambda } { l } ( e - M ^ { - 1 } \dot { x } { } ^ { 0 } ) ,

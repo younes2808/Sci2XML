@@ -1,0 +1,1 @@
+\psi ( z ) = A _ { + } c _ { + } \sqrt { \omega z } J _ { j / 2 } ( \omega z ) + A _ { - } c _ { - } \sqrt { \omega z } J _ { - j / 2 } ( \omega z ) .

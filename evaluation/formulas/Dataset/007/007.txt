@@ -1,0 +1,1 @@
+\breve { c } _ { n , \nu } = \sum _ { m = n } ^ { 2 n } { \frac { \Gamma \left( \nu + m - { \frac { D - 1 } { 2 } } \right) } { \Gamma \left( \nu + n - { \frac { D - 1 } { 2 } } \right) } } \breve { a } _ { 2 ( m - n ) , m } .

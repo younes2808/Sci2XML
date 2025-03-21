@@ -1,0 +1,1 @@
+{ \tilde { \rho } } _ { { \bf { q } } } = \sum _ { { \bf { k } } } [ \Lambda _ { { \bf { k } } } ( { \bf { q } } ) a _ { { \bf { k } } } ( - { \bf { q } } ) + \Lambda _ { { \bf { k } } } ( - { \bf { q } } ) a _ { { \bf { k } } } ^ { \dagger } ( { \bf { q } } ) ]

@@ -1,0 +1,1 @@
+C _ { J } ( \nu _ { 1 } , \nu _ { 2 } ) = ( 2 J + \nu _ { 1 } + \nu _ { 2 } + 1 ) \frac { { \mit \Gamma } ( J + 1 ) { \mit \Gamma } ( J + \nu _ { 1 } + \nu _ { 2 } + 1 ) } { { \mit \Gamma } ( J + \nu _ { 1 } + 1 ) { \mit \Gamma } ( J + \nu _ { 2 } + 1 ) } .

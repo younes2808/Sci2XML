@@ -1,0 +1,1 @@
+\Gamma ( z + 1 ) = \int _ { 0 } ^ { \infty } d x e ^ { - x } x ^ { z } .

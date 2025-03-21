@@ -1,0 +1,1 @@
+k _ { 0 } \sim \omega \sqrt { \frac { g \phi _ { 0 } } { 2 M ^ { 2 } } } \ll \omega

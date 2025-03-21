@@ -1,0 +1,1 @@
+\delta _ { \perp } \kappa _ { 1 } = \kappa _ { 3 } \kappa _ { 2 } \Psi _ { 3 } + 2 \kappa _ { 2 } \Psi _ { 2 } { } ^ { \prime } + \kappa _ { 2 } ^ { \prime } \Psi _ { 2 } + \Psi _ { 1 } { } ^ { \prime \prime } - \left( \kappa _ { 1 } ^ { 2 } + \kappa _ { 2 } { } ^ { 2 } \right) \Psi _ { 1 } .

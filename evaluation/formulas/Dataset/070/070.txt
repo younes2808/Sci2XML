@@ -1,0 +1,1 @@
+f _ { \alpha } ( x ) = \left( 4 \sin ^ { 2 } \frac { x } { 2 } \right) ^ { \alpha } .

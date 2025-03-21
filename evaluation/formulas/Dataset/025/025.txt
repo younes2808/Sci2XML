@@ -1,0 +1,1 @@
+\left\{ \Psi \circ \mu , f \right\} = ( \overline { X } _ { i } f ) ( Y ^ { i } \Psi ) \circ \mu ,

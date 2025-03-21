@@ -1,0 +1,1 @@
+E _ { 1 2 } \Phi = 2 \sqrt { ( m + \frac { 1 } { 2 } b r ) ^ { 2 } + p _ { r } ^ { 2 } + \frac { \ell ( \ell + 1 ) } { r ^ { 2 } } } \Phi ,

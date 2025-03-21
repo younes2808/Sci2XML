@@ -1,0 +1,1 @@
+c _ { \alpha } = \sum _ { \beta \in \Lambda _ { R } } \epsilon ( \alpha , \beta ) | \beta + \bar { p } > < \beta + \bar { p } |

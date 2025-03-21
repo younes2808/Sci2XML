@@ -1,0 +1,1 @@
+M = \int _ { r \rightarrow \infty } d ^ { p } x r ^ { p / 2 } f ^ { - 1 / 2 } T _ { t t } = \frac { p m V _ { p } } { 1 6 \pi G _ { p + 2 } } .

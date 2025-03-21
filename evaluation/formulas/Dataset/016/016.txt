@@ -1,0 +1,1 @@
+L _ { g } ^ { ' } \Bigl ( v ( h ) \Bigr ) = v ( L _ { g } h ) = v ( g h ) , \forall g , h \in G ,

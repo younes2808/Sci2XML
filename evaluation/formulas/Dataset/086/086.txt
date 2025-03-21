@@ -1,0 +1,1 @@
+S _ { E } = \int _ { 0 } ^ { \tau } d \tau \left( { \frac { 1 } { 2 } } x _ { \tau } ^ { 2 } + { \frac { 1 } { 2 } } W ^ { 2 } ( x ) - \psi ^ { \ast } [ \partial _ { \tau } - W ^ { \prime } ( x ) ] \psi \right)

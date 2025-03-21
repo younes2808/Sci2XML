@@ -1,0 +1,1 @@
+\xi = v _ { 1 } \left( u _ { 1 } - \kappa v _ { 2 } \right) + v _ { 2 } \left( u _ { 2 } - \kappa v _ { 1 } \right) .

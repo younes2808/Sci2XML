@@ -1,0 +1,1 @@
+Y ( T , U ) = \int _ { \cal F } \frac { d ^ { 2 } \tau } { \Im \tau } \Gamma _ { 2 , 2 } ( T , U ) \left( - 6 \left[ { \overline { { \Omega } } } _ { 2 } ^ { \phantom { 2 } } - \frac { 1 } { 8 \pi \Im \tau } \right] \frac { \overline { { \Omega } } } { \overline { { \eta } } ^ { 2 4 } } - \frac { \overline { { j } } } { 8 } + 1 2 6 \right) \ ,

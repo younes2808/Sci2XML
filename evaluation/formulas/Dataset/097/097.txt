@@ -1,0 +1,1 @@
+G ^ { - 1 } ( k ) = ( p ^ { 2 } + \mu ^ { 2 } ) \left[ 1 + \left( 3 - \frac { 9 } { 4 } \ln 3 \right) \frac { g } { 2 4 \pi m } \right] + O \Bigl ( ( p ^ { 2 } + \mu ^ { 2 } ) ^ { 2 } \Bigr )

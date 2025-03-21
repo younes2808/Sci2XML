@@ -1,0 +1,1 @@
+U ( r ) = U ( r _ { 0 } ) + 4 \pi ^ { 2 } K A ( d , \sigma ) \int _ { r _ { 0 } } ^ { r } d s \frac { s ^ { \sigma - d - 1 } } { \varepsilon ( s ) } .

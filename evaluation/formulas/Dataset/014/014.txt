@@ -1,0 +1,1 @@
+i \sqrt { 2 } \partial _ { - } \chi - g [ \phi , \psi ] = 0 , \quad \partial _ { - } ^ { 2 } \bar { A } _ { + } - g ^ { 2 } J ^ { + } = 0 .

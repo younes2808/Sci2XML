@@ -1,0 +1,1 @@
+z _ { t , 0 } ^ { ' ( r ) } \quad = \quad z _ { t , 0 } ^ { ' ^ { \prime } ( r ) } \quad = \quad 0 \qquad ( 1 \le t \le r , \mathrm { { a l l } } r ) ;

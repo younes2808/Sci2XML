@@ -1,0 +1,1 @@
+e ^ { i { \bf k \cdot r } } = e ^ { i k r \cos ( \theta - \Theta ) } = \sum _ { l = - \infty } ^ { \infty } i ^ { l } J _ { l } ( k r ) e ^ { i l ( \theta - \Theta ) } ,

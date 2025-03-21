@@ -1,0 +1,1 @@
+R _ { \mu \nu b } ^ { \quad a } = \partial _ { \mu } \omega _ { \nu b } ^ { a } - \partial _ { \nu } \omega _ { \mu b } ^ { a } + \omega _ { \mu c } ^ { a } \ast \omega _ { \nu b } ^ { c } - \omega _ { \nu c } ^ { a } \ast \omega _ { \mu b } ^ { c }

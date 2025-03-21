@@ -1,0 +1,1 @@
+J _ { k } = \oint p _ { k } d q _ { k } , k = r , \theta , \phi ,

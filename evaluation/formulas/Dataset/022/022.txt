@@ -1,0 +1,1 @@
+g _ { n } ^ { > } ( r , r ^ { \prime } ) = E _ { n } K _ { | n / \alpha | } ( \beta r ) , \quad \mathrm { f o r r > r ^ { ' } . }

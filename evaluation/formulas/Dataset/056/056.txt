@@ -1,0 +1,1 @@
+\int d t d ^ { 3 } x \bar { \lambda } \partial ^ { \mu } \gamma _ { \mu } \lambda ,

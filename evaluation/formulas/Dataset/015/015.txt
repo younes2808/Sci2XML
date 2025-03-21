@@ -1,0 +1,1 @@
+\Omega _ { k } ^ { ( l ) } = \sum _ { s = 0 } \int d ^ { 3 } y \left( ( - 1 ) ^ { s + 1 } \frac { d ^ { s } } { d t ^ { s } } \phi _ { k } ^ { i ( s ) } ( x , y ) L _ { i } ^ { ( 0 ) } ( y ) \right) .

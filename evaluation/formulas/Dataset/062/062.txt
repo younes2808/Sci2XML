@@ -1,0 +1,1 @@
+{ \bf N } ( { \bf p } , { \bf s } ) : = i p _ { 0 } { \nabla } _ { \bf p } - \frac { { \bf s } \times { \bf p } } { p _ { 0 } + m } , \quad { \bf J } ( { \bf p } , { \bf s } ) : = - i { \bf p } \times { \bf \nabla } _ { \bf p } + { \bf s } : = { \bf L } ( { \bf p } ) + { \bf s } ,

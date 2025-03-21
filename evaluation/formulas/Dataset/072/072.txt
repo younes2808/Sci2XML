@@ -1,0 +1,1 @@
+\mu ^ { \prime \prime } + \biggl [ n ^ { 2 } - \frac { a ^ { \prime \prime } } { a } \biggr ] \mu = 0 .
