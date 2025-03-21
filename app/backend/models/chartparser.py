@@ -50,11 +50,11 @@ def generate_unichart_response(image, prompt):
     response = response.split("<s_answer>")[1].strip() if "<s_answer>" in response else response
 
     # Debugging output
-    print(f"Generated response: {response}")
+    # print(f"Generated response: {response}")
 
     # Apply hallucination filter before returning
     if is_hallucinated(response):
-        print("❌ Response marked as unreliable")
+        # print("Response marked as unreliable")
         return "Unreliable response"
     
     return response
