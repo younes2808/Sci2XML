@@ -1,0 +1,1 @@
+( a ^ { \dagger } L _ { m n } a ) = a _ { k } ^ { \dagger } ( L _ { m n } ) _ { k l } a _ { l } = i a _ { [ m } ^ { \dagger } a _ { n ] } , ( L _ { m n } ) _ { k l } = i ( \delta _ { m k } \delta _ { n l } - \delta _ { n k } \delta _ { m l } )

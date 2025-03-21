@@ -1,0 +1,1 @@
+\left\{ Q ^ { i } , Q ^ { j } \right\} = c ^ { i j } \Gamma ^ { M } C P _ { M } + C c ^ { i j } Z ,

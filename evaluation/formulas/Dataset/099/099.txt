@@ -1,0 +1,1 @@
+{ \frac { d \omega } { d z } } = \omega ^ { 1 - \alpha _ { 0 } } ( 1 - \omega ) ^ { 1 - \alpha _ { 1 } }

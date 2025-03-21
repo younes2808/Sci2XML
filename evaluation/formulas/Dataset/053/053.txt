@@ -1,0 +1,1 @@
+F _ { a b } = { \frac { 1 } { 2 } } \epsilon _ { a b c d } F ^ { c d }

@@ -1,0 +1,1 @@
+S = S _ { P h y s . } ( \Phi ^ { a } , \Phi ^ { \ast a } ) + S _ { T } ( \vartheta ^ { b } , \vartheta ^ { \ast b } , c ^ { \alpha } )

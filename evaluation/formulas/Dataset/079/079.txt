@@ -1,0 +1,1 @@
+1 - \frac { 2 G M } { \rho } = ( \nabla \rho ) ^ { 2 } \equiv f

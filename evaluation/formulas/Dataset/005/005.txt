@@ -1,0 +1,1 @@
+Z = \sum _ { s p i n s } \prod _ { c u b e s } W ( a | e , f , g | b , c , d | h ) ,

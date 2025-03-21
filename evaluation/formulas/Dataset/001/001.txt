@@ -1,0 +1,1 @@
+\eta = - \frac { 1 } { 2 } \ln \left( \frac { \cosh \left( \sqrt { 2 } b _ { \infty } \sqrt { 1 + \alpha ^ { 2 } } y - \mathrm { a r c s i n h } \alpha \right) } { \sqrt { 1 + \alpha ^ { 2 } } } \right)

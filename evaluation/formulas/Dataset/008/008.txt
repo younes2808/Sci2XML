@@ -1,0 +1,1 @@
+R ( g ) = - f \left[ 3 \left[ ( \ln f ) ^ { \prime } \right] ^ { 2 } + \frac { \Lambda ( x ^ { 5 } ) } { M ^ { 3 } } \right] ,

@@ -1,0 +1,1 @@
+{ \frac { d } { d s } } { \frac { 1 } { \Gamma ( - s ) } } \bigg | _ { s = 0 } = - 1 ,

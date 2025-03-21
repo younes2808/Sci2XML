@@ -1,0 +1,1 @@
+| 0 \rangle \rightarrow | 0 \rangle _ { \beta } = ( 1 + \mathrm { e } ^ { - \beta \epsilon } ) ^ { - 1 / 2 } \{ | 0 \rangle _ { a } \otimes | 0 \rangle _ { b } + \mathrm { e } ^ { - \beta \epsilon / 2 } a ^ { \dagger } { \tilde { a } } | 0 \rangle _ { a } \otimes b ^ { \dagger } { \tilde { b } } | 0 \rangle _ { b } \} .

@@ -1,0 +1,1 @@
+\kappa _ { \omega } = \frac { 2 \Gamma ( \Delta _ { \omega } ) } { \pi \Gamma ( 1 - \Delta _ { \omega } ) } \left( \frac { \sqrt { \pi } \Gamma \left( \frac { 1 } { 2 - 2 \Delta _ { \omega } } \right) } { 2 \Gamma \left( \frac { \Delta _ { \omega } } { 2 - 2 \Delta _ { \omega } } \right) } \right) ^ { 2 - 2 \Delta _ { \omega } } .

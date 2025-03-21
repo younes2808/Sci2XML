@@ -1,0 +1,1 @@
+F _ { - { \frac { 1 } { 2 } } } ( x ) = \bar { \epsilon } _ { 0 } S ( x ) e ^ { - 1 / 2 \phi ( x ) } , \qquad F _ { \frac { 1 } { 2 } } ( x ) = \bar { \epsilon } _ { 0 } \gamma _ { \mu } S ( x ) \partial X ^ { \mu } ( x ) e ^ { 1 / 2 \phi ( x ) } ,

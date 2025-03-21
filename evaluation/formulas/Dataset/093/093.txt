@@ -1,0 +1,1 @@
+{ \cal L } ( J ) = \frac { 1 } { 2 } \partial _ { \mu } \phi \partial ^ { \mu } \phi + \frac { J } { 2 } \phi ^ { 2 } + \frac { \lambda \mu ^ { 2 \varepsilon } } { 4 ! } \phi ^ { 4 } + { \cal L } _ { \mathrm { C T } } ( J ) - \mu ^ { - 2 \varepsilon } \frac { \zeta } { 2 } J ^ { 2 } .

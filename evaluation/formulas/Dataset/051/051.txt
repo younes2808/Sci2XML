@@ -1,0 +1,1 @@
+T _ { \mathit { G } } ( - t , - t ^ { - 1 } ) = T _ { \mathit { G } ^ { \ast } } ( - t ^ { - 1 } , - t )

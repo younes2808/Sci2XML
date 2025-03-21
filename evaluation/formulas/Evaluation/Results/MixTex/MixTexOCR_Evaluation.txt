@@ -1,0 +1,714 @@
+Processing folder: 000
+Folder 000, Image 000.png: Similarity = 1.0000
+OCR LaTeX: \[\begin{array}{r}{\alpha_{1}^{\mathrm{T}}\gamma_{1}+\ldots+\alpha_{N}^{\mathrm{r}}\gamma_{N}=0\quad(r=1,...,R),}\end{array}\]
+Correct LaTeX: \alpha _ { 1 } ^ { r } \gamma _ { 1 } + \dots + \alpha _ { N } ^ { r } \gamma _ { N } = 0 \quad ( r = 1 , . . . , R ) ,
+Time taken for OCR: 2.0042 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 001
+Folder 001, Image 001.png: Similarity = 0.9714
+OCR LaTeX: \[\eta=-\frac{1}{2}\ln\left(\frac{\cosh\left(\sqrt{2}b_{\mathrm{os}}\sqrt{1+\alpha^{2}}y-\mathrm{arcsinh}\alpha\right)}{\sqrt{1+\alpha^{2}}}\right)\]
+Correct LaTeX: \eta = - \frac { 1 } { 2 } \ln \left( \frac { \cosh \left( \sqrt { 2 } b _ { \infty } \sqrt { 1 + \alpha ^ { 2 } } y - \mathrm { a r c s i n h } \alpha \right) } { \sqrt { 1 + \alpha ^ { 2 } } } \right)
+Time taken for OCR: 2.2131 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 002
+Folder 002, Image 002.png: Similarity = 0.9744
+OCR LaTeX: \[P_{{(2)}}^{-}\equiv\int\beta d\beta d^{3}p d^{3}\lambda\Phi(-p,-\lambda)\left(-\frac{p^{I}p^{I}}{2\beta}\right)\Phi(p,\lambda).\]
+Correct LaTeX: P _ { ( 2 ) } ^ { - } = \int \beta d \beta d ^ { 9 } p d ^ { 8 } \lambda \Phi ( - p , - \lambda ) \left( - \frac { p ^ { I } p ^ { I } } { 2 \beta } \right) \Phi ( p , \lambda ) .
+Time taken for OCR: 2.1457 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 003
+Folder 003, Image 003.png: Similarity = 0.9767
+OCR LaTeX: \[\Gamma(z+1)=\int_{0}^{\infty}\mathrm{d}x e^{-\pi}x^{z}.\]
+Correct LaTeX: \Gamma ( z + 1 ) = \int _ { 0 } ^ { \infty } d x e ^ { - x } x ^ { z } .
+Time taken for OCR: 1.4742 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 004
+Folder 004, Image 004.png: Similarity = 1.0000
+OCR LaTeX: \[\frac{d}{d s}{\bf C}_{i}=\frac{1}{2}\epsilon_{i j k}{\bf C}_{j}\times{\bf C}_{k}.\]
+Correct LaTeX: \frac { d } { d s } { \bf C } _ { i } = \frac { 1 } { 2 } \epsilon _ { i j k } { \bf C } _ { j } \times { \bf C } _ { k } .
+Time taken for OCR: 1.7763 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 005
+Folder 005, Image 005.png: Similarity = 0.8478
+OCR LaTeX: \[Z=\sum_{\mathrm{spin}s}\prod_{\mathrm{cvol}b\mathrm{cs}}\bar{W}(a|\mathrm{e}_{j}\,f_{s}\,g|b_{j}\,c_{j}\,d|h)_{s}\]
+Correct LaTeX: Z = \sum _ { s p i n s } \prod _ { c u b e s } W ( a | e , f , g | b , c , d | h ) ,
+Time taken for OCR: 2.9447 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 006
+Folder 006, Image 006.png: Similarity = 0.7288
+OCR LaTeX: \[\{Q^{\dagger},Q^{\dagger}\}=\mathrm{e}^{\mathrm{i}\dot{q}}\Gamma^{M}C P_{M}+C\mathrm{e}^{\mathrm{i}\dot{q}}Z,\]
+Correct LaTeX: \left\{ Q ^ { i } , Q ^ { j } \right\} = c ^ { i j } \Gamma ^ { M } C P _ { M } + C c ^ { i j } Z ,
+Time taken for OCR: 2.0297 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 007
+Folder 007, Image 007.png: Similarity = 0.8828
+OCR LaTeX: \[\displaystyle\check{\zeta}_{n,\nu}=\sum_{m=n}^{2n}\frac{\Gamma\left(\nu+m-\frac{D-1}{2}\right)}{\Gamma\left(\nu+\eta-\frac{D-1}{2}\right)}\check{Q}_{2}(m\!-\!n)\!,m\,.\]
+Correct LaTeX: \breve { c } _ { n , \nu } = \sum _ { m = n } ^ { 2 n } { \frac { \Gamma \left( \nu + m - { \frac { D - 1 } { 2 } } \right) } { \Gamma \left( \nu + n - { \frac { D - 1 } { 2 } } \right) } } \breve { a } _ { 2 ( m - n ) , m } .
+Time taken for OCR: 2.5375 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 008
+Folder 008, Image 008.png: Similarity = 0.9759
+OCR LaTeX: \[R(g)=-f\left[3\left[(\ln f)^{\prime}\right]^{2}+\frac{\Lambda\big{(}\mathrm{g}^{5}\big{)}}{M^{3}}\right].\]
+Correct LaTeX: R ( g ) = - f \left[ 3 \left[ ( \ln f ) ^ { \prime } \right] ^ { 2 } + \frac { \Lambda ( x ^ { 5 } ) } { M ^ { 3 } } \right] ,
+Time taken for OCR: 1.8527 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 009
+Folder 009, Image 009.png: Similarity = 0.8654
+OCR LaTeX: \[\frac{d}{d s}\left.\frac{1}{\Gamma\left(-s\right)}\right|_{s\equiv0}=-1,\]
+Correct LaTeX: { \frac { d } { d s } } { \frac { 1 } { \Gamma ( - s ) } } \bigg | _ { s = 0 } = - 1 ,
+Time taken for OCR: 1.6039 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 010
+Folder 010, Image 010.png: Similarity = 0.8870
+OCR LaTeX: \[\dot{x}_{1}=-N^{2}(x_{1})=-g(x_{1})=-\frac{x_{1}}{P_{x}(x_{2}-x_{1})};\dot{x}_{2}=-\frac{x_{2}}{P_{x}(x_{2}-x_{1})}\]
+Correct LaTeX: \dot { z } _ { 1 } = - N ^ { z } ( z _ { 1 } ) = - g ( z _ { 1 } ) = - \frac { z _ { 1 } } { P _ { z } ( z _ { 2 } - z _ { 1 } ) } ; \dot { z } _ { 2 } = - \frac { z _ { 2 } } { P _ { z } ( z _ { 2 } - z _ { 1 } ) }
+Time taken for OCR: 2.3450 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 011
+Folder 011, Image 011.png: Similarity = 0.8202
+OCR LaTeX: \[c_{\alpha}=\sum_{\boldsymbol{\beta}\in\bigwedge\boldsymbol{R}}\epsilon(\alpha,\boldsymbol{\beta})|\boldsymbol{\beta}+\bar{\boldsymbol{\beta}}>\boldsymbol{\zeta}\neq\bar{\boldsymbol{\beta}}|\]
+Correct LaTeX: c _ { \alpha } = \sum _ { \beta \in \Lambda _ { R } } \epsilon ( \alpha , \beta ) | \beta + \bar { p } > < \beta + \bar { p } |
+Time taken for OCR: 2.8515 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 012
+Folder 012, Image 012.png: Similarity = 0.8929
+OCR LaTeX: \[{\cal L}=-\frac{1}{4}F_{\mu\nu}F^{\mu\nu}+\bar{\phi}\{\hat{\epsilon}\gamma^{\mu}D_{\mu}-\eta\epsilon\}\phi_{j}\]
+Correct LaTeX: { \cal L } = - { \frac { 1 } { 4 } } F _ { \mu \nu } F ^ { \mu \nu } + { \bar { \psi } } ( i \gamma ^ { \mu } D _ { \mu } - m ) \psi ,
+Time taken for OCR: 2.1609 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 013
+Folder 013, Image 013.png: Similarity = 0.7453
+OCR LaTeX: \[\phi^{\mathrm{ikr}}\equiv\phi^{\mathrm{ikr}}\cos(\theta\!-\!\Theta)\equiv\sum_{l\!=\!\mathrm{os}}^{\!\mathrm{os}}i^{l}J_{l}(k\pi)e^{\mathrm{i}l(\theta\!-\!\Theta)},\]
+Correct LaTeX: e ^ { i { \bf k \cdot r } } = e ^ { i k r \cos ( \theta - \Theta ) } = \sum _ { l = - \infty } ^ { \infty } i ^ { l } J _ { l } ( k r ) e ^ { i l ( \theta - \Theta ) } ,
+Time taken for OCR: 2.4283 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 014
+Folder 014, Image 014.png: Similarity = 0.9655
+OCR LaTeX: \[\dot{*\sqrt{2}\partial_{-}\chi-g[\phi_{j},\phi]=0,\quad\partial_{\bot}^{2}\bar{A}_{+}-g^{2}J^{+}=0.\]
+Correct LaTeX: i \sqrt { 2 } \partial _ { - } \chi - g [ \phi , \psi ] = 0 , \quad \partial _ { - } ^ { 2 } \bar { A } _ { + } - g ^ { 2 } J ^ { + } = 0 .
+Time taken for OCR: 1.8958 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 015
+Folder 015, Image 015.png: Similarity = 0.9739
+OCR LaTeX: \[\Omega_{k}^{(l)}\equiv\sum_{s=0}\int d^{3}y\left((-1)^{s+1}\frac{d^{s}}{d t^{s}}\phi_{k}^{i(s)}(\varpi_{s}y)L_{i}^{(0)}(y)\right).\]
+Correct LaTeX: \Omega _ { k } ^ { ( l ) } = \sum _ { s = 0 } \int d ^ { 3 } y \left( ( - 1 ) ^ { s + 1 } \frac { d ^ { s } } { d t ^ { s } } \phi _ { k } ^ { i ( s ) } ( x , y ) L _ { i } ^ { ( 0 ) } ( y ) \right) .
+Time taken for OCR: 2.3608 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 016
+Folder 016, Image 016.png: Similarity = 0.8596
+OCR LaTeX: \[\begin{array}{r}{L_{g}^{\prime}\left(\vartheta(h)\right)=\vartheta\bigl(L_{g}h\bigr)=\vartheta\bigl(g h\bigr)_{s}\,\forall g_{j}\,h\in\mathcal{G},}\end{array}\]
+Correct LaTeX: L _ { g } ^ { ' } \Bigl ( v ( h ) \Bigr ) = v ( L _ { g } h ) = v ( g h ) , \forall g , h \in G ,
+Time taken for OCR: 2.4718 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 017
+Folder 017, Image 017.png: Similarity = 0.9740
+OCR LaTeX: \[\xi^{2}=\left(\frac{\bar{\epsilon}_{1}-\bar{\epsilon}_{2}}{\bar{\epsilon}_{1}+\bar{\epsilon}_{2}}\right)^{2}=\left(\frac{\mu_{1}-\mu_{2}}{\mu_{1}+\mu_{2}}\right)^{2},\]
+Correct LaTeX: \xi ^ { 2 } = \left( \frac { \varepsilon _ { 1 } - \varepsilon _ { 2 } } { \varepsilon _ { 1 } + \varepsilon _ { 2 } } \right) ^ { 2 } = \left( \frac { \mu _ { 1 } - \mu _ { 2 } } { \mu _ { 1 } + \mu _ { 2 } } \right) ^ { 2 } ,
+Time taken for OCR: 2.9630 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 018
+Folder 018, Image 018.png: Similarity = 0.9054
+OCR LaTeX: \[R(\mathrm{e}_{1})\equiv\epsilon^{-J_{0}\tau+J_{8}\theta},\quad R(\mathrm{e}_{2})\equiv\epsilon^{J_{4}\bar{5}-J_{8}\rho},\]
+Correct LaTeX: R ( e _ { 1 } ) = \epsilon ^ { - J _ { 6 7 } + J _ { 8 9 } } , \quad R ( e _ { 2 } ) = \epsilon ^ { J _ { 4 5 } - J _ { 8 9 } } .
+Time taken for OCR: 2.0569 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 019
+Folder 019, Image 019.png: Similarity = 0.8657
+OCR LaTeX: \[\widetilde{\cal E}_{\mathrm{m}<0}={\cal E}_{\mathrm{m}<0}(B)-{\cal E}(0)={\frac{B^{2}}{2}}+{\frac{(e B)^{2}}{2\pi}}g\left({\frac{e B}{\cal m^{2}}}\right),\]
+Correct LaTeX: { \tilde { \cal { E } } } _ { m < 0 } = { \cal { E } } _ { m < 0 } ( B ) - { \cal { E } } ( 0 ) = \frac { B ^ { 2 } } { 2 } + \frac { ( e B ) ^ { \frac { 3 } { 2 } } } { 2 \pi } g \left( \frac { e B } { m ^ { 2 } } \right) ,
+Time taken for OCR: 2.3041 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 020
+Folder 020, Image 020.png: Similarity = 0.9423
+OCR LaTeX: \[\hat{O}_{2}^{r}\mid1>_{(0)}\equiv O_{2}^{r}\mid0>_{(0)}\.\]
+Correct LaTeX: \hat { O } _ { 2 } ^ { r } \mid 1 > _ { ( 0 ) } = { O } _ { 2 } ^ { r } \mid 0 > _ { ( 0 ) } .
+Time taken for OCR: 1.5412 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 021
+Folder 021, Image 021.png: Similarity = 0.9792
+OCR LaTeX: \[I^{\mathrm{c}}=\mp\frac{\pi b\sqrt{1-\Lambda\varrho^{2}}}{2\mathcal{G}},\]
+Correct LaTeX: I ^ { c } = \mp { \frac { \pi b \sqrt { 1 - \Lambda a ^ { 2 } } } { 2 G } } ,
+Time taken for OCR: 1.5575 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 022
+Folder 022, Image 022.png: Similarity = 0.7922
+OCR LaTeX: \[g_{n}^{>}(\tau_{j}\tau^{\prime})\equiv E_{n}K_{1n/\mathrm{a}}[\left\langle\bar{\rho}\tau\right\rangle_{s}\quad\mathrm{for}r>\mathrm{r}\;.\]
+Correct LaTeX: g _ { n } ^ { > } ( r , r ^ { \prime } ) = E _ { n } K _ { | n / \alpha | } ( \beta r ) , \quad \mathrm { f o r r > r ^ { ' } . }
+Time taken for OCR: 2.3556 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 023
+Folder 023, Image 023.png: Similarity = 0.9821
+OCR LaTeX: \[Q_{1}^{a b}(x_{j}y)\equiv Q_{1}^{a b}+x_{o}J_{1}^{a b}+y K_{1}^{a b},\]
+Correct LaTeX: Q _ { 1 } ^ { a b } ( x , y ) \equiv Q _ { 1 } ^ { a b } + x J _ { 1 } ^ { a b } + y K _ { 1 } ^ { a b } ,
+Time taken for OCR: 2.5517 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 024
+Folder 024, Image 024.png: Similarity = 0.8328
+OCR LaTeX: \[\begin{array}{r}{\left\{\begin{array}{c}{\partial_{\tau}R+\tilde{\nabla}\cdot\left(\tilde{\nabla}\Theta\sqrt{\frac{R^{2}+a^{2}}{1+(\tilde{\nabla}\Theta)^{2}}}\right)=0,}\\ {\partial_{\tau}\Theta+R\sqrt{\frac{1+(\tilde{\nabla}\Theta)^{2}}{R^{2}+a^{2}}}=0.}\end{array}\right.}\end{array}\]
+Correct LaTeX: \left\{ \begin{array} { c } { \partial _ { \tau } R + \vec { \nabla } \cdot \left( \vec { \nabla } \Theta \sqrt { \displaystyle \frac { R ^ { 2 } + a ^ { 2 } } { 1 + ( \vec { \nabla } \Theta ) ^ { 2 } } } \right) = 0 , \hfill } \\ { \partial _ { \tau } \Theta + R \sqrt { \displaystyle \frac { 1 + ( \vec { \nabla } \Theta ) ^ { 2 } } { R ^ { 2 } + a ^ { 2 } } } = 0 . \hfill } \\ \end{array} \right.
+Time taken for OCR: 3.2472 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 025
+Folder 025, Image 025.png: Similarity = 0.8261
+OCR LaTeX: \[\{\Psi\circ\mu_{j}f\}=(\overline{{X}}_{i}f)(Y^{i}\Psi)\circ\mu_{j}\]
+Correct LaTeX: \left\{ \Psi \circ \mu , f \right\} = ( \overline { X } _ { i } f ) ( Y ^ { i } \Psi ) \circ \mu ,
+Time taken for OCR: 1.6412 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 026
+Folder 026, Image 026.png: Similarity = 0.9941
+OCR LaTeX: \[\begin{array}{r}{F_{n}^{\mathcal{O}|\mu_{1}\ldots\mu_{n}}(\theta_{1}+\lambda_{i}\ldots,\theta_{n}+\lambda)=e^{s\lambda}F_{n}^{\mathcal{O}|\mu_{1}\ldots\mu_{n}}(\theta_{1},\ldots,\theta_{n}),}\end{array}\]
+Correct LaTeX: F _ { n } ^ { \mathcal { O } | \mu _ { 1 } \ldots \mu _ { n } } ( \theta _ { 1 } + \lambda , \ldots , \theta _ { n } + \lambda ) = e ^ { s \lambda } F _ { n } ^ { \mathcal { O } | \mu _ { 1 } \ldots \mu _ { n } } ( \theta _ { 1 } , \ldots , \theta _ { n } ) ,
+Time taken for OCR: 2.7899 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 027
+Folder 027, Image 027.png: Similarity = 0.7857
+OCR LaTeX: \[\begin{array}{r}{\mathcal{S}=\mathcal{S}_{P h y s.}\big(\Phi^{a},\Phi^{a a}\big)+\mathcal{S}_{T}\big(\partial^{b},\partial^{a b},\partial^{c\bar{a}}\big)}\end{array}\]
+Correct LaTeX: S = S _ { P h y s . } ( \Phi ^ { a } , \Phi ^ { \ast a } ) + S _ { T } ( \vartheta ^ { b } , \vartheta ^ { \ast b } , c ^ { \alpha } )
+Time taken for OCR: 2.3663 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 028
+Folder 028, Image 028.png: Similarity = 0.8587
+OCR LaTeX: \[{\cal A}\equiv\exp\left[\int_{0}^{\lambda}d\vec{\lambda}\theta(\vec{\lambda})\right].\]
+Correct LaTeX: \mathcal { A } \equiv \exp \left[ \int _ { 0 } ^ { \lambda } d \tilde { \lambda } \theta ( \tilde { \lambda } ) \right] .
+Time taken for OCR: 2.2452 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 029
+Folder 029, Image 029.png: Similarity = 0.8553
+OCR LaTeX: \[\begin{array}{r}{F_{-\frac{1}{2}}(x)=\bar{e}_{0}S(x)e^{-1/2\phi(x)},~~~~~~~~~~F_{\frac{1}{2}}(x)=\bar{e}_{0}\gamma_{\mu}S(x)\partial X^{\mu}(x)\mathrm{e}^{1/2\phi(x)},}\end{array}\]
+Correct LaTeX: F _ { - { \frac { 1 } { 2 } } } ( x ) = \bar { \epsilon } _ { 0 } S ( x ) e ^ { - 1 / 2 \phi ( x ) } , \qquad F _ { \frac { 1 } { 2 } } ( x ) = \bar { \epsilon } _ { 0 } \gamma _ { \mu } S ( x ) \partial X ^ { \mu } ( x ) e ^ { 1 / 2 \phi ( x ) } ,
+Time taken for OCR: 3.2029 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 030
+Folder 030, Image 030.png: Similarity = 0.9733
+OCR LaTeX: \[\rho^{0}=\left(\begin{array}{c c}{{0}}&{{-i}}\\ {{\dot{i}}}&{{0}}\end{array}\right)\mathrm{and}\rho^{1}=\left(\begin{array}{c c}{{0}}&{{\dot{i}}}\\ {{\dot{i}}}&{{0}}\end{array}\right).\]
+Correct LaTeX: \rho ^ { 0 } = \left( \begin{array} { c c } { 0 } & { - i } \\ { i } & { 0 } \\ \end{array} \right) \mathrm { a n d } \rho ^ { 1 } = \left( \begin{array} { c c } { 0 } & { i } \\ { i } & { 0 } \\ \end{array} \right) .
+Time taken for OCR: 2.5777 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 031
+Folder 031, Image 031.png: Similarity = 0.8772
+OCR LaTeX: \[\displaystyle\phi=\sum_{i=0}^{3}(\forall_{i}^{A}+\left(\forall_{i}^{A}\right)^{\mathrm{c}})T^{A}\]
+Correct LaTeX: \psi = \sum _ { i = 0 } ^ { 3 } ( \psi _ { i } ^ { A } + ( \psi _ { i } ^ { A } ) ^ { c } ) T ^ { A }
+Time taken for OCR: 1.7159 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 032
+Folder 032, Image 032.png: Similarity = 0.8980
+OCR LaTeX: \[G=\varrho^{i\tau L_{-1}}\varrho^{i U^{(1)}L_{1}}\varrho^{i U^{(2)}L_{2}}\varrho^{i U^{(3)}L_{3}}\dots\varrho^{i U^{(0)}L_{0}},\]
+Correct LaTeX: G = \! e ^ { i \tau L _ { - 1 } } e ^ { i U ^ { ( 1 ) } L _ { 1 } } e ^ { i U ^ { ( 2 ) } L _ { 2 } } e ^ { i U ^ { ( 3 ) } L _ { 3 } } \ldots \! e ^ { i { U ^ { ( 0 ) } } L _ { 0 } } ,
+Time taken for OCR: 2.1894 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 033
+Folder 033, Image 033.png: Similarity = 0.9756
+OCR LaTeX: \[V(x,\bar{z})=\mathrm{e}^{-q\Phi(x)}\mathrm{e}^{i\alpha\cdot\bar{H}}\mathrm{e}^{i(P_{R}\cdot\mathcal{X}_{R}\mathrm{-P_{L}\cdot\mathcal{X}_{L})}\mathrm{,}~}\]
+Correct LaTeX: V ( z , \bar { z } ) = e ^ { - q \Phi ( z ) } e ^ { i \alpha \cdot H } e ^ { i ( P _ { R } \cdot X _ { R } - P _ { L } \cdot X _ { L } ) } ,
+Time taken for OCR: 2.7304 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 034
+Folder 034, Image 034.png: Similarity = 0.9873
+OCR LaTeX: \[\begin{array}{r}{\epsilon_{i}=\tau_{i}+\rho_{i}+\rho_{i-1},\quad\left(\tau_{3}=0,\ \rho_{0}=\rho_{4}\right)}\end{array}\]
+Correct LaTeX: \epsilon _ { i } = \tau _ { i } + \rho _ { i } + \rho _ { i - 1 } , \quad ( \tau _ { 3 } = 0 , \: \rho _ { 0 } = \rho _ { 4 } )
+Time taken for OCR: 2.5903 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 035
+Folder 035, Image 035.png: Similarity = 0.8621
+OCR LaTeX: \[\begin{array}{r}{\mathfrak{s}_{\mathcal{O S}}\big(k^{2}\big)-\mathfrak{s}_{\mathcal{Y}_{\mathrm{max}}}\big(k^{2}\big)\sim O\big(J_{\mathrm{max}}^{-2}\big).}\end{array}\]
+Correct LaTeX: s _ { \infty } ( k ^ { 2 } ) - s _ { J _ { \max } } ( k ^ { 2 } ) \sim O ( J _ { \max } ^ { - 2 } ) .
+Time taken for OCR: 2.3748 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 036
+Folder 036, Image 036.png: Similarity = 0.4336
+OCR LaTeX: \[\begin{array}{r}{A(\mathsf{u})=\mathrm{Res}\big|_{{\mathsf{y}}={\mathsf{u}}}\left(\frac{1}{y-q_{}}\bar{R}\big(\mathsf{u},\mathsf{v}\big)\cdot L\big(\mathsf{v}\big)\right)+\frac{1}{2}\xi\big(\mathsf{Qu}\big)L\big(\mathsf{u}\big)}\end{array}\]
+Correct LaTeX: A ( u ) = \mathrm { R e s } \vert _ { v = u } ^ { } \left( { \frac { 1 } { v - u } } R ( u , v ) \cdot L ( v ) \right) + { \textstyle { \frac { 1 } { 2 } } } \zeta ( 2 u ) L ( u )
+Time taken for OCR: 3.1337 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 037
+Folder 037, Image 037.png: Similarity = 1.0000
+OCR LaTeX: \[\int\mathrm{d}^{4}x_{1}\cdots\mathrm{d}^{4}x_{n}P_{4}\big{(}x_{1},\cdots,x_{n}\big{)}\Gamma_{x_{1}\cdots x_{n}0}=0\]
+Correct LaTeX: \int \mathrm { d } ^ { 4 } x _ { 1 } \cdots \mathrm { d } ^ { 4 } x _ { n } P _ { 4 } ( x _ { 1 } , \cdots , x _ { n } ) \Gamma _ { x _ { 1 } \cdots x _ { n } 0 } = 0
+Time taken for OCR: 2.1992 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 038
+Folder 038, Image 038.png: Similarity = 0.9306
+OCR LaTeX: \[L\equiv\frac{\dot{g}_{\mu}^{2}}{2e}+\frac{\lambda}{l}(\mathrm{e}-\bar{M}^{-1}\dot{\mathrm{o}}^{0})_{*}\]
+Correct LaTeX: L = \frac { \dot { x } _ { \mu } ^ { 2 } } { 2 e } + \frac { \lambda } { l } ( e - M ^ { - 1 } \dot { x } { } ^ { 0 } ) ,
+Time taken for OCR: 2.0243 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 039
+Folder 039, Image 039.png: Similarity = 0.9429
+OCR LaTeX: \[J_{2}(x)\ \times X^{+}\big{(}0\big{)}\rightarrow0.\]
+Correct LaTeX: J _ { 2 } ( z ) \times X ^ { + } ( w ) \rightarrow 0 .
+Time taken for OCR: 1.9490 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 040
+Folder 040, Image 040.png: Similarity = 0.9259
+OCR LaTeX: \[F(x_{12}^{\prime})=\bar{K}(x_{2};g)F(x_{12})K(x_{11};g)\]
+Correct LaTeX: F ( z _ { 1 2 } ^ { \prime } ) = \bar { K } ( z _ { 2 } ; g ) F ( z _ { 1 2 } ) K ( z _ { 1 } ; g )
+Time taken for OCR: 1.9433 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 041
+Folder 041, Image 041.png: Similarity = 0.8200
+OCR LaTeX: \[\xi_{i}^{\ast}:p_{i}^{\bullet}:\quad i=2_{j}\ldots,l\mathrm{~+~1~}\]
+Correct LaTeX: { \xi } _ { i } ^ { \ast } , { p } _ { i } ^ { \ast } , \quad i = 2 , \dots , l + 1
+Time taken for OCR: 1.6015 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 042
+Folder 042, Image 042.png: Similarity = 0.9917
+OCR LaTeX: \[\begin{array}{r}{\varrho_{L}-\mathcal{L}_{E}=[2\dot{\Phi}^{2}]K^{\prime}\big(\dot{\Phi}^{2},\Phi\big)-K\big(\dot{\Phi}^{2},\Phi\big)+K\big(-\dot{\Phi}^{2},\bar{\Phi}\big).}\end{array}\]
+Correct LaTeX: \varrho _ { L } - { \cal L } _ { E } = [ 2 \dot { \Phi } ^ { 2 } ] K ^ { \prime } ( \dot { \Phi } ^ { 2 } , \Phi ) - K ( \dot { \Phi } ^ { 2 } , \Phi ) + K ( - \dot { \Phi } ^ { 2 } , \Phi ) .
+Time taken for OCR: 2.6187 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 043
+Folder 043, Image 043.png: Similarity = 1.0000
+OCR LaTeX: \[K^{\prime}=\sqrt{c-2f}\,\ K^{\prime\prime}=-\frac{1}{\sqrt{c-2f}}\,\]
+Correct LaTeX: K ^ { \prime } = \sqrt { c - 2 f } \ , \ K ^ { \prime \prime } = - \frac { 1 } { \sqrt { c - 2 f } } \ ,
+Time taken for OCR: 1.5811 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 044
+Folder 044, Image 044.png: Similarity = 0.8917
+OCR LaTeX: \[\kappa_{\!\nu}=\frac{2\Gamma(\Delta_{\!\omega})}{\pi\Gamma(1-\Delta_{\!\omega})}\ \left(\frac{\sqrt{\pi}\Gamma\left(\frac{1}{2\!-\!2\Delta_{\!\omega}}\right)}{2\Gamma\left(\frac{\Delta_{\!\omega}}{2\!-\!2\Delta_{\!\omega}}\right)}\right)\ \ \ \ \ \.\]
+Correct LaTeX: \kappa _ { \omega } = \frac { 2 \Gamma ( \Delta _ { \omega } ) } { \pi \Gamma ( 1 - \Delta _ { \omega } ) } \left( \frac { \sqrt { \pi } \Gamma \left( \frac { 1 } { 2 - 2 \Delta _ { \omega } } \right) } { 2 \Gamma \left( \frac { \Delta _ { \omega } } { 2 - 2 \Delta _ { \omega } } \right) } \right) ^ { 2 - 2 \Delta _ { \omega } } .
+Time taken for OCR: 2.8750 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 045
+Folder 045, Image 045.png: Similarity = 0.8811
+OCR LaTeX: \[<\frac{1}{2},m_{\theta}|\phi_{\omega}^{(\frac{1}{2})}(g)>=D_{m_{\theta}-\frac{1}{2}}^{({\frac{1}{2})}}(g)=<g_{,l}+\frac{1}{2}|T_{m_{\theta}}^{\frac{1}{2}}|g_{,l}>.\]
+Correct LaTeX: < \frac { 1 } { 2 } , m _ { s } | { \psi } _ { - } ^ { ( \frac { 1 } { 2 } ) } ( g ) > \equiv D _ { m _ { s } - \frac { 1 } { 2 } } ^ { ( \frac { 1 } { 2 } ) } ( g ) = < g , l + \frac { 1 } { 2 } | T _ { m _ { s } - } ^ { \frac { 1 } { 2 } } | g , l > .
+Time taken for OCR: 3.3707 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 046
+Folder 046, Image 046.png: Similarity = 1.0000
+OCR LaTeX: \[D^{\mu}\frac{\delta f(A_{\nu})}{\delta A_{\mu}}=D_{\mu}\partial^{\mu}(\partial_{\nu}A^{\nu})\]
+Correct LaTeX: D ^ { \mu } \frac { \delta f ( A _ { \nu } ) } { \delta A _ { \mu } } = D _ { \mu } \partial ^ { \mu } ( \partial _ { \nu } A ^ { \nu } )
+Time taken for OCR: 1.7291 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 047
+Folder 047, Image 047.png: Similarity = 0.9649
+OCR LaTeX: \[\delta\chi_{\mu\nu}=\dot{v}b_{\mu\nu_{j}}\qquad\delta b_{\mu\nu}=0.\]
+Correct LaTeX: \delta \chi _ { \mu \nu } = i b _ { \mu \nu } , \qquad \delta b _ { \mu \nu } = 0 .
+Time taken for OCR: 1.6707 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 048
+Folder 048, Image 048.png: Similarity = 0.9868
+OCR LaTeX: \[V_{a b m n}^{k}=\frac{1}{g}\ E_{a}^{r}\ E_{b}^{s}\epsilon_{r s(m}\ \delta_{n}^{i}).\]
+Correct LaTeX: V _ { a b m n } ^ { k } = \frac { 1 } { g } \ E _ { a } ^ { r } \ E _ { b } ^ { s } \epsilon _ { r s ( m } \ \delta _ { n ) } ^ { i } .
+Time taken for OCR: 1.8717 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 049
+Folder 049, Image 049.png: Similarity = 1.0000
+OCR LaTeX: \[f(r)=\left(1-\frac{m}{2r^{n-1}}\right)^{2}+\frac{r^{2}}{l^{2}}.\]
+Correct LaTeX: f ( r ) = \left( 1 - \frac { m } { 2 r ^ { n - 1 } } \right) ^ { 2 } + \frac { r ^ { 2 } } { l ^ { 2 } } .
+Time taken for OCR: 1.6890 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 050
+Folder 050, Image 050.png: Similarity = 1.0000
+OCR LaTeX: \[E_{12}\Phi=2\sqrt{\left(m+\frac{1}{2}b r\right)^{2}+p_{r}^{2}+\frac{\ell(\ell+1)}{r^{2}}}\Phi,\]
+Correct LaTeX: E _ { 1 2 } \Phi = 2 \sqrt { ( m + \frac { 1 } { 2 } b r ) ^ { 2 } + p _ { r } ^ { 2 } + \frac { \ell ( \ell + 1 ) } { r ^ { 2 } } } \Phi ,
+Time taken for OCR: 2.0436 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 051
+Folder 051, Image 051.png: Similarity = 0.6167
+OCR LaTeX: \[T_{G}(-t_{j}-t^{-1})=T_{G^{*}}(-t^{-1},-t)\]
+Correct LaTeX: T _ { \mathit { G } } ( - t , - t ^ { - 1 } ) = T _ { \mathit { G } ^ { \ast } } ( - t ^ { - 1 } , - t )
+Time taken for OCR: 1.6871 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 052
+Folder 052, Image 052.png: Similarity = 0.8991
+OCR LaTeX: \[d s_{11}^{2}=d\omega^{+}d\omega^{-}\mp\ell_{p}^{9}\frac{2^{D-}}{r^{7}}\delta(\omega^{-})d\omega^{-}d\omega^{-}+d\omega_{1}^{2}+\cdots\ +\ d\omega_{9}^{2}\]
+Correct LaTeX: d s _ { 1 1 } ^ { 2 } = d x ^ { + } d x ^ { - } + l _ { p } ^ { 9 } \frac { p _ { - } } { r ^ { 7 } } \delta ( x ^ { - } ) d x ^ { - } d x ^ { - } + d x _ { 1 } ^ { 2 } + \ \cdots \ + d x _ { 9 } ^ { 2 }
+Time taken for OCR: 3.1590 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 053
+Folder 053, Image 053.png: Similarity = 0.9268
+OCR LaTeX: \[F_{a b}\equiv\frac{1}{2}\epsilon_{a b c d}F^{c d}\]
+Correct LaTeX: F _ { a b } = { \frac { 1 } { 2 } } \epsilon _ { a b c d } F ^ { c d }
+Time taken for OCR: 1.5077 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 054
+Folder 054, Image 054.png: Similarity = 1.0000
+OCR LaTeX: \[\displaystyle2f^{2}-4f^{2}-g^{2}\big{(}1-\Gamma\big{)},\]
+Correct LaTeX: 2 f ^ { 2 } - 4 f ^ { 2 } - g ^ { 2 } ( 1 - \Gamma ) ,
+Time taken for OCR: 1.4839 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 055
+Folder 055, Image 055.png: Similarity = 1.0000
+OCR LaTeX: \[\begin{array}{r}{(a^{\dagger}L_{m n}a)=a_{k}^{\dagger}(L_{m n})_{k l}a_{l}=i a_{[m}^{\dagger}a_{n]},(L_{m n})_{k l}=i(\delta_{m k}\delta_{n l}-\delta_{n k}\delta_{m l})}\end{array}\]
+Correct LaTeX: ( a ^ { \dagger } L _ { m n } a ) = a _ { k } ^ { \dagger } ( L _ { m n } ) _ { k l } a _ { l } = i a _ { [ m } ^ { \dagger } a _ { n ] } , ( L _ { m n } ) _ { k l } = i ( \delta _ { m k } \delta _ { n l } - \delta _ { n k } \delta _ { m l } )
+Time taken for OCR: 2.7548 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 056
+Folder 056, Image 056.png: Similarity = 0.9831
+OCR LaTeX: \[\displaystyle\int d t d^{3}x\bar{\lambda}\partial^{\mu}\gamma_{\mu}\lambda_{j}\]
+Correct LaTeX: \int d t d ^ { 3 } x \bar { \lambda } \partial ^ { \mu } \gamma _ { \mu } \lambda ,
+Time taken for OCR: 1.5175 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 057
+Folder 057, Image 057.png: Similarity = 0.8788
+OCR LaTeX: \[h=\frac{\delta\lambda}{1+2n+s N+\left\vert N\right\vert^{3}},\]
+Correct LaTeX: h = { \frac { s \lambda } { 1 + 2 n + s N + | N | } } ,
+Time taken for OCR: 1.5371 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 058
+Folder 058, Image 058.png: Similarity = 0.9286
+OCR LaTeX: \[Q=\mathcal{C}\sum_{i}f_{i}^{\prime}p^{i}+\sum_{k}c_{k}p^{k}f_{k}+\mathrm{i}\alpha f\mathrm{eriete~mor}e.\]
+Correct LaTeX: Q = c \sum _ { i } f _ { i } ^ { \prime } p ^ { i } + \sum _ { k } c _ { k } p ^ { k } f _ { k } + i n f i n i t e \: m o r e .
+Time taken for OCR: 2.7156 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 059
+Folder 059, Image 059.png: Similarity = 1.0000
+OCR LaTeX: \[\mathrm{Tr}\log(1-\sum_{i=0}^{N}A_{i})=\mathrm{Tr}\log(1-\sum_{k=1}^{N}\sum_{m=0}^{k-1}A_{k}\phi^{m})+\mathrm{Tr}\log(1-\phi).\]
+Correct LaTeX: \mathrm { T r } \log ( 1 - \sum _ { i = 0 } ^ { N } A _ { i } ) = \mathrm { T r } \log ( 1 - \sum _ { k = 1 } ^ { N } \sum _ { m = 0 } ^ { k - 1 } A _ { k } \phi ^ { m } ) + \mathrm { T r } \log ( 1 - \phi ) .
+Time taken for OCR: 2.6544 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 060
+Folder 060, Image 060.png: Similarity = 0.9808
+OCR LaTeX: \[H_{i j}^{a}\equiv F_{i j}^{a}-g f_{b c}^{a}A_{i}^{b}A_{j j}^{c},\]
+Correct LaTeX: H _ { i j } ^ { a } = F _ { i j } ^ { a } - g f _ { b c } ^ { a } A _ { i } ^ { b } A _ { j } ^ { c } ,
+Time taken for OCR: 1.7115 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 061
+Folder 061, Image 061.png: Similarity = 0.9038
+OCR LaTeX: \[\widetilde{\rho}_{\mathbf{q}}\equiv\sum_{\mathbf{k}}[\Lambda_{\mathbf{k}}({\mathbf{q}})a_{\mathbf{k}}(-{\mathbf{q}})+\Lambda_{\mathbf{k}}(-{\mathbf{q}})a_{\mathbf{k}}^{\dagger}({\mathbf{q}})]\]
+Correct LaTeX: { \tilde { \rho } } _ { { \bf { q } } } = \sum _ { { \bf { k } } } [ \Lambda _ { { \bf { k } } } ( { \bf { q } } ) a _ { { \bf { k } } } ( - { \bf { q } } ) + \Lambda _ { { \bf { k } } } ( - { \bf { q } } ) a _ { { \bf { k } } } ^ { \dagger } ( { \bf { q } } ) ]
+Time taken for OCR: 2.3034 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 062
+Folder 062, Image 062.png: Similarity = 0.8480
+OCR LaTeX: \[\mathrm{N}(p,{\bf s}):=i p_{0}\nabla_{\bf p}-\frac{8\ \times{\bf p}}{p_{0}+m},\quad\mathrm{J}({\bf p},{\bf s}):=-i{\bf p}\times\nabla_{\bf p}+{\bf s}:=\mathrm{L}({\bf p})+{\bf s},\]
+Correct LaTeX: { \bf N } ( { \bf p } , { \bf s } ) : = i p _ { 0 } { \nabla } _ { \bf p } - \frac { { \bf s } \times { \bf p } } { p _ { 0 } + m } , \quad { \bf J } ( { \bf p } , { \bf s } ) : = - i { \bf p } \times { \bf \nabla } _ { \bf p } + { \bf s } : = { \bf L } ( { \bf p } ) + { \bf s } ,
+Time taken for OCR: 2.6336 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 063
+Folder 063, Image 063.png: Similarity = 1.0000
+OCR LaTeX: \[A_{\mu}=\partial_{\mu}\varphi+\epsilon_{\mu\nu}\partial_{\nu}\sigma.\]
+Correct LaTeX: A _ { \mu } = \partial _ { \mu } \varphi + \epsilon _ { \mu \nu } \partial _ { \nu } \sigma .
+Time taken for OCR: 1.4155 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 064
+Folder 064, Image 064.png: Similarity = 0.7871
+OCR LaTeX: \[C J(\nu_{1},\nu_{2})=(2J+\nu_{1}+\nu_{2}+1)\frac{I^{\prime}(J+1)I^{\prime}(J+\nu_{1}+\nu_{2}+1)}{\varGamma\left(J+\nu_{1}+1\right)I^{\prime}(J+\nu_{2}+1)}.\]
+Correct LaTeX: C _ { J } ( \nu _ { 1 } , \nu _ { 2 } ) = ( 2 J + \nu _ { 1 } + \nu _ { 2 } + 1 ) \frac { { \mit \Gamma } ( J + 1 ) { \mit \Gamma } ( J + \nu _ { 1 } + \nu _ { 2 } + 1 ) } { { \mit \Gamma } ( J + \nu _ { 1 } + 1 ) { \mit \Gamma } ( J + \nu _ { 2 } + 1 ) } .
+Time taken for OCR: 3.4883 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 065
+Folder 065, Image 065.png: Similarity = 0.8333
+OCR LaTeX: \[\{\phi\otimes_{\xi,x}\chi\}\mapsto(\mathrm{e}^{-u L_{-1}}\phi\otimes_{\xi+u,x+v}\mathrm{e}^{-v L_{-1}}\chi)_{\mathrm{r}}\]
+Correct LaTeX: ( \psi \otimes _ { \zeta , z } \chi ) \mapsto ( e ^ { - u L _ { - 1 } } \psi \otimes _ { \zeta + u , z + v } e ^ { - v L _ { - 1 } } \chi ) ,
+Time taken for OCR: 2.0038 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 066
+Folder 066, Image 066.png: Similarity = 0.7068
+OCR LaTeX: \[u_{0}(k_{i},\tau)=\sqrt{\frac{\pi}{2}}\dot{4}\sqrt{\tau}J_{0}(k\tau)-\sqrt{\frac{\pi}{2}}A(k)\sqrt{k\tau}H_{0}^{(1)}(k\tau).\]
+Correct LaTeX: u _ { 0 } ( k , r ) = \sqrt { { \displaystyle { \frac { \pi } { 2 } } } } i \sqrt { r } J _ { 0 } ( k r ) - \sqrt { { \displaystyle { \frac { \pi } { 2 } } } } A ( k ) \sqrt { k r } H _ { 0 } ^ { ( 1 ) } ( k r ) .
+Time taken for OCR: 2.3304 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 067
+Folder 067, Image 067.png: Similarity = 0.8974
+OCR LaTeX: \[J_{k}\equiv\oint p_{k}d q_{k},k=\tau,\theta_{j}\,\phi_{j}\]
+Correct LaTeX: J _ { k } = \oint p _ { k } d q _ { k } , k = r , \theta , \phi ,
+Time taken for OCR: 1.5392 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 068
+Folder 068, Image 068.png: Similarity = 0.6146
+OCR LaTeX: \[\begin{array}{r}{\delta_{\perp,\mathcal{K}_{1}}=\kappa_{9}\kappa_{2}\Psi_{3}+\Delta\kappa_{2}\Psi_{2}{}^{I}+\kappa_{2}^{\prime}\Psi_{2}+\Psi_{1}{}^{I^{\prime}}-\left(\kappa_{1}^{2}+\kappa_{2}{}^{2}\right)\Psi_{1}.}\end{array}\]
+Correct LaTeX: \delta _ { \perp } \kappa _ { 1 } = \kappa _ { 3 } \kappa _ { 2 } \Psi _ { 3 } + 2 \kappa _ { 2 } \Psi _ { 2 } { } ^ { \prime } + \kappa _ { 2 } ^ { \prime } \Psi _ { 2 } + \Psi _ { 1 } { } ^ { \prime \prime } - \left( \kappa _ { 1 } ^ { 2 } + \kappa _ { 2 } { } ^ { 2 } \right) \Psi _ { 1 } .
+Time taken for OCR: 2.8063 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 069
+Folder 069, Image 069.png: Similarity = 0.9697
+OCR LaTeX: \[\left(\gamma_{\mu}\partial_{\mu}+\gamma n\right)\triangleleft\dot{p}^{(b)}(x)=0,b=1,2,3,4\]
+Correct LaTeX: \left( \gamma _ { \mu } \partial _ { \mu } + m \right) \psi ^ { ( b ) } ( x ) = 0 , b = 1 , 2 , 3 , 4
+Time taken for OCR: 2.0083 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 070
+Folder 070, Image 070.png: Similarity = 0.9649
+OCR LaTeX: \[f_{\alpha}(\varphi)=\left(4\sin^{2}{\frac{2}{2}}\right)^{\alpha}.\]
+Correct LaTeX: f _ { \alpha } ( x ) = \left( 4 \sin ^ { 2 } \frac { x } { 2 } \right) ^ { \alpha } .
+Time taken for OCR: 2.0636 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 071
+Folder 071, Image 071.png: Similarity = 0.9623
+OCR LaTeX: \[r_{h}^{2}\equiv\frac{l^{2}}{2}(\sqrt{K^{2}+4l^{-2}\mu}-R).\]
+Correct LaTeX: r _ { h } ^ { 2 } = \frac { l ^ { 2 } } { 2 } ( \sqrt { K ^ { 2 } + 4 l ^ { - 2 } \mu } - K ) .
+Time taken for OCR: 1.6082 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 072
+Folder 072, Image 072.png: Similarity = 0.8732
+OCR LaTeX: \[\mu^{\prime\prime}+\left[\pi^{2}-\frac{a^{\prime\prime}}{a}\right]\mu=0.\]
+Correct LaTeX: \mu ^ { \prime \prime } + \biggl [ n ^ { 2 } - \frac { a ^ { \prime \prime } } { a } \biggr ] \mu = 0 .
+Time taken for OCR: 1.5811 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 073
+Folder 073, Image 073.png: Similarity = 0.8696
+OCR LaTeX: \[\displaystyle\omega_{\overline{{m}}}=\frac{1}{2}\big{(}\mathcal{E}_{m}+\mathcal{Z}_{m+1}\big{)}_{\sharp}\]
+Correct LaTeX: x _ { \overline { m } } = { \frac { 1 } { 2 } } ( x _ { m } + x _ { m + 1 } ) ,
+Time taken for OCR: 1.7614 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 074
+Folder 074, Image 074.png: Similarity = 0.9677
+OCR LaTeX: \[S_{i j}\left(\theta\right)=\prod_{\mathcal{E}_{i}y}\left[x,y\right]_{\theta}\]
+Correct LaTeX: S _ { i j } \left( \theta \right) = \prod _ { x , y } \left[ x , y \right] _ { \theta }
+Time taken for OCR: 1.6705 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 075
+Folder 075, Image 075.png: Similarity = 0.2121
+OCR LaTeX: \[\begin{array}{r}{\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expandafter{\romannumeral1}q^{\prime}\uppercase\expa
+Correct LaTeX: \psi _ { c } ( x ) = \gamma ^ { 1 } \psi ^ { * } ( x ) \ ,
+Time taken for OCR: 8.2771 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 076
+Folder 076, Image 076.png: Similarity = 0.8429
+OCR LaTeX: \[L=L^{\Lambda}\mathrm{Tr}_{\Lambda}=d Z^{M}L_{M}\Lambda\mathrm{Tr}_{\Lambda}.\]
+Correct LaTeX: L = L ^ { \Lambda } { \bf T } _ { \Lambda } = d Z ^ { M } L _ { M } { } ^ { \Lambda } { \bf T } _ { \Lambda } .
+Time taken for OCR: 1.5834 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 077
+Folder 077, Image 077.png: Similarity = 0.5638
+OCR LaTeX: \[\begin{array}{r c l r l r l}{2_{\texttt{i},0}^{(r)}}&{{=}}&{2_{\texttt{i},0}^{(r)}}&{{=}}&{0}&{}&{}&{{}(1\leq t\leq r,\mathrm{all}r);}\end{array}\]
+Correct LaTeX: z _ { t , 0 } ^ { ' ( r ) } \quad = \quad z _ { t , 0 } ^ { ' ^ { \prime } ( r ) } \quad = \quad 0 \qquad ( 1 \le t \le r , \mathrm { { a l l } } r ) ;
+Time taken for OCR: 2.4972 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 078
+Folder 078, Image 078.png: Similarity = 0.9479
+OCR LaTeX: \[d T(x)=\left(\begin{array}{c c}{{\delta(\varpi)1_{N-k}}}&{{\bf0}}\\ {{0}}&{{\displaystyle-\delta(\varpi)1_{k}}}\end{array}\right)d\omega\]
+Correct LaTeX: d T ( x ) = \left( \begin{array} { c c } { \delta ( x ) 1 _ { N - k } } & { 0 } \\ { 0 } & { - \delta ( x ) 1 _ { k } } \\ \end{array} \right) d x
+Time taken for OCR: 2.1344 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 079
+Folder 079, Image 079.png: Similarity = 1.0000
+OCR LaTeX: \[1-\frac{2{\cal G}M}{\rho}=(\nabla\rho)^{2}\equiv f\]
+Correct LaTeX: 1 - \frac { 2 G M } { \rho } = ( \nabla \rho ) ^ { 2 } \equiv f
+Time taken for OCR: 1.4987 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 080
+Folder 080, Image 080.png: Similarity = 0.9692
+OCR LaTeX: \[M_{g}=M_{c_{1}}M_{c_{2}}M_{c_{3}}M_{c_{4}}M_{c_{5}}M_{r\equiv\infty}\equiv1\]
+Correct LaTeX: M _ { g } = M _ { c _ { 1 } } M _ { c _ { 2 } } M _ { c _ { 3 } } M _ { c _ { 4 } } M _ { c _ { 5 } } M _ { r = \infty } = 1
+Time taken for OCR: 2.6653 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 081
+Folder 081, Image 081.png: Similarity = 0.8919
+OCR LaTeX: \[\displaystyle\delta F\left(\sin\theta d\omega^{0}d\omega^{1}{}_{j}\,0_{j}\,0_{j}\,\epsilon d\omega^{0}\ldots d\omega^{3}\right).\]
+Correct LaTeX: \delta F \left( \sin \theta d x ^ { 0 } d x ^ { 1 } , 0 , 0 , \epsilon d x ^ { 0 } \cdots d x ^ { 3 } \right) .
+Time taken for OCR: 2.0141 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 082
+Folder 082, Image 082.png: Similarity = 0.9485
+OCR LaTeX: \[S_{\mathrm{part,0}}^{({\mathrm{N})}}=\int d t\sum_{\alpha=1}^{N}\left(\xi_{\alpha}^{\underline{{\underline{{\alpha}}}}}\left(E_{\underline{{\hat{J}}},\alpha}^{\underline{{\underline{{\alpha}}}}}\dot{\sigma}_{\alpha}^{\hat{\beta}}+E_{0,\alpha}^{\underline{{\underline{{\alpha}}}}}\right)-\frac{1}{2}\xi_{\alpha}^{\underline{{\alpha}}}}\xi_{\alpha}^{\underline{{\underline{{\alpha}}}}\right).\]
+Correct LaTeX: S _ { \mathrm { p a r t } , 0 } ^ { ( \mathrm { N } ) } = \int d t \sum _ { \alpha = 1 } ^ { N } \left( \xi _ { \alpha } ^ { \underline { { a } } } \left( E _ { j , \alpha } ^ { \underline { { a } } } \dot { x } _ { \alpha } ^ { j } + E _ { 0 , \alpha } ^ { \underline { { a } } } \right) - { \frac { 1 } { 2 } } \xi _ { \alpha } ^ { \underline { { a } } } \xi _ { \alpha } ^ { \underline { { a } } } \right) .
+Time taken for OCR: 3.4973 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 083
+Folder 083, Image 083.png: Similarity = 0.9342
+OCR LaTeX: \[\begin{array}{r}{\xi=\mathrm{~o}_{1}\left(u_{1}-\kappa\mathrm{o}_{2}\right)+\mathrm{~o}_{2}\left(\mathrm{o}_{2}-\kappa\mathrm{o}_{1}\right).}\end{array}\]
+Correct LaTeX: \xi = v _ { 1 } \left( u _ { 1 } - \kappa v _ { 2 } \right) + v _ { 2 } \left( u _ { 2 } - \kappa v _ { 1 } \right) .
+Time taken for OCR: 2.2985 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 084
+Folder 084, Image 084.png: Similarity = 0.9889
+OCR LaTeX: \[U(r)=U(r_{0})+4\pi^{2}K A(d,\sigma)\int_{r_{0}}^{r}d s\frac{s^{\sigma-d-1}}{\varepsilon(\delta)}.\]
+Correct LaTeX: U ( r ) = U ( r _ { 0 } ) + 4 \pi ^ { 2 } K A ( d , \sigma ) \int _ { r _ { 0 } } ^ { r } d s \frac { s ^ { \sigma - d - 1 } } { \varepsilon ( s ) } .
+Time taken for OCR: 1.9950 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 085
+Folder 085, Image 085.png: Similarity = 0.9231
+OCR LaTeX: \[\begin{array}{r}{|0\rangle\rightarrow|0\rangle_{\partial}=(1+\mathrm{e}^{-\beta\sigma})^{-1/2}\{|0\rangle_{a}\otimes|0\rangle_{b}+\mathrm{e}^{-\beta\sigma/2}a^{\dagger}\tilde{a}|0\rangle_{a}\otimes b^{\dagger}\tilde{b}|0\rangle_{b}\}.}\end{array}\]
+Correct LaTeX: | 0 \rangle \rightarrow | 0 \rangle _ { \beta } = ( 1 + \mathrm { e } ^ { - \beta \epsilon } ) ^ { - 1 / 2 } \{ | 0 \rangle _ { a } \otimes | 0 \rangle _ { b } + \mathrm { e } ^ { - \beta \epsilon / 2 } a ^ { \dagger } { \tilde { a } } | 0 \rangle _ { a } \otimes b ^ { \dagger } { \tilde { b } } | 0 \rangle _ { b } \} .
+Time taken for OCR: 3.7906 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 086
+Folder 086, Image 086.png: Similarity = 0.8797
+OCR LaTeX: \[S_{\mathrm{E}}=\int_{0}^{\tau}d\tau\left(\frac{1}{2}2_{\tau}^{2}+\frac{1}{2}\overline{{W}}^{2}(\varpi)-\phi^{\prime\prime}[\partial_{\tau}-\overline{{W}}^{\prime}(\varpi)]{\mathrm{g}}^{\prime}\right)\]
+Correct LaTeX: S _ { E } = \int _ { 0 } ^ { \tau } d \tau \left( { \frac { 1 } { 2 } } x _ { \tau } ^ { 2 } + { \frac { 1 } { 2 } } W ^ { 2 } ( x ) - \psi ^ { \ast } [ \partial _ { \tau } - W ^ { \prime } ( x ) ] \psi \right)
+Time taken for OCR: 2.6036 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 087
+Folder 087, Image 087.png: Similarity = 0.9568
+OCR LaTeX: \[R_{\mu\nu\dot{b}}^{a}=\partial_{\mu}\omega_{\nu b}^{a}-\partial_{\nu}\omega_{\mu b}^{a}+\omega_{\mu c}^{a}\star\omega_{\nu b}^{c}-\omega_{\nu c}^{a}\star\omega_{\mu b}^{c}\]
+Correct LaTeX: R _ { \mu \nu b } ^ { \quad a } = \partial _ { \mu } \omega _ { \nu b } ^ { a } - \partial _ { \nu } \omega _ { \mu b } ^ { a } + \omega _ { \mu c } ^ { a } \ast \omega _ { \nu b } ^ { c } - \omega _ { \nu c } ^ { a } \ast \omega _ { \mu b } ^ { c }
+Time taken for OCR: 2.3969 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 088
+Folder 088, Image 088.png: Similarity = 0.9881
+OCR LaTeX: \[M=\int_{r\rightarrow\infty}d^{p}\varpi\gamma^{p/2}f^{-1/2}T_{\mathrm{et}}=\frac{p m V_{p}}{16\pi G_{p+2}}.\]
+Correct LaTeX: M = \int _ { r \rightarrow \infty } d ^ { p } x r ^ { p / 2 } f ^ { - 1 / 2 } T _ { t t } = \frac { p m V _ { p } } { 1 6 \pi G _ { p + 2 } } .
+Time taken for OCR: 2.0699 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 089
+Folder 089, Image 089.png: Similarity = 0.9130
+OCR LaTeX: \[\begin{array}{r}{\dot{j}_{H W}(\varpi)=\mathcal{W}_{\dot{4}}(\varpi)T^{\dot{i}}\ _jT^{\dot{i}}\in k e r(\ A d(M_{-}))\quad}\end{array}\]
+Correct LaTeX: j _ { H W } ( x ) = W _ { i } ( x ) T ^ { i } , T ^ { i } \in k e r ( A d ( M _ { - } ) )
+Time taken for OCR: 2.1580 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 090
+Folder 090, Image 090.png: Similarity = 0.8000
+OCR LaTeX: \[k_{0}\sim\mathrm{~}\mathrm{~}\sqrt{\frac{g\dot{q}_{0}}{2M^{2}}}\ \ \mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~}\mathrm{~
+Correct LaTeX: k _ { 0 } \sim \omega \sqrt { \frac { g \phi _ { 0 } } { 2 M ^ { 2 } } } \ll \omega
+Time taken for OCR: 8.3591 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 091
+Folder 091, Image 091.png: Similarity = 0.5066
+OCR LaTeX: \[Y(T,U)=\int_{\cal F}\frac{d^{2}\tau}{S\tau}\Gamma_{2,2}(T,U)\left(-6\left[\overline{{\Omega}}_{2}-\frac{1}{8\pi S\tau}\right]\frac{\overline{{\Omega}}}{\overline{{\eta}}^{24}}-\frac{\overline{{\jmath}}}{8}+126\right)\,\]
+Correct LaTeX: Y ( T , U ) = \int _ { \cal F } \frac { d ^ { 2 } \tau } { \Im \tau } \Gamma _ { 2 , 2 } ( T , U ) \left( - 6 \left[ { \overline { { \Omega } } } _ { 2 } ^ { \phantom { 2 } } - \frac { 1 } { 8 \pi \Im \tau } \right] \frac { \overline { { \Omega } } } { \overline { { \eta } } ^ { 2 4 } } - \frac { \overline { { j } } } { 8 } + 1 2 6 \right) \ ,
+Time taken for OCR: 2.7638 seconds
+OCR output has significant differences.
+--------------------------------------------------
+Processing folder: 092
+Folder 092, Image 092.png: Similarity = 0.9124
+OCR LaTeX: \[\langle\phi_{F a}^{\dagger-{\bf e}}\mid\phi_{F\sigma}^{\dagger-{\bf e}^{\prime}}\rangle_{\bf t}=\frac{1}{2}\delta(a-a^{\prime})\theta(t-1+a)\theta(t-1+a^{\prime})\]
+Correct LaTeX: \langle \psi _ { F a } ^ { 1 - a } \mid \phi _ { F a ^ { \prime } } ^ { 1 - a ^ { \prime } } \rangle _ { t } = \frac { 1 } { 2 } \delta ( a - a ^ { \prime } ) \theta ( t - 1 + a ) \theta ( t - 1 + a ^ { \prime } )
+Time taken for OCR: 2.4483 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 093
+Folder 093, Image 093.png: Similarity = 0.8730
+OCR LaTeX: \[{\cal L}(J)=\frac{1}{2}\partial_{\mu}\phi\partial^{\mu}\phi+\frac{J}{2}\partial^{2}+\frac{\lambda\mu^{2\sigma}}{4!}\phi^{4}+\cal L_{\mathrm{CT}}(J)-\mu^{-2\sigma}\frac{5}{2}\,J^{2}.\]
+Correct LaTeX: { \cal L } ( J ) = \frac { 1 } { 2 } \partial _ { \mu } \phi \partial ^ { \mu } \phi + \frac { J } { 2 } \phi ^ { 2 } + \frac { \lambda \mu ^ { 2 \varepsilon } } { 4 ! } \phi ^ { 4 } + { \cal L } _ { \mathrm { C T } } ( J ) - \mu ^ { - 2 \varepsilon } \frac { \zeta } { 2 } J ^ { 2 } .
+Time taken for OCR: 3.2610 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 094
+Folder 094, Image 094.png: Similarity = 0.9121
+OCR LaTeX: \[\begin{array}{r}{\phi(x)=\mathbb{A}_{+}\mathbb{C}_{+}\sqrt{\omega x}J_{j/2}(\omega x)+\mathbb{A}_{-}\mathbb{C}_{-}\sqrt{\omega x}J_{-\frac{j}{2}/2}(\omega x).}\end{array}\]
+Correct LaTeX: \psi ( z ) = A _ { + } c _ { + } \sqrt { \omega z } J _ { j / 2 } ( \omega z ) + A _ { - } c _ { - } \sqrt { \omega z } J _ { - j / 2 } ( \omega z ) .
+Time taken for OCR: 2.4182 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 095
+Folder 095, Image 095.png: Similarity = 1.0000
+OCR LaTeX: \[\Psi=\bar{\Phi}R\mathrm{exp}\frac{\dot{i}}{\hbar}\mathcal{S}\]
+Correct LaTeX: \Psi = \Phi R e x p \frac { i } { \hbar } S
+Time taken for OCR: 1.4573 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 096
+Folder 096, Image 096.png: Similarity = 0.9571
+OCR LaTeX: \[\begin{array}{r}{\vec{E}^{\mathrm{rad}}=\,E_{1}\vec{\mathcal{E}}+E_{2}\left[\vec{\eta},\vec{\mathcal{E}}\right],}\end{array}\]
+Correct LaTeX: \vec { E } ^ { \mathrm { r a d } } = E _ { 1 } \vec { e } + E _ { 2 } \left[ \vec { n } , \vec { e } \right] ,
+Time taken for OCR: 1.9518 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 097
+Folder 097, Image 097.png: Similarity = 0.9748
+OCR LaTeX: \[G^{-1}(k)=(\mathrm{p}^{2}+\mu^{2})\left[1+\left(3-\frac{9}{4}\ln3\right)\frac{g}{24\pi m}\right]+O\Bigl(\mathrm{p}^{2}+\mu^{2}\Bigr)^{2}\right)\]
+Correct LaTeX: G ^ { - 1 } ( k ) = ( p ^ { 2 } + \mu ^ { 2 } ) \left[ 1 + \left( 3 - \frac { 9 } { 4 } \ln 3 \right) \frac { g } { 2 4 \pi m } \right] + O \Bigl ( ( p ^ { 2 } + \mu ^ { 2 } ) ^ { 2 } \Bigr )
+Time taken for OCR: 2.4073 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 098
+Folder 098, Image 098.png: Similarity = 0.8923
+OCR LaTeX: \[\Lambda_{b k}\sim Q_{e}^{2/(2-d_{\perp})}\hskip5.535827p t b o c o c o n d\ l o c r b d a\sim Q_{e}\,\]
+Correct LaTeX: \Lambda _ { b k } \sim Q _ { e } ^ { 2 / ( 2 - d _ { \perp } ) } \ m b o x { a n d } \ l a m b d a \sim Q _ { e } \ ,
+Time taken for OCR: 2.3565 seconds
+OCR output is fairly accurate.
+--------------------------------------------------
+Processing folder: 099
+Folder 099, Image 099.png: Similarity = 0.9552
+OCR LaTeX: \[\frac{d\omega}{d\omega}=\omega^{1-\alpha_{0}}\big{(}1-\omega\big{)}^{1-\alpha_{1}}\]
+Correct LaTeX: { \frac { d \omega } { d z } } = \omega ^ { 1 - \alpha _ { 0 } } ( 1 - \omega ) ^ { 1 - \alpha _ { 1 } }
+Time taken for OCR: 2.2392 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+Processing folder: 100
+Folder 100, Image 100.png: Similarity = 0.9810
+OCR LaTeX: \[\displaystyle=\int_{0}^{\frac{1}{4}}d s\,\frac{1}{(1-4s)^{\frac{1}{2}}s^{\frac{1}{2}}}\,\,\exp\left(-t k^{2}s\right)=\frac{\pi}{2}\,\exp\left(-t\frac{k^{2}}{8}\right)\,I_{0}(t\frac{k^{2}}{8}),\]
+Correct LaTeX: = \int _ { 0 } ^ { \frac 1 4 } \ d s \ \frac { 1 } { ( 1 - 4 s ) ^ { \frac 1 2 } s ^ { \frac 1 2 } } \ \exp \left( - t k ^ { 2 } s \right) = \frac { \pi } { 2 } \exp \left( - t \frac { k ^ { 2 } } { 8 } \right) I _ { 0 } ( t \frac { k ^ { 2 } } { 8 } ) ,
+Time taken for OCR: 2.8718 seconds
+OCR output is highly accurate.
+--------------------------------------------------
+
+Summary:
+Total number of comparisons: 101
+Number of passed comparisons (similarity > 0.9): 58
+Percentage of passed comparisons: 57.43%
+Average similarity score: 0.8955
+Average OCR response time: 2.3599 seconds

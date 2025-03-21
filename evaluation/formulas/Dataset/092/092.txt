@@ -1,0 +1,1 @@
+\langle \psi _ { F a } ^ { 1 - a } \mid \phi _ { F a ^ { \prime } } ^ { 1 - a ^ { \prime } } \rangle _ { t } = \frac { 1 } { 2 } \delta ( a - a ^ { \prime } ) \theta ( t - 1 + a ) \theta ( t - 1 + a ^ { \prime } )

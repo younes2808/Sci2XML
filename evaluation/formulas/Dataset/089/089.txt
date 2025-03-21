@@ -1,0 +1,1 @@
+j _ { H W } ( x ) = W _ { i } ( x ) T ^ { i } , T ^ { i } \in k e r ( A d ( M _ { - } ) )

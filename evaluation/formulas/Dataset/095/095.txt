@@ -1,0 +1,1 @@
+\Psi = \Phi R e x p \frac { i } { \hbar } S

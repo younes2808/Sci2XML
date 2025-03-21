@@ -1,0 +1,1 @@
+f ( r ) = \left( 1 - \frac { m } { 2 r ^ { n - 1 } } \right) ^ { 2 } + \frac { r ^ { 2 } } { l ^ { 2 } } .

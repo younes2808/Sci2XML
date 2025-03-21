@@ -1,0 +1,1 @@
+V _ { a b m n } ^ { k } = \frac { 1 } { g } \ E _ { a } ^ { r } \ E _ { b } ^ { s } \epsilon _ { r s ( m } \ \delta _ { n ) } ^ { i } .

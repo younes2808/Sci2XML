@@ -1,0 +1,1 @@
+D ^ { \mu } \frac { \delta f ( A _ { \nu } ) } { \delta A _ { \mu } } = D _ { \mu } \partial ^ { \mu } ( \partial _ { \nu } A ^ { \nu } )

@@ -1,0 +1,1 @@
+Q = c \sum _ { i } f _ { i } ^ { \prime } p ^ { i } + \sum _ { k } c _ { k } p ^ { k } f _ { k } + i n f i n i t e \: m o r e .

@@ -1,0 +1,1 @@
+\left( \gamma _ { \mu } \partial _ { \mu } + m \right) \psi ^ { ( b ) } ( x ) = 0 , b = 1 , 2 , 3 , 4

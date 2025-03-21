@@ -1,0 +1,1 @@
+= \int _ { 0 } ^ { \frac 1 4 } \ d s \ \frac { 1 } { ( 1 - 4 s ) ^ { \frac 1 2 } s ^ { \frac 1 2 } } \ \exp \left( - t k ^ { 2 } s \right) = \frac { \pi } { 2 } \exp \left( - t \frac { k ^ { 2 } } { 8 } \right) I _ { 0 } ( t \frac { k ^ { 2 } } { 8 } ) ,

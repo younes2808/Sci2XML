@@ -1,0 +1,1 @@
+{ \xi } _ { i } ^ { \ast } , { p } _ { i } ^ { \ast } , \quad i = 2 , \dots , l + 1

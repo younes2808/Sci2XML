@@ -1,0 +1,1 @@
+V ( z , \bar { z } ) = e ^ { - q \Phi ( z ) } e ^ { i \alpha \cdot H } e ^ { i ( P _ { R } \cdot X _ { R } - P _ { L } \cdot X _ { L } ) } ,

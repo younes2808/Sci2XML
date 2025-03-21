@@ -1,0 +1,1 @@
+d T ( x ) = \left( \begin{array} { c c } { \delta ( x ) 1 _ { N - k } } & { 0 } \\ { 0 } & { - \delta ( x ) 1 _ { k } } \\ \end{array} \right) d x
