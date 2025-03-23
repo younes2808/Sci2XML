@@ -4,7 +4,7 @@
 [![Streamlit](https://img.shields.io/badge/Framework-Streamlit-red)](https://streamlit.io/)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
 ## Overview  
-This repository provides a pipeline for converting research PDFs into structured XML using [**Grobid**](https://github.com/kermitt2/grobid), a **custom classification model**, and specialized OCR tools. It supports multiple execution modes: **Streamlit UI**, **terminal**, and **code integration**.  
+This repository provides a pipeline for converting research PDFs into structured XML using [**Grobid**](https://github.com/kermitt2/grobid), a **custom classification model**, and specialized OCR tools. It supports multiple execution modes: **Streamlit UI** and **terminal**.  
 
 Developed as part of our **bachelor’s project in collaboration with SINTEF** for the [**enRichMyData**](https://www.sintef.no/en/projects/2022/enrichmydata/) initiative.  
 
