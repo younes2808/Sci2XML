@@ -24,8 +24,6 @@ def load_Sumen():
   return sumen_model, sumen_processor
 
 def run_sumen_ocr(image):
-    with open("formulaparserrun.txt", "a") as file:
-        file.write("\n run now")
     """
     Runs the Sumen OCR model on the given image.
 
