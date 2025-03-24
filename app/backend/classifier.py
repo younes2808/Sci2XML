@@ -470,6 +470,7 @@ def processFigures(figures, images, frontend):
             if label is not None:
                 if (re.sub("\D", "", label.text) != ""):
                     correctFigureNr = int(re.sub("\D", "", label.text))
+                    logging.info(f"Classifier - Found number in <label> tag.")
                 else:
                     # Bad/empty label
                     label = None
@@ -505,41 +506,40 @@ def processFigures(figures, images, frontend):
         ## Getting coordinates:
         coords = ""
         try:
+            # If multiple coordinates are found, the last one in the list is used.
             coords = figure.get("coords").split(";")[-1]
             # print(coords)
         except:
+            # If that somehow fails, its likely just one set of coords.
             coords = figure.get("coords")
             # print(coords)
-
+            
+        # The PDF page that this element is on. The page number is the first part of the coords.
         imgside = images[int(coords.split(",")[0])-1]
+        logging.info(f"Classifier - This element is on page nr: {int(coords.split(',')[0])}")
 
+        # When cropping the image of the element from the PDF page we have to use a factor of ca 2.775 to get the correct position. This factor was found thhrough trial and error.
         const = 2.775
 
         x=float(coords.split(",")[1])
         y=float(coords.split(",")[2])
         x2=float(coords.split(",")[3])
         y2=float(coords.split(",")[4])
-
+        # Use the coords to crop image.
         imgFigur = imgside.crop((x*const,y*const,(x+x2)*const,(y+y2)*const))
 
-        print("----------> FOUND PAGE NR: ", int(coords.split(",")[0]))
 
-        print("\n ---------- Cropping image/figure nr ", figurnr, ". Sending it to ML for classification. ----------")
-
-        ## Saving cropped image to file. Should not be done except for testing.
-        # filename = "./MathFormulaImgs/MathFormulafigur" + str(figurnr) + ".png"
-        # imgFigur.save(filename)
+        logging.info(f"Classifier - Cropped element : {figurnr}. Sending it to classifier...")
 
         ## Sending to classification:
 
         classify("figure", imgFigur, figurnr, int(coords.split(",")[0]), None, correctFigureNr, frontend)
 
         figurnr+=1
-        #print("----------")
 
 def processFormulas(formulas, images, mode, frontend):
     """
-    Crops the formulas from the PDF file into images and sends them to the classifier for classification.
+    Crops the formulas from the PDF file into images and sends them to the classifier (ML model) for classification.
 
     Paramaters:
     formulas: The formulas from the XML file.
@@ -558,55 +558,75 @@ def processFormulas(formulas, images, mode, frontend):
 
         ## Getting formula number ##
         correctFigureNr = 0 # The correct number for the formula, as it is in the PDF. Might not exist because Grobid finds un-numbered formulas sometimes.
-        label = formula.find("label")
-        if label is not None:
-            if (re.sub("\D", "", label.text) != ""):
-                correctFigureNr = int(re.sub("\D", "", label.text))
-            else:
-                label = None
-        if label is None:
-            print("NO LABEL")
-            # If no label tag, look for (formulanr) in formula.text
-            compare = re.search(r"\(\d+\)$", formula.text)
-            if compare:
-                correctFigureNr = int(re.sub("\D", "", compare[0]))
-            else:
-                # If no match, just use xml:id i guess
-                correctFigureNr = int(re.sub("\D", "", formula.get("xml:id"))) + 1
-        print("----------> FOUND FORMULA NR: ", correctFigureNr)
+        try:
+            # 1. Try to find <label> tag.
+            label = formula.find("label")
+            if label is not None:
+                if (re.sub("\D", "", label.text) != ""):
+                    correctFigureNr = int(re.sub("\D", "", label.text))
+                    logging.info(f"Classifier - Found number in <label> tag.")
+                else:
+                    # Bad/empty label
+                    label = None
+            # 2. If the element has no label:
+            if label is None:
+                # print("NO LABEL")
+                logging.info(f"Classifier - There is no <label> tag.")
+                # 3. If no label tag, look first for (formulanr) in formula.text
+                compare = re.search(r"\(\d+\)$", formula.text)
+                if compare:
+                    logging.info(f"Classifier - Found formula number in formula text.")
+                    correctFigureNr = int(re.sub("\D", "", compare[0]))
+                else:
+                    # 4. If no label or formulanr in text, try to use <xml:id> tag:
+                    logging.info(f"Classifier - No formula number in formula text.")
+                    if (formula.get("xml:id") != None):
+                        correctFigureNr = int(re.sub("\D", "", formula.get("xml:id"))) + 1
+                        logging.info(f"Classifier - Found formula nr in <xml:id> tag.")
+                    else:
+                        # 5. If there is no <label> tag, formulanr in text or a <xml:id> tag, use the self-made self-updated formulanr variable.
+                        correctFigureNr = formulanr + 1
+                        logging.info(f"Classifier - Using self-made formula number.")
+            logging.info(f"Classifier - Successfully found a correct figure number")
+        except Exception as e:
+            logging.error(f"Classifier - An error occurred while trying to find a correct figure number: {e}", exc_info=True)
+
+        
+        
+        # print("----------> FOUND FORMULA NR: ", correctFigureNr)
+        logging.info(f"Classifier - Correct formula number is now set as: {correctFigureNr}")
 
         ## Getting coords ##
         coords = ""
         try:
+            # If multiple coordinates are found, the last one in the list is used.
             coords = formula.get("coords").split(";")[-1]
         except:
+            # If that somehow fails, its likely just one set of coords.
             coords = formula.get("coords")
 
+        # The PDF page that this element is on. The page number is the first part of the coords.
         imgside = images[int(coords.split(",")[0])-1]
+        logging.info(f"Classifier - This element is on page nr: {int(coords.split(',')[0])}")
 
+        # When cropping the image of the element from the PDF page we have to use a factor of ca 2.775 to get the correct position. This factor was found thhrough trial and error.
         const = 2.775
 
         x=float(coords.split(",")[1])
         y=float(coords.split(",")[2])
         x2=float(coords.split(",")[3])
         y2=float(coords.split(",")[4])
-
+        # Use the coords to crop image.
         imgFormula = imgside.crop((x*const,y*const,(x+x2)*const,(y+y2)*const))
 
-        print("----------> FOUND PAGE NR: ", int(coords.split(",")[0]))
+        logging.info(f"Classifier - Cropped element : {formulanr}. Sending it to classifier...")
 
-        print("\n ---------- Cropping image/formula nr ", formulanr, ". Sending it to classifier for classification. ----------")
 
-        ## Saving cropped image to file. Should not be done except for testing.
-        # filename = "./MathFormulaImgs/MathFormulaformel" + str(formulanr) + ".png"
-        # imgFormula.save(filename)
+        ## Sending to classification:
 
-        ## SENDING TO CLASSIFICATION...
-
-        if (mode == "VLM"):
+        if (mode == "VLM"): # If a VLM is used for classifying the formula:
           classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), None, "Answer with only one word (Yes OR No), is this a formula?", correctFigureNr)
-        elif (mode == "regex"):
+        elif (mode == "regex"): # If regex is used. Preferred.
           classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), formula.text, correctFigureNr, frontend)
 
         formulanr+=1
-        print("----------")
