@@ -7,7 +7,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load():
   # Load Moondream2 model
-  print("Loading Moondream2 model...")
+  print("\n\n#-------------------- # Loading Moondream2 model # -----------------#\n")
   model = AutoModelForCausalLM.from_pretrained(
       "vikhyatk/moondream2",
       revision="2025-01-09",
@@ -16,6 +16,6 @@ def load():
   ).eval()
 
   tokenizer = AutoTokenizer.from_pretrained("vikhyatk/moondream2", trust_remote_code=True)
-  print("Moondream2 model loaded successfully!")
+  print("----->Moondream2 model loaded successfully!")
 
   return model, tokenizer

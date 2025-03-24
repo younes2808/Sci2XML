@@ -2,12 +2,9 @@ import torch
 from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcessor
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-with open("formulaparserinit.txt", "a") as file:
-      file.write("\n init now")
 
 def load_Sumen():
-  with open("formulaparserload.txt", "a") as file:
-      file.write("\n load now")
+  
   """
   Loads the Sumen model.
 
@@ -19,11 +16,11 @@ def load_Sumen():
   processor: The Sumen processor.
   """
   # Load Sumen model
-  print("Loading Sumen OCR model...")
+  print("\n\n#-------------------- # Loading Sumen OCR model # ------------------#\n")
   global sumen_model, sumen_processor
   sumen_model = VisionEncoderDecoderModel.from_pretrained("hoang-quoc-trung/sumen-base").to(device)
   sumen_processor = AutoProcessor.from_pretrained("hoang-quoc-trung/sumen-base")
-  print("Sumen model loaded successfully!")
+  print("----->Sumen model loaded successfully!")
   return sumen_model, sumen_processor
 
 def run_sumen_ocr(image):

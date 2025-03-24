@@ -13,6 +13,18 @@ from PIL import Image
 from tempfile import NamedTemporaryFile
 from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcessor
 from io import BytesIO
+import time
+import logging
+import sys
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    force=True,
+    handlers=[
+        logging.FileHandler("app.log"),  # Log to a file named 'app.log'
+        logging.StreamHandler(sys.stdout)  # Also log to console
+    ]
+)
 
 ## Our own modules ##
 import importlib.util
@@ -29,20 +41,20 @@ import backend.models.formulaparser as formula
 import backend.models.figureparser as figure
 import backend.models.tableparser as tableParser
 
+print("\n\n#---------------------- ## Loading models ## -----------------------#\n")
+logging.info(f"APIcode - Loading models.")
 ML = classifierML.loadML()
 charter.load_UniChart()
 formula.load_Sumen()
 figureParserModel, figureParserTokenizer = figure.load()
 
-with open("apiinit.txt", "a") as file:
-      file.write("\n api init now")
 
 def API(portnr):
   """
   Defines and starts the API.
 
   Paramaters:
-  None
+  portnr: The port number the API is hosted on.
 
   Returns:
   None
@@ -58,6 +70,7 @@ def API(portnr):
   @app.route('/parseFormula', methods=['POST'])
   def handle_formula():
       print("-- You have reached endpoint for formula --")
+      logging.info(f"API - parseFormula - You have reached endpoint for formula.")
 
       file = request.files['image']
 

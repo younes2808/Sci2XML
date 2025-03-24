@@ -9,11 +9,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load_UniChart():
     """Loads the UniChart model."""
-    print("Loading UniChart model...")
+    print("\n\n#-------------------- # Loading UniChart model # -------------------#\n")
     global unichart_model, unichart_processor
     unichart_model = VisionEncoderDecoderModel.from_pretrained("ahmed-masry/unichart-base-960").to(device)
     unichart_processor = DonutProcessor.from_pretrained("ahmed-masry/unichart-base-960")
-    print("UniChart model loaded successfully!")
+    print("----->UniChart model loaded successfully!")
     return unichart_model, unichart_processor
 
 def is_hallucinated(response, repetition_threshold=20):

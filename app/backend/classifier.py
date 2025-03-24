@@ -108,7 +108,7 @@ def addToXMLfile(type, name, newContent, frontend):
             parentTag = st.session_state.Bs_data.find(type, {"xml:id": name})
         else:
             parentTag = Bs_data.find(type, {"xml:id": name})
-        logging.info("Classifier - old parentTag: {parentTag}")
+        logging.info(f"Classifier - old parentTag: {parentTag}")
         # If there is no parent tag, then there is nowhere to place the content.
         if (parentTag == None):
             logging.error("Classifier - Could not find tag to place element back into...")
@@ -116,7 +116,7 @@ def addToXMLfile(type, name, newContent, frontend):
         # Try to find all text in the parent tag, but not counting text in child tags:
         textWithoutTag = parentTag.find_all(string=True, recursive=False)
         print("findall", textWithoutTag)
-        logging.info("Classifier - find text in tag: {textWithoutTag}")
+        logging.info(f"Classifier - find text in tag: {textWithoutTag}")
     except Exception as e:
         parentTag = ""
         textWithoutTag = []
@@ -171,7 +171,7 @@ def addToXMLfile(type, name, newContent, frontend):
         logging.error(f"Classifier - An error occurred while trying to add new csv content to parentTag: {e}", exc_info=True)
     
 
-    logging.info("Classifier - new parentTag: {parentTag}")
+    logging.info(f"Classifier - new parentTag: {parentTag}")
 
 def getXML(frontend):
    """
