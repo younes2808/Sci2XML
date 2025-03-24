@@ -69,7 +69,7 @@ def API(portnr):
 
   @app.route('/parseFormula', methods=['POST'])
   def handle_formula():
-      print("-- You have reached endpoint for formula --")
+      print("\n")
       logging.info(f"API - parseFormula - You have reached endpoint for formula.")
 
       file = request.files['image']
@@ -82,7 +82,8 @@ def API(portnr):
 
   @app.route('/parseChart', methods=['POST'])
   def handle_chart():
-      print("-- You have reached endpoint for chart --")
+      print("\n")
+      logging.info(f"API - parseChart - You have reached endpoint for chart.")
 
       file = request.files['image']
 
@@ -93,7 +94,8 @@ def API(portnr):
 
   @app.route('/parseFigure', methods=['POST'])
   def handle_figure():
-      print("-- You have reached endpoint for figure --")
+      print("\n")
+      logging.info(f"API - parseFigure - You have reached endpoint for figure.")
 
       file = request.files['image']
 
@@ -105,7 +107,8 @@ def API(portnr):
 
   @app.route('/parseTable', methods=['POST'])
   def handle_table():
-      print("-- You have reached endpoint for table --")
+      print("\n")
+      logging.info(f"API - parseTable - You have reached endpoint for table.")
 
       # Check if both required files are provided
       if 'pdf' not in request.files or 'grobid_xml' not in request.files:
@@ -137,7 +140,7 @@ def API(portnr):
       latex_code: The generated LaTeX code.
       NLdata: The generated NL data.
       """
-      print("Processing formula...")
+      logging.info(f"API - processFormula - processing formula...")
       ###
       # Send to OCR or something
       ###
@@ -166,7 +169,7 @@ def API(portnr):
       summary: The generated summary.
       table_data: The generated table data.
       """
-      print("Processing chart...")
+      logging.info(f"API - processChart - processing chart...")
 
       """
       if 'file' not in request.files:
@@ -192,7 +195,7 @@ def API(portnr):
       Returns:
       NLdata: The generated NL data.
       """
-      print("Processing figure...")
+      logging.info(f"API - processFigure - processing figure...")
       ###
       # Send to VLM or something
       ###
@@ -229,7 +232,7 @@ def API(portnr):
         Returns:
             Response: A Flask Response object with the updated Grobid XML, served as an XML file.
         """
-        print("Processing table...")
+        logging.info(f"API - processTable - processing table...")
         
         # Save the PDF file temporarily
         with NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
@@ -352,7 +355,8 @@ def API(portnr):
 
   @app.route('/callClassifier', methods=['POST'])
   def call_ml():
-      print("-- You have reached endpoint for classifier ML --")
+      print("\n")
+      logging.info(f"API - callClassifier - You have reached endpoint for classifier ML.")
 
       image = request.files['image']
       image = Image.open(image)
@@ -360,6 +364,8 @@ def API(portnr):
       ## PROCESS IMAGE
       response = classifierML.callML(ML, image)
       #response = "VLMresponse"
+
+      logging.info(f"API - callClassifier - Predicted class: {response}")
 
       return jsonify({'ClassifierResponse':response})
   

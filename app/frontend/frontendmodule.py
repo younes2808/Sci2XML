@@ -68,11 +68,17 @@ def startNgrok(port):
   logging.info(f"frontendmodule - Starting Ngrok.")
 
   # Lets user write their auth token:
+  print("Enter your Ngrok Authtoken. Token can be found here: https://dashboard.ngrok.com/get-started/your-authtoken")
   conf.get_default().auth_token = getpass.getpass()
 
   # Open a ngrok tunnel to the localhost:
-  public_url = ngrok.connect(port).public_url
-  print(f" * ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:{port}\"")
+  try:
+      public_url = ngrok.connect(port).public_url
+      print(f" * ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:{port}\"")
+      logging.info(f"frontendmodule - Successfullt opened ngrok tunnel.")
+  except Exception as e:
+      logging.error(f"frontendmodule - An error occurred while trying to open ngrok tunnel: {e}", exc_info=True)
+  
   return public_url, "no password needed"
 
 def startStreamlit(tunnel, portnr):
@@ -105,9 +111,9 @@ def startStreamlit(tunnel, portnr):
     file.write("\n")
     file.write(passw)
 
-  print("############################################################")
-  print(f"\n\n----->Public URL: {url} \n----->Password: {passw}")
-  print("############################################################")
+  print("\n\n############################################################")
+  print(f"----->Public URL: {url} \n----->Password: {passw}")
+  print("############################################################\n")
 
 def startAPI(tunnel, portnr):
   """
@@ -137,6 +143,6 @@ def startAPI(tunnel, portnr):
     file.write("\n")
     file.write(passw)
 
-  print("\n############################################################")
-  print(f"\n\n----->Public URL: {url} \n----->Password: {passw}")
-  print("############################################################")
+  print("\n\n############################################################")
+  print(f"----->Public URL: {url} \n----->Password: {passw}")
+  print("############################################################\n")

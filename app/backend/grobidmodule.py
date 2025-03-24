@@ -23,16 +23,12 @@ def loadGrobidPythonway():
   try:
     serverstatus = requests.get('http://172.28.0.12:8070/api/isalive')
     logging.info(f"grobidmodule - Server status. Up: {serverstatus}, {serverstatus.text}")
-    print(f" Grobid Server status. Up: {serverstatus}, {serverstatus.text}")
     serverstatus = serverstatus.text
   except:
     logging.warning(f"grobidmodule - Server status. Up: {serverstatus}. No grobid server is running.")
-    print(f" Grobid Server status. Up: {serverstatus}")
   
   # Check if Grobid is installed and if the gradle file exists:
-  print("Grobid folder exist: ", Path('grobid-0.8.1').is_dir())
   logging.info(f"grobidmodule - Grobid folder exist: {Path('grobid-0.8.1').is_dir()}")
-  print("Grobid gradlew file exist: ", (Path.cwd() / 'grobid-0.8.1' / 'gradlew').exists())
   logging.info(f"grobidmodule - Grobid gradlew file exist: {(Path.cwd() / 'grobid-0.8.1' / 'gradlew').exists()}")
 
   if (serverstatus == "true"):
@@ -46,13 +42,13 @@ def loadGrobidPythonway():
     else:
       # Download and install Grobid, then Gradlew run to start server
       logging.info(f"grobidmodule - Grobid server not running and Grobid doesn't exist. Downloading and installing grobid with gradle.")
-      print("---> Downloading Grobid:")
+      print("---> Downloading Grobid...")
       n = subprocess.run(["wget", "https://github.com/kermitt2/grobid/archive/0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Unzipping Grobid files:")
+      print("---> Unzipping Grobid files...")
       n = subprocess.run(["unzip", "0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Installing Grobid with gradle (Takes some time):")
+      print("---> Installing Grobid with gradle (Takes some time)...")
       grobidinstalllogfile = open("grobidinstalllog.txt", "a")
       n = subprocess.run(["./gradlew", "clean", "install"], stdout=grobidinstalllogfile, stderr=grobidinstalllogfile, text=True, cwd="/content/grobid-0.8.1/")
 

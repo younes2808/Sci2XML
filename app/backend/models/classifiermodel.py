@@ -140,5 +140,4 @@ def callML(model, image):
                 'growth_chart', 'pie_chart', 'table', 'text_sentence']
   predicted_class_name = class_names[predicted_class[0]]
 
-  print(f"Predicted class: {predicted_class_name}")
   return predicted_class_name

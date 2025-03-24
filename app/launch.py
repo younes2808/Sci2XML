@@ -17,7 +17,7 @@ def startEverything():
   start_time = time.time()
   time_array = []
   """
-  Starts the entire application. When starting this from the terminal it accepts two arguments: tunnel and port number.
+  Starts the entire application exposed through frontend. When starting this from the terminal it accepts two arguments: tunnel and port number.
   The port number is the port the API will be hosted on. The tunnel is the tunnel provider which exposes the localhost
   to the outside world. 
 
@@ -27,6 +27,9 @@ def startEverything():
   Returns:
   None
   """
+  print("#----------------------- ################### -----------------------#")
+  print("#----------------------- ##### Sci2XML ##### -----------------------#")
+  print("#----------------------- ################### -----------------------#\n")
   logging.info("Launch - Starting function startEverything()")
   # Parsing arguments from terminal:
   parser = argparse.ArgumentParser()
@@ -36,22 +39,18 @@ def startEverything():
   logging.info("Launch - Arguments parsed.")
 
   ## Setup ##
-  print("#----------------------- ################### -----------------------#")
-  print("#----------------------- ##### Sci2XML ##### -----------------------#")
-  print("#----------------------- ################### -----------------------#\n")
   print("#-------------------------- ### Setup ### --------------------------#\n")
-  logging.info("Launch - Installing requirements.")
   print("#-------------------- # Installing requirements # ------------------#\n")
-  print("# Installing requirements... #")
+  logging.info("Launch - Installing requirements.")
   try:
     log = open("reqlog.txt", "a")
-    print("----------> pip installs:")
+    print("----------> pip installs...")
     n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
-    print("----------> apt-get installs:")
+    print("----------> apt-get installs...")
     n = subprocess.run(["apt", "update"], stdout=log, stderr=log, text=True)
     n = subprocess.run(["apt-get", "install", "poppler-utils"], stdout=log, stderr=log, text=True)
     n = subprocess.run(["apt-get", "install", "-y", "libvips"], stdout=log, stderr=log, text=True)
-    print("----------> npm installs:")
+    print("----------> npm installs...")
     n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
     logging.info(f"Launch - Finished installing requirements.")
   except Exception as e:
@@ -114,7 +113,6 @@ def startEverything():
   for time_object in time_array:
     minutes, seconds = divmod(time_object["time"], 60)
     logging.info(f"{time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")
-    print(f"{time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   print("\n\n#--------------------- ### User Interaction ### --------------------#\n")
   
