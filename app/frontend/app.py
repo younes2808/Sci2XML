@@ -45,7 +45,8 @@ def clean_latex(latex_str):
         logging.info(f"Formula {latex_str} was cleaned successfully!")
 
     except Exception as e:
-        logging.error(f"An error occurred while cleaning formula {latex_str}: {e}", exc_info=True)
+        logging.error(f"An error occurred while trimming formula {latex_str}: {e}", exc_info=True)
+        st.error(f"An error occurred while trimming a formula.")
 
     return latex_str.strip()  # Trim any extra spaces
 
@@ -92,6 +93,7 @@ def processClassifierResponse(element):
 
     except Exception as e:
         logging.error(f"An error occurred while processing the classifier response for element: {e}", exc_info=True)
+        st.error(f"An error occurred while processing the classifier response")
 
 def main():
     """
@@ -116,9 +118,11 @@ def main():
 
     except FileNotFoundError:
         logging.error(f"CSS file not found: {css_path}", exc_info=True)
+        st.error(f"CSS file not found.")
 
     except Exception as e:
         logging.error(f"An error occurred while applying CSS: {e}", exc_info=True)
+        st.error(f"An error occurred while applying CSS.")
 
     def process_classifier(xml_input, pdf_file):
         """
@@ -168,6 +172,7 @@ def main():
 
             except requests.exceptions.RequestException as e:
                 logging.error(f"An error occurred while communication with the table parser: {e}", exc_info=True)
+                st.error(f"An error occurred while communication with the table parser.")
             
             try:
                 # Define the xml_input and XML namespace
@@ -237,6 +242,7 @@ def main():
 
             except Exception as e:
                 logging.error(f"An error occured while classifying the non-textual elements: {e}", exc_info=True)
+                st.error(f"An error occured while classifying the non-textual elements.")
 
             try:
                 # Parse the figures by calling 'processFigures' from the classifier module
@@ -245,6 +251,7 @@ def main():
 
             except Exception as e:
                 logging.error(f"An error occured while parsing the figures: {e}", exc_info=True)
+                st.error(f"An error occured while parsing the figures.")
 
             # Update progress bar
             st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and updating XML file... 🔄")
@@ -256,6 +263,7 @@ def main():
 
             except Exception as e:
                 logging.error(f"An error occured while parsing the formulas: {e}", exc_info=True)
+                st.error(f"An error occured while parsing the formulas.")
 
             try:
                 # Extract the version and encoding from the XML declaration using a regex
@@ -290,6 +298,7 @@ def main():
 
             except Exception as e:
                 logging.error(f"An error occured while prettifying the XML file: {e}", exc_info=True)
+                st.error(f"An error occured while pprettifying the XML file.")
 
             # Update the progress bar
             st.session_state.progress_bar.progress(percent_complete + 100, text="Non-textual elements were interpreted successfully ✅")
@@ -330,7 +339,8 @@ def main():
             return response.text  # Return XML recevied from GROBID
 
         except requests.exceptions.RequestException as e:
-            logging.error(f"Error while communicating with GROBID: {e}", exc_info=True)
+            logging.error(f"An error occured while communicating with GROBID: {e}", exc_info=True)
+            st.error(f"An error occured while communicating with GROBID.")
             return None  # Return None on error
 
     def parse_coords_for_figures(xml_content):
@@ -382,8 +392,8 @@ def main():
                                 })
 
                         except ValueError as e:
-                            logging.warning(f"Error parsing figure group '{group}': {e}")
-                            st.warning(f"Error parsing figure group '{group}': {e}")
+                            logging.error(f"An error occured while parsing figure group '{group}': {e}")
+                            st.error(f"An error occured while parsing a figure group.")
 
             # Process each formula
             for formula in formulas:
@@ -405,12 +415,12 @@ def main():
                                 })
 
                         except ValueError as e:
-                            logging.warning(f"Error parsing formula group '{group}': {e}")
-                            st.warning(f"Error parsing formula group '{group}': {e}")
+                            logging.error(f"An error occured while parsing figure group '{group}': {e}")
+                            st.error(f"An error occured while parsing a figure group.")
 
         except ET.ParseError as e:
-            logging.error(f"Error parsing XML: {e}", exc_info=True)
-            st.error(f"Error parsing XML: {e}")
+            logging.error(f"An error occured while parsing GROBID XML: {e}", exc_info=True)
+            st.error(f"An error occured while parsing the GROBID XML.")
 
         return annotations
 
@@ -429,6 +439,7 @@ def main():
             logging.info(f"Variable xml_text successfully set to the current content in text area.")
         except Exception as e:
             logging.error(f"An error occurred while setting variable xml_text to the current content in text area: {e}", exc_info=True)
+            st.error(f"An error occurred while setting variable xml_text to the current content in text area")
 
     def update_interpreted_xml():
         """
@@ -445,6 +456,7 @@ def main():
             logging.info(f"Variable interpreted_xml_text successfully set to the current content in text area.")
         except Exception as e:
             logging.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area: {e}", exc_info=True)
+            st.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area")
 
     # Title/logo
     st.image("app/images/Sci2XML_logo.png")
@@ -517,6 +529,7 @@ def main():
 
                         except Exception as e:
                             logging.error(f"An error occurred when receiving the GROBID result: {e}", exc_info=True)
+                            st.error(f"An error occurred when receiving the GROBID result.")
 
                 # Initialize the xml_text and show_grobid_results in session_state if not already set
                 if "xml_text" not in st.session_state or st.session_state.xml_text is None:
@@ -625,6 +638,7 @@ def main():
 
                                     except Exception as e:
                                         logging.error(f"An error occurred when processing the PDF file and XML file in the classifier: {e}", exc_info=True)
+                                        st.error(f"An error occurred when processing the PDF file and XML file in the classifier.")
 
                                 # Empty the results placeholder when all the elements have been parsed
                                 container_placeholder.empty()
