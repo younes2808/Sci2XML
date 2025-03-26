@@ -43,10 +43,16 @@ import backend.models.tableparser as tableParser
 
 print("\n\n#---------------------- ## Loading models ## -----------------------#\n")
 logging.info(f"APIcode - Loading models.")
-ML = classifierML.loadML()
-charter.load_UniChart()
-formula.load_Sumen()
-figureParserModel, figureParserTokenizer = figure.load()
+try:
+    # Loading the various parsing models by calling the load function in their module.
+    ML = classifierML.loadML()
+    charter.load_UniChart()
+    formula.load_Sumen()
+    figureParserModel, figureParserTokenizer = figure.load()
+    logging.info(f"APIcode - Finished loading models.")
+except Exception as e:
+    logging.error(f"APIcode - An error occurred while loading the models: {e}", exc_info=True)
+  
 
 
 def API(portnr):
@@ -69,44 +75,103 @@ def API(portnr):
 
   @app.route('/parseFormula', methods=['POST'])
   def handle_formula():
+      """
+      Endpoint for parsing formulas. It accepts an image file in POST body.
+
+      Paramaters:
+      None
+
+      Returns:
+      JSON response object
+      """
       print("\n")
       logging.info(f"API - parseFormula - You have reached endpoint for formula.")
+      
+      # Make sure an image is present:
+      if 'image' not in request.files:
+          return jsonify({"error": "No file uploaded"}), 400
 
       file = request.files['image']
 
-      ## PROCESS IMAGE
+      # Process image:
+      try:
+        processedFormulaLaTex, processedFormulaNL = processFormula(file)
+        logging.info(f"APIcode - Successfully processed formula.")
+      except Exception as e:
+        logging.error(f"APIcode - An error occurred while processing formula: {e}", exc_info=True)
 
-      processedFormulaLaTex, processedFormulaNL = processFormula(file)
-
+      # Return parsed content
       return jsonify({'element_type':"formula", 'formula': processedFormulaLaTex, "NL": processedFormulaNL, "preferred": processedFormulaLaTex})
 
   @app.route('/parseChart', methods=['POST'])
   def handle_chart():
+      """
+      Endpoint for parsing charts. It accepts an image file in POST body.
+
+      Paramaters:
+      None
+
+      Returns:
+      JSON response object
+      """
       print("\n")
       logging.info(f"API - parseChart - You have reached endpoint for chart.")
 
+      # Make sure an image is present:
+      if 'image' not in request.files:
+          return jsonify({"error": "No file uploaded"}), 400
+
       file = request.files['image']
 
-      ## PROCESS IMAGE
-      processedChartCSV, processedChartNL = processChart(file)
+      # Process image:
+      try:
+        processedChartCSV, processedChartNL = processChart(file)
+        logging.info(f"APIcode - Successfully processed chart.")
+      except Exception as e:
+        logging.error(f"APIcode - An error occurred while processing chart: {e}", exc_info=True)
 
       return jsonify({'element_type':"chart", 'NL': processedChartNL, "csv": processedChartCSV, "preferred": processedChartNL})
 
   @app.route('/parseFigure', methods=['POST'])
   def handle_figure():
+      """
+      Endpoint for parsing figures. It accepts an image file in POST body.
+
+      Paramaters:
+      None
+
+      Returns:
+      JSON response object
+      """
       print("\n")
       logging.info(f"API - parseFigure - You have reached endpoint for figure.")
 
+      # Make sure an image is present:
+      if 'image' not in request.files:
+          return jsonify({"error": "No file uploaded"}), 400
+
       file = request.files['image']
 
-      ## PROCESS IMAGE
-
-      processedFigureNL = processFigure(file)
+      # Process image:
+      try:
+        processedFigureNL = processFigure(file)
+        logging.info(f"APIcode - Successfully processed figure.")
+      except Exception as e:
+        logging.error(f"APIcode - An error occurred while processing figure: {e}", exc_info=True)
 
       return jsonify({'element_type':"figure", 'NL': processedFigureNL, "preferred": processedFigureNL})
 
   @app.route('/parseTable', methods=['POST'])
   def handle_table():
+      """
+      Endpoint for parsing tables. It accepts an image file in POST body.
+
+      Paramaters:
+      None
+
+      Returns:
+      JSON response object
+      """
       print("\n")
       logging.info(f"API - parseTable - You have reached endpoint for table.")
 
@@ -118,9 +183,12 @@ def API(portnr):
       pdf_file = request.files['pdf']
       grobid_xml_file = request.files['grobid_xml']
 
-      ## PROCESS TABLES
-      # processedTableCSV, processedTableNL = processTable(pdf_file, grobid_xml_file) # Doesnt return a single tabledata+NL, but instead the entire XML with all tables processed.
-      processedTablesXML = processTable(pdf_file, grobid_xml_file)
+      # Process image:
+      try:
+        processedTablesXML = processTable(pdf_file, grobid_xml_file)
+        logging.info(f"APIcode - Successfully processed table.")
+      except Exception as e:
+        logging.error(f"APIcode - An error occurred while processing table: {e}", exc_info=True)
 
       #Return the final Grobid XML as a downloadable file (with content type "application/xml")
       return Response(
@@ -141,19 +209,19 @@ def API(portnr):
       NLdata: The generated NL data.
       """
       logging.info(f"API - processFormula - processing formula...")
-      ###
-      # Send to OCR or something
-      ###
-      """
-      if 'file' not in request.files:
-          return jsonify({"error": "No file uploaded"}), 400
-      file = request.files['file']
-      """
+      
+      # Ensure proper file
       if file.filename == '':
           return jsonify({"error": "No selected file"}), 400
       image = Image.open(BytesIO(file.read())).convert('RGB')
-      latex_code = formula.run_sumen_ocr(image)
-      #return jsonify({"latex": latex_code})
+
+      # Send to sumen:
+      try:
+        latex_code = formula.run_sumen_ocr(image)
+        logging.info(f"APIcode - Successfully called sumen.")
+      except Exception as e:
+        logging.error(f"APIcode - An error occurred while calling sumen: {e}", exc_info=True)
+      
 
       NLdata = "some NL"
       return latex_code, NLdata
@@ -170,19 +238,21 @@ def API(portnr):
       table_data: The generated table data.
       """
       logging.info(f"API - processChart - processing chart...")
-
-      """
-      if 'file' not in request.files:
-          return jsonify({"error": "No file uploaded"}), 400
-      file = request.files['file']
-      """
+      
+      # Ensure proper file
       if file.filename == '':
           return jsonify({"error": "No selected file"}), 400
       image = Image.open(BytesIO(file.read())).convert('RGB')
-      summary = charter.generate_unichart_response(image, "<summarize_chart><s_answer>")
-      table_data = charter.generate_unichart_response(image, "<extract_data_table><s_answer>")
-      structured_table_data = charter.parse_table_data(table_data)
 
+      # Send to unichart:
+      try:
+        summary = charter.generate_unichart_response(image, "<summarize_chart><s_answer>")
+        table_data = charter.generate_unichart_response(image, "<extract_data_table><s_answer>")
+        structured_table_data = charter.parse_table_data(table_data)
+        logging.info(f"APIcode - Successfully called unichart.")
+      except Exception as e:
+        logging.error(f"APIcode - An error occurred while calling unichart: {e}", exc_info=True)
+      
       return structured_table_data, summary
 
   def processFigure(file):
@@ -196,9 +266,8 @@ def API(portnr):
       NLdata: The generated NL data.
       """
       logging.info(f"API - processFigure - processing figure...")
-      ###
-      # Send to VLM or something
-      ###
+      
+      # Ensure proper file
       if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
@@ -331,13 +400,7 @@ def API(portnr):
     print(f"Predicted class: {predicted_class_name}")
     return predicted_class_name
 
-  @app.route("/loadVLM")
-  def load_vlm(): # NOT IN USE
-      print("API endpoint: Loading VLM...")
-      global VLM
-      VLM = loadVLM()
-      return "API endpoint: Loading VLM..."
-
+ 
   @app.route('/callVLM', methods=['POST'])
   def call_vlm(): # NOT IN USE
       print("-- You have reached endpoint for classifier VLM --")
@@ -371,32 +434,35 @@ def API(portnr):
   
   @app.route('/process', methods=['POST'])
   def initiate_processing():
-      print("-- You have reached API Endpoint for full processing --")
-
-      ## Opening files: ##
       """
-      #  XML file:
-      file = request.files['xmlfile']
+      Endpoint for initiating the entire process.
+      First reads the uploaded PDF, then sends it to Grobid server.
+      Then calls the classifier functions to process the figures and formulas.
+      In the end it calls on getXML() and returns the result.
 
-      stringio = StringIO(file.getvalue().decode("utf-8"), newline=None)
-      #with open("testXML.txt", "a") as file:
-          #file.write(stringio)
-      string_data_XML = stringio.read()
+      Paramaters:
+      None
 
-      print("\n----- Saving XML file... -----")
-      with open("TESTING_temp_xmlfile.grobid.tei.xml", "w", encoding="utf-8") as file:
-          file.write(string_data_XML)
+      Returns:
+      The processed XML file.
       """
-      #  PDF file:
+      print("\n")
+      logging.info(f"API - process - You have reached endpoint for full processing.")
+            
+      # Make sure an PDF file is present:
+      if 'pdffile' not in request.files:
+          return jsonify({"error": "No file uploaded"}), 400
+
+      # Opening PDF file:
       file = request.files['pdffile']
       byte_data_PDF = file.read()
 
-      print("\n----- Saving PDF file... -----")
-      with open("TESTING_temp_pdffile.pdf", "wb") as file:
-          file.write(byte_data_PDF)
+      #print("\n----- Saving PDF file... -----")
+      #with open("TESTING_temp_pdffile.pdf", "wb") as file:
+      #    file.write(byte_data_PDF)
 
       ## Calling Grobid ##
-      print("-- Calling Grobid --")
+      logging.info(f"API - process - Calling Grobid.")
       grobid_url="http://172.28.0.12:8070/api/processFulltextDocument"
       files = {'input': byte_data_PDF}
       params = {
@@ -408,53 +474,57 @@ def API(portnr):
                     "segmentSentences": 1,
                     "teiCoordinates": ["ref", "s", "biblStruct", "persName", "figure", "formula", "head", "note", "title", "affiliation"]
                 }
-      response = requests.post(grobid_url, files=files, data=params)  # Use 'data' for form-data
-      response.raise_for_status()  # Raise exception if status is not 200
-      string_data_XML = response.text
+      # Call grobid server:
+      try:
+        response = requests.post(grobid_url, files=files, data=params)  # Use 'data' for form-data
+        response.raise_for_status()  # Raise exception if status is not 200
+        string_data_XML = response.text
+        logging.info(f"APIcode - Successfully called Grobid server.")
+        # Check if coordinates are missing in the response
+        if 'coords' not in response.text:
+            logging.warning("No coordinates found in PDF file. Please check GROBID settings.")
+      except Exception as e:
+        logging.error(f"APIcode - An error occurred while calling Grobid server: {e}", exc_info=True)
 
       ## Table Parser ##
-      print("-- Table Parser --")
-      ### Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
+      logging.info(f"API - process - Initiating Table parser.")
+      ## Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
       # Ready the files
       files = {"grobid_xml": ("xmlfile.xml", string_data_XML, "application/json"), "pdf": ("pdffile.pdf", byte_data_PDF)}
 
-      # Send to API endpoint for processing of tables
-      response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
-      print("response", response)
-      string_data_XML = response.text
+      try:
+        # Send to API endpoint for processing of tables
+        response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
+        string_data_XML = response.text
+        logging.info(f'Response from table parser: {response}')
+      except requests.exceptions.RequestException as e:
+        logging.error(f"An error occurred while communication with the table parser: {e}", exc_info=True)
 
       ##  Starting classifier ##
-      print("-- Starting Classifier --")
-      images, figures, formulas = classifier.openXMLfile(string_data_XML, byte_data_PDF, frontend=False)
-      classifier.processFigures(figures, images, frontend=False)
-      classifier.processFormulas(formulas, images, mode="regex", frontend=False)
-      # alteredXML = main(string_data_XML, byte_data_PDF)
-      #alteredXML = "alteredXML"
+      logging.info(f"API - process - Initiating Classifier.")
+      try:
+        # Open the XML file and extract all figures and formulas, as well as getting each page of the PDF as an image.
+        images, figures, formulas = classifier.openXMLfile(string_data_XML, byte_data_PDF, frontend=False)
+        logging.info(f'Successfully opened XML file.')
+      except requests.exceptions.RequestException as e:
+        logging.error(f"An error occurred while opening the XML file: {e}", exc_info=True)
+      try:
+        # Process each figure. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
+        classifier.processFigures(figures, images, frontend=False)
+        logging.info(f'Successfully processed the figures.')
+      except requests.exceptions.RequestException as e:
+        logging.error(f"An error occurred while processeing figures: {e}", exc_info=True)
+      try:
+        # Process each formula. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
+        classifier.processFormulas(formulas, images, mode="regex", frontend=False)
+        logging.info(f'Successfully processed the formulas.')
+      except requests.exceptions.RequestException as e:
+        logging.error(f"An error occurred while processing formulas: {e}", exc_info=True)
+
 
       return str(classifier.getXML(frontend=False))
-      #   return str(alteredXML)
 
-  @app.route("/test2")
-  def test2(): # NOT IN USE
-      print("API endpoint: Loading VLM...")
-      g = 2
-      print("..", g)
-      from PIL import Image
-      image_path = "chart3.png"  # Replace with the path to your image
-      image = Image.open(image_path)
-      import app.backend.models.classifiermodel as classifierML
-      predicted_class_name = classifierML.callML(ML, image)
-
-      print(f"Predicted class: {predicted_class_name}")
-      return "API endpoint: Loading VLM..."+str(g) + str(predicted_class_name)
-
-  @app.route('/test', methods=['POST'])
-  def test_function(): # NOT IN USE
-      text = request.get_json()['text']
-      print(text)
-      predictions = "predd"
-      sentiment = "senttttt"
-      return jsonify({'predictions ':predictions, 'sentiment ': sentiment})
+ 
 
   port = portnr # default 8000
   threading.Thread(target=app.run, kwargs={'host':'0.0.0.0','port':port}).start()
