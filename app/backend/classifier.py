@@ -264,6 +264,10 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
           # Send image of formula to API endpoint where it should be processed by a formula parser:
           try:
             APIresponse = requests.post(apiURL+"parseFormula", files={'image': img_byte_arr})
+            # Check that the response is positive:
+            if (APIresponse.status_code != 200):
+                logging.error(f"Classifier - Something went wrong in the API: {APIresponse.content}")
+
             APIresponse = APIresponse.json()
             # Set some attributes to the returned response object:
             APIresponse["element_number"] = PDFelementNr
@@ -299,6 +303,9 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
       try:
         files = {"image": ("image1.png", img_byte_arr)}
         response = requests.post(apiURL+"callClassifier", files=files)
+        # Check that the response is positive:
+        if (response.status_code != 200):
+            logging.error(f"Classifier - Something went wrong in the API: {response.content}")
         response = response.json()
         figureClass = response["ClassifierResponse"]
         logging.info(f"Classifier - Received response from API classifier: {figureClass}. Sending it over to the correct API endpoint.")
@@ -331,6 +338,10 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
           # Send image of figure to API endpoint where it should be processed by a chart parser:
           try:
             APIresponse = requests.post(apiURL+"parseChart", files={'image': img_byte_arr})
+            # Check that the response is positive:
+            if (APIresponse.status_code != 200):
+                logging.error(f"Classifier - Something went wrong in the API: {APIresponse.content}")
+
             APIresponse = APIresponse.json()
             APIresponse["element_number"] = PDFelementNr
             APIresponse["page_number"] = pagenr
@@ -362,6 +373,10 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
           # Send image of figure to API endpoint where it should be processed by a figure parser:
           try:
             APIresponse = requests.post(apiURL+"parseFigure", files={'image': img_byte_arr})
+            # Check that the response is positive:
+            if (APIresponse.status_code != 200):
+                logging.error(f"Classifier - Something went wrong in the API: {APIresponse.content}")
+
             APIresponse = APIresponse.json()
             APIresponse["element_number"] = PDFelementNr
             APIresponse["page_number"] = pagenr
@@ -394,6 +409,10 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
         # Send image of formula to API endpoint where it should be processed by a formula parser:
         try:
             APIresponse = requests.post(apiURL+"parseFormula", files={'image': img_byte_arr})
+            # Check that the response is positive:
+            if (APIresponse.status_code != 200):
+                logging.error(f"Classifier - Something went wrong in the API: {APIresponse.content}")
+
             APIresponse = APIresponse.json()
             APIresponse["element_number"] = PDFelementNr
             APIresponse["page_number"] = pagenr

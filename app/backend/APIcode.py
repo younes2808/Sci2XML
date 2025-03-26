@@ -421,12 +421,20 @@ def API(portnr):
       print("\n")
       logging.info(f"API - callClassifier - You have reached endpoint for classifier ML.")
 
+      # Make sure an image is present:
+      if 'image' not in request.files:
+          return jsonify({"error": "No file uploaded"}), 400
+
       image = request.files['image']
       image = Image.open(image)
 
-      ## PROCESS IMAGE
-      response = classifierML.callML(ML, image)
-      #response = "VLMresponse"
+      # Process image:
+      try:
+        response = classifierML.callML(ML, image)
+        logging.info(f"APIcode - Successfully classified image.")
+      except Exception as e:
+        logging.error(f"APIcode - An error occurred while classifying image: {e}", exc_info=True)
+
 
       logging.info(f"API - callClassifier - Predicted class: {response}")
 
@@ -482,7 +490,7 @@ def API(portnr):
         logging.info(f"APIcode - Successfully called Grobid server.")
         # Check if coordinates are missing in the response
         if 'coords' not in response.text:
-            logging.warning("No coordinates found in PDF file. Please check GROBID settings.")
+            logging.warning("APIcode - No coordinates found in PDF file. Please check GROBID settings.")
       except Exception as e:
         logging.error(f"APIcode - An error occurred while calling Grobid server: {e}", exc_info=True)
 
@@ -496,7 +504,7 @@ def API(portnr):
         # Send to API endpoint for processing of tables
         response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
         string_data_XML = response.text
-        logging.info(f'Response from table parser: {response}')
+        logging.info(f'APIcode - Response from table parser: {response}')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while communication with the table parser: {e}", exc_info=True)
 
@@ -505,19 +513,19 @@ def API(portnr):
       try:
         # Open the XML file and extract all figures and formulas, as well as getting each page of the PDF as an image.
         images, figures, formulas = classifier.openXMLfile(string_data_XML, byte_data_PDF, frontend=False)
-        logging.info(f'Successfully opened XML file.')
+        logging.info(f'APIcode - Successfully opened XML file.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while opening the XML file: {e}", exc_info=True)
       try:
         # Process each figure. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
         classifier.processFigures(figures, images, frontend=False)
-        logging.info(f'Successfully processed the figures.')
+        logging.info(f'APIcode - Successfully processed the figures.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while processeing figures: {e}", exc_info=True)
       try:
         # Process each formula. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
         classifier.processFormulas(formulas, images, mode="regex", frontend=False)
-        logging.info(f'Successfully processed the formulas.')
+        logging.info(f'APIcode - Successfully processed the formulas.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while processing formulas: {e}", exc_info=True)
 
