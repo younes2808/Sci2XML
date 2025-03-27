@@ -13,6 +13,7 @@ from PIL import Image
 from tempfile import NamedTemporaryFile
 from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcessor
 from io import BytesIO
+from io import StringIO
 import time
 import logging
 import sys
@@ -152,9 +153,23 @@ def API(portnr):
 
       file = request.files['image']
 
+      # Make sure a prompt is present:
+      if 'prompt' not in request.files:
+          return jsonify({"error": "No prompt uploaded"}), 400
+
+      prompt = request.files['prompt']
+      try:
+        # Fetch string value from bytestream
+        stringio = StringIO(prompt.getvalue().decode("utf-8"), newline=None)
+        string_data_prompt = stringio.read()
+        logging.info(f"APIcode - parseFigure - prompt: {string_data_prompt}.")
+      except Exception as e:
+        logging.error(f"APIcode - An error occurred while fetching string value from bytestream: {e}", exc_info=True)
+
+
       # Process image:
       try:
-        processedFigureNL = processFigure(file)
+        processedFigureNL = processFigure(file, string_data_prompt)
         logging.info(f"APIcode - Successfully processed figure.")
       except Exception as e:
         logging.error(f"APIcode - An error occurred while processing figure: {e}", exc_info=True)
@@ -255,12 +270,13 @@ def API(portnr):
       
       return structured_table_data, summary
 
-  def processFigure(file):
+  def processFigure(file, promptContext):
       """
       Processes the figure. More specifically redirects to the VLM model.
 
       Paramaters:
       image: The file/image to be processed.
+      promptContext: A string with the figure description. Can be used to give context to the prompt for the VLM.
 
       Returns:
       NLdata: The generated NL data.
@@ -278,7 +294,7 @@ def API(portnr):
         return jsonify({"error": f"Invalid image file: {str(e)}"}), 400
 
       try:
-        answer = figureParserModel.query(image, "Describe this image deeply. Caption it")["answer"]
+        answer = figureParserModel.query(image, f"Describe this image deeply. Caption it. Here is the figure description for context: {promptContext}")["answer"]
       except Exception as e:
         return jsonify({"error": f"Model query failed: {str(e)}"}), 500
 

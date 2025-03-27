@@ -208,7 +208,7 @@ def saveXMLfile(pathToXML):
     except Exception as e:
         logging.error(f"Classifier - An error occurred while trying to save XML file: {e}", exc_info=True)
 
-def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
+def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, promptContext=""):
     """
     Classifies a given element as either a formula, chart, figure or other. Based on what the element is classified as 
     it gets redirected to the correct API endpoint for processing. When it gets a response it calls on addToXMLfile() to 
@@ -223,6 +223,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
     regex: the formula string to be matched against regex.
     PDFelementNr: the correct number for the figure, as it is in the PDF. Might not exist because Grobid finds un-numbered figures/formulas sometimes.
     frontend (bool): Tag stating if frontend is used or not. 
+    promptContext: A string with the figure description. Can be used to give context to the prompt for the VLM.
 
     Returns:
     None
@@ -372,7 +373,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend):
 
           # Send image of figure to API endpoint where it should be processed by a figure parser:
           try:
-            APIresponse = requests.post(apiURL+"parseFigure", files={'image': img_byte_arr})
+            APIresponse = requests.post(apiURL+"parseFigure", files={'image': img_byte_arr, 'prompt': promptContext})
             # Check that the response is positive:
             if (APIresponse.status_code != 200):
                 logging.error(f"Classifier - Something went wrong in the API: {APIresponse.content}")
@@ -522,6 +523,20 @@ def processFigures(figures, images, frontend):
         #print("----------> FOUND FIGURE NR: ", correctFigureNr)
         logging.info(f"Classifier - Correct figure number is now set as: {correctFigureNr}")
 
+        ## Getting figure description:
+        promptContext = ""
+        try:
+            figureDesc = figure.find("figDesc")
+            if figureDesc is not None:
+                logging.info(f"Classifier - Found figure description {figureDesc}.")
+                promptContext = figureDesc.text
+            if figureDesc is None:
+                logging.info(f"Classifier - No figure description found.")
+            logging.info(f"Classifier - Successfully found figure description.")
+        except Exception as e:
+            logging.error(f"Classifier - An error occurred while trying to find figure description: {e}", exc_info=True)
+
+
         ## Getting coordinates:
         coords = ""
         try:
@@ -552,7 +567,7 @@ def processFigures(figures, images, frontend):
 
         ## Sending to classification:
 
-        classify("figure", imgFigur, figurnr, int(coords.split(",")[0]), None, correctFigureNr, frontend)
+        classify("figure", imgFigur, figurnr, int(coords.split(",")[0]), None, correctFigureNr, frontend, promptContext)
 
         figurnr+=1
 
