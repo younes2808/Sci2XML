@@ -1,4 +1,3 @@
-# Imports:
 import requests, json
 import io
 import re
@@ -6,16 +5,16 @@ import streamlit as st
 import pandas as pd
 from bs4 import BeautifulSoup
 from PIL import Image, ImageDraw
-from pdf2image import convert_from_path, convert_from_bytes # Module which turns each page of a PDF into an image.
-from pdf2image.exceptions import ( # Built-in exception handlers. 
+from pdf2image import convert_from_path, convert_from_bytes
+from pdf2image.exceptions import (
     PDFInfoNotInstalledError,
     PDFPageCountError,
     PDFSyntaxError
 )
+import logging
 import sys
 import time
-import logging
-# Set configuration for logging
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -26,12 +25,11 @@ logging.basicConfig(
     ]
 )
 
-
-apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
+apiURL = "http://172.28.0.12:8000/"
 
 def openXMLfile(XMLfile, PDFfile, frontend):
     """
-    Opens the XML file and converts it to a python dict, and extracts all formulas and figures. Also turns each page of the PDF into an image.
+    Opens the XML file and converts it to a python dict.
 
     Paramaters:
     XMLfile: The XML file as stringio object.
@@ -44,25 +42,35 @@ def openXMLfile(XMLfile, PDFfile, frontend):
     formulas: The formulas from the XML file.
     """
 
+    #print("\n----- Opening XML and PDF file... -------")
     logging.info("Classifier - Starting function openXMLfile()")
+
+    #stringio = StringIO(XMLfile.getvalue().decode("utf-8"), newline=None)
+    #XMLfile = stringio.read()
 
     # Opening XML file and storing it in variable.
     try:
         global Bs_data
         if (frontend):
             PDFfile = PDFfile.getvalue()
-            st.session_state.Bs_data = BeautifulSoup(XMLfile, "xml") # Store XML string data in session state variable which the frontend can access later.
+            st.session_state.Bs_data = BeautifulSoup(XMLfile, "xml")
             Bs_data = st.session_state.Bs_data
         else:
-            Bs_data = BeautifulSoup(XMLfile, "xml") # Store XML string data in global variable.
+            Bs_data = BeautifulSoup(XMLfile, "xml")
         logging.info(f"Classifier - Opened and stored XML and PDF file.")
     except Exception as e:
         logging.error(f"Classifier - An error occurred while opening XML and PDF file: {e}", exc_info=True)
 
     # Finding all figures and formulas in the xml file using their <figure> or <formula> tag:
     figures = Bs_data.find_all('figure')
+
+    #print("Figures:")
+    #print(figures)
+
     formulas = Bs_data.find_all('formula')
 
+    #print("Formulas:")
+    #print(formulas)
     logging.info(f"Classifier - Found all figures and formulas in XML file.")
 
     # Converting the pages in the PDF file to images.
@@ -73,8 +81,10 @@ def openXMLfile(XMLfile, PDFfile, frontend):
         images = []
         logging.error(f"Classifier - An error occurred while converting the pages in the PDF file to images: {e}", exc_info=True)
 
-    return images, figures, formulas
+    #for i in range(0, len(images)):
+    #    print("--- Image nr ", i+1)
 
+    return images, figures, formulas
 
 def addToXMLfile(type, name, newContent, frontend):
     """
@@ -94,17 +104,18 @@ def addToXMLfile(type, name, newContent, frontend):
     ## Find parent tag, and the text content of that:
     try:
         # Find parent tag:
-        if (frontend): # Search in session state variable.
+        if (frontend):
             parentTag = st.session_state.Bs_data.find(type, {"xml:id": name})
-        else: # Search in global variable.
+        else:
             parentTag = Bs_data.find(type, {"xml:id": name})
         logging.info(f"Classifier - old parentTag: {parentTag}")
         # If there is no parent tag, then there is nowhere to place the content.
         if (parentTag == None):
             logging.error("Classifier - Could not find tag to place element back into...")
             return
-        # Try to find all preexisting text in the parent tag, but not counting text in child tags:
+        # Try to find all text in the parent tag, but not counting text in child tags:
         textWithoutTag = parentTag.find_all(string=True, recursive=False)
+        print("findall", textWithoutTag)
         logging.info(f"Classifier - find text in tag: {textWithoutTag}")
     except Exception as e:
         parentTag = ""
@@ -112,11 +123,11 @@ def addToXMLfile(type, name, newContent, frontend):
         logging.error(f"Classifier - An error occurred while trying to find parentTag and its content: {e}", exc_info=True)
 
 
-    ## Add the generated content to correct position in new tag
+    ## Add generated content to correct position in new tag
     try:
         if ("formula" in newContent): # Check to see if newContent object has formula key
             newTag = Bs_data.new_tag("latex") # Create new tag
-            if (len(textWithoutTag) == 0): # If no preexisting text content in tag:
+            if (len(textWithoutTag) == 0): # If no text content in tag:
                 parentTag.append(newTag) # Add the new tag to parentTag
             else: # If there already is some text in tag (like the Grobids attempt at capturing formula):
                 for text in textWithoutTag:
@@ -129,32 +140,32 @@ def addToXMLfile(type, name, newContent, frontend):
     except Exception as e:
         logging.error(f"Classifier - An error occurred while trying to add new formula content to parentTag: {e}", exc_info=True)
     try:
-        if ("NL" in newContent): # Check to see if newContent object has natural language key
+        if ("NL" in newContent):
             newTag = Bs_data.new_tag("llmgenerated")
-            if (len(textWithoutTag) == 0): # If no preexisting text content in tag:
+            if (len(textWithoutTag) == 0):
                 parentTag.append(newTag)
-            else: # If there already is some text in tag (like the Grobids attempt at capturing formula):
+            else:
                 for text in textWithoutTag:
                     if (text in parentTag.contents):
-                        parentTag.contents[parentTag.contents.index(text)].replace_with(newTag) # Replace text with new tag 
-                        textWithoutTag = [] # Make sure it doesnt try to replace the newly inserted tag with another later.
+                        parentTag.contents[parentTag.contents.index(text)].replace_with(newTag)
+                        textWithoutTag = []
                         break
-            newTag.string = newContent["NL"] # Set content of new tag to be the value of object key.
+            newTag.string = newContent["NL"]
         logging.info(f"Classifier - Successfully added new llmgenerated content to parentTag.")
     except Exception as e:
         logging.error(f"Classifier - An error occurred while trying to add new llmgenerated content to parentTag: {e}", exc_info=True)
     try:
-        if ("csv" in newContent): # Check to see if newContent object has CSV key
+        if ("csv" in newContent):
             newTag = Bs_data.new_tag("tabledata")
-            if (len(textWithoutTag) == 0): # If no preexisting text content in tag:
+            if (len(textWithoutTag) == 0):
                 parentTag.append(newTag)
-            else: # If there already is some text in tag (like the Grobids attempt at capturing formula):
+            else:
                 for text in textWithoutTag:
                     if (text in parentTag.contents):
-                        parentTag.contents[parentTag.contents.index(text)].replace_with(newTag) # Replace text with new tag 
-                        textWithoutTag = [] # Make sure it doesnt try to replace the newly inserted tag with another later.
+                        parentTag.contents[parentTag.contents.index(text)].replace_with(newTag)
+                        textWithoutTag = []
                         break
-            newTag.string = str(newContent["csv"]) # Set content of new tag to be the value of object key.
+            newTag.string = str(newContent["csv"])
         logging.info(f"Classifier - Successfully added new csv content to parentTag.")
     except Exception as e:
         logging.error(f"Classifier - An error occurred while trying to add new csv content to parentTag: {e}", exc_info=True)
@@ -219,7 +230,9 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
     """
     logging.info("Classifier - Starting function Classifier()")
 
-    subtype = "unknown" # The type of element. Will be updated after classification.
+    ## Redirecting to correct endpoint in API...
+
+    subtype = "unknown"
 
     ## API request header:
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -234,9 +247,11 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
       ## .{3,} matches any character at least three times, and ensures the string is longer than 2 characters.
       # If the formula meets the criteria for being a formula:
       if (re.match(pattern, regex)):
+          #print("YES: ", "Formula: ", elementNr, " ->", regex)
           logging.info(f"Classifier - This formula is indeed a formula.")
-          subtype = "formula" # Set type.
-          logging.info(f"Classifier - Redirecting to formulaParser.")
+          subtype = "formula"
+          print("Redirecting to formulaParser")
+          ##### APIresponse = API.call("127.0.0.1/formulaParser") #####
           
           # Create a bytes object of the image of the element:
           try:
@@ -253,7 +268,6 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
             # Check that the response is positive:
             if (APIresponse.status_code != 200):
                 logging.error(f"Classifier - Something went wrong in the API: {APIresponse.content}")
-                return # Error in API, a proper response is not received.
 
             APIresponse = APIresponse.json()
             # Set some attributes to the returned response object:
@@ -264,16 +278,17 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
           except Exception as e:
             logging.error(f"Classifier - An error occurred while calling API endpoint for formula parser: {e}", exc_info=True)
 
+          #print("Response from formulaParser: --> ", APIresponse["preferred"])
           logging.info(f"Classifier - Response from formulaParser: {APIresponse}")
       # If the formula does not meets the criteria for being a formula:
       else:
           # Not actually a formula, exiting...
           logging.info(f"Classifier - This formula is NOT actually a formula.")
+          #print("NO: ", "Formula: ", elementNr, " ->", regex)
           return
 
     ## Classifying figures:
     else:
-      ## Send to classifier model first:
       logging.info(f"Classifier - Classifies figure nr:{elementNr}.")
 
       # Create a bytes object of the image of the element:
@@ -292,14 +307,12 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
         # Check that the response is positive:
         if (response.status_code != 200):
             logging.error(f"Classifier - Something went wrong in the API: {response.content}")
-            return # Error in API, a proper response is not received.
         response = response.json()
         figureClass = response["ClassifierResponse"]
         logging.info(f"Classifier - Received response from API classifier: {figureClass}. Sending it over to the correct API endpoint.")
       except Exception as e:
         logging.error(f"Classifier - An error occurred while calling API endpoint for classification: {e}", exc_info=True)
 
-      ## After classification the element is sent to the correct endpoint for further processing.
 
       ## If the figure is of type 'other':
       # That is, 'just_image' elements are likely elements mistaken as figures, 'table' elements are processed separately and not here, 
@@ -310,8 +323,9 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
 
       ## If the figure is a 'chart':
       if (figureClass.lower() in ['bar_chart', 'diagram', 'graph', 'pie_chart']):
-          logging.info(f"Classifier - Element identified as 'chart', subtype: {figureClass.lower()}. Redirecting to chart parser API endpoint...")
-          subtype = figureClass.lower() # Set type to what it was classified as.
+          logging.info(f"Classifier - Element identified as 'chart'. Redirecting to chart parser API endpoint...")
+          subtype = figureClass.lower()
+          ##### APIresponse = API.call("127.0.0.1/chartParser") #####
 
           # Create a bytes object of the image of the element:
           try:
@@ -328,7 +342,6 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
             # Check that the response is positive:
             if (APIresponse.status_code != 200):
                 logging.error(f"Classifier - Something went wrong in the API: {APIresponse.content}")
-                return # Error in API, a proper response is not received.
 
             APIresponse = APIresponse.json()
             APIresponse["element_number"] = PDFelementNr
@@ -338,12 +351,16 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
           except Exception as e:
             logging.error(f"Classifier - An error occurred while calling API endpoint for chart parser: {e}", exc_info=True)
 
+
+          #print("Response from chartParser: --> ", APIresponse["preferred"])
           logging.info(f"Classifier - Response from chartParser: {APIresponse}")
 
       ## If the figure is a 'figure':
       if (figureClass.lower() in ['flow_chart', 'growth_chart']):
-          logging.info(f"Classifier - Element identified as 'figure', subtype: {figureClass.lower()}. Redirecting to figure parser API endpoint...")
+          #print("Redirecting to figureParser. Image identified as ", figureClass.lower())
+          logging.info(f"Classifier - Element identified as 'figure'. Redirecting to figure parser API endpoint...")
           subtype = figureClass.lower()
+          ##### APIresponse = API.call("127.0.0.1/figureParser") #####
 
           # Create a bytes object of the image of the element:
           try:
@@ -360,7 +377,6 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
             # Check that the response is positive:
             if (APIresponse.status_code != 200):
                 logging.error(f"Classifier - Something went wrong in the API: {APIresponse.content}")
-                return # Error in API, a proper response is not received.
 
             APIresponse = APIresponse.json()
             APIresponse["element_number"] = PDFelementNr
@@ -370,13 +386,17 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
           except Exception as e:
             logging.error(f"Classifier - An error occurred while calling API endpoint for figure parser: {e}", exc_info=True)
 
+
+          #print("Response from figureParser: --> ", APIresponse["preferred"])
           logging.info(f"Classifier - Response from figureParser: {APIresponse}")
 
       ## If the classifier thinks that this figure is a formula:
       # Should not happen often. The main handling of formulas happens at the top of this (classify()) function.
       if ("formula" in figureClass.lower()):
+        #print("Redirecting to formulaParser")
         logging.warning(f"Classifier - Element identified as 'formula'. Redirecting to formula parser API endpoint...")
         subtype = "formula"
+        ##### APIresponse = API.call("127.0.0.1/formulaParser") #####
 
         # Create a bytes object of the image of the element:
         try:
@@ -393,7 +413,6 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
             # Check that the response is positive:
             if (APIresponse.status_code != 200):
                 logging.error(f"Classifier - Something went wrong in the API: {APIresponse.content}")
-                return # Error in API, a proper response is not received.
 
             APIresponse = APIresponse.json()
             APIresponse["element_number"] = PDFelementNr
@@ -403,6 +422,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
         except Exception as e:
             logging.error(f"Classifier - An error occurred while calling API endpoint for formula parser: {e}", exc_info=True)
 
+        #print("Response from formulaParser: --> ", APIresponse["preferred"])
         logging.info(f"Classifier - Response from formulaParser: {APIresponse}")
 
     ## If subtype is unknown its better to abort and not add anything back into the XML.
@@ -412,6 +432,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
       return
 
     # Call on addToXMLfile() to add the processed content back into the XML file.
+    #print("Received response about image nr ", elementNr, ". Will now paste response back into the XML-file.")
     logging.info(f"Classifier - Received response about image nr {elementNr}. Will now paste response back into the XML-file.")
     try:
         if (XMLtype == "figure"):
@@ -423,7 +444,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
         logging.error(f"Classifier - An error occurred while calling addToXMLfile(): {e}", exc_info=True)
 
     
-    # If the frontend tag is set, the processed content should be returned to the frontend as well:
+    # If the frontend tag is set, the processed content should be returned to the frontend:
     try: 
         if (frontend):
             ## Uses importlib to find the frontend module:
@@ -444,8 +465,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
 
 def processFigures(figures, images, frontend):
     """
-    Crops the figures from the PDF file into images, finds correct element number, gets figure description
-     and coordinates and sends them to the classifier (ML model) for classification.
+    Crops the figures from the PDF file into images and sends them to the classifier (ML model) for classification.
 
     Paramaters:
     figures: The figures from the XML file.
@@ -455,6 +475,7 @@ def processFigures(figures, images, frontend):
     Returns:
     None
     """
+    #print("\n-------- Cropping Figures --------")
     logging.info("Classifier - Starting function processFigures()")
 
     figurnr = 0 # The number which Grobid gave this figure. Will be used when putting processed content back into the figure tag.
@@ -497,13 +518,15 @@ def processFigures(figures, images, frontend):
             logging.info(f"Classifier - Successfully found a correct figure number")
         except Exception as e:
             logging.error(f"Classifier - An error occurred while trying to find a correct figure number: {e}", exc_info=True)
-    
+
+            
+        #print("----------> FOUND FIGURE NR: ", correctFigureNr)
         logging.info(f"Classifier - Correct figure number is now set as: {correctFigureNr}")
 
-        ## Getting figure description (may be used as context for the prompt to figure parser):
+        ## Getting figure description:
         promptContext = ""
         try:
-            figureDesc = figure.find("figDesc") # Tries to find any occurance of <figDesc> tag in figure object.
+            figureDesc = figure.find("figDesc")
             if figureDesc is not None:
                 logging.info(f"Classifier - Found figure description {figureDesc}.")
                 promptContext = figureDesc.text
@@ -519,12 +542,14 @@ def processFigures(figures, images, frontend):
         try:
             # If multiple coordinates are found, the last one in the list is used.
             coords = figure.get("coords").split(";")[-1]
+            # print(coords)
         except:
             # If that somehow fails, its likely just one set of coords.
             coords = figure.get("coords")
+            # print(coords)
             
         # The PDF page that this element is on. The page number is the first part of the coords.
-        imgside = images[int(coords.split(",")[0])-1] # With '-1' because pdf2image numbers differently than Grobid.
+        imgside = images[int(coords.split(",")[0])-1]
         logging.info(f"Classifier - This element is on page nr: {int(coords.split(',')[0])}")
 
         # When cropping the image of the element from the PDF page we have to use a factor of ca 2.775 to get the correct position. This factor was found thhrough trial and error.
@@ -548,8 +573,7 @@ def processFigures(figures, images, frontend):
 
 def processFormulas(formulas, images, mode, frontend):
     """
-    Crops the formulas from the PDF file into images, finds correct element number, gets
-     coordinates and sends them to the classifier (ML model) for classification.
+    Crops the formulas from the PDF file into images and sends them to the classifier (ML model) for classification.
 
     Paramaters:
     formulas: The formulas from the XML file.
@@ -560,6 +584,7 @@ def processFormulas(formulas, images, mode, frontend):
     Returns:
     None
     """
+    #print("\n-------- Cropping Formulas ---------")
     logging.info("Classifier - Starting function processFormulas()")
 
     formulanr = 0 # The number which Grobid gave this formula. Will be used when putting processed content back into the formula tag.
@@ -599,7 +624,10 @@ def processFormulas(formulas, images, mode, frontend):
             logging.info(f"Classifier - Successfully found a correct figure number")
         except Exception as e:
             logging.error(f"Classifier - An error occurred while trying to find a correct figure number: {e}", exc_info=True)
+
         
+        
+        # print("----------> FOUND FORMULA NR: ", correctFigureNr)
         logging.info(f"Classifier - Correct formula number is now set as: {correctFigureNr}")
 
         ## Getting coords ##
@@ -612,7 +640,7 @@ def processFormulas(formulas, images, mode, frontend):
             coords = formula.get("coords")
 
         # The PDF page that this element is on. The page number is the first part of the coords.
-        imgside = images[int(coords.split(",")[0])-1] # With '-1' because pdf2image numbers differently than Grobid.
+        imgside = images[int(coords.split(",")[0])-1]
         logging.info(f"Classifier - This element is on page nr: {int(coords.split(',')[0])}")
 
         # When cropping the image of the element from the PDF page we have to use a factor of ca 2.775 to get the correct position. This factor was found thhrough trial and error.
@@ -631,7 +659,7 @@ def processFormulas(formulas, images, mode, frontend):
         ## Sending to classification:
 
         if (mode == "VLM"): # If a VLM is used for classifying the formula:
-          classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), None, "Answer with only one word (Yes OR No), is this a formula?", correctFigureNr, frontend)
+          classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), None, "Answer with only one word (Yes OR No), is this a formula?", correctFigureNr)
         elif (mode == "regex"): # If regex is used. Preferred.
           classify("formula", imgFormula, formulanr, int(coords.split(",")[0]), formula.text, correctFigureNr, frontend)
 

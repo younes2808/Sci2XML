@@ -95,7 +95,8 @@ def startStreamlit(tunnel, portnr):
   """
   logging.info(f"frontendmodule - Starting Streamlit.")
   # Launching streamlit on localhost:
-  URL = subprocess.Popen(["streamlit", "run", "app/frontend/app.py", "&"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd="/content/Sci2XML")
+  logfile = open("logs.txt", "w")
+  URL = subprocess.Popen(["streamlit", "run", "app/frontend/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML")
 
   # Exposing localhost through tunnel, depending on which tunnel is selected at launch:
   if (tunnel == "localtunnel"):
