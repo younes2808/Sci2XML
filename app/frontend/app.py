@@ -70,7 +70,7 @@ def clean_latex(latex_str):
     try:
         # Remove \boldmath if it's used incorrectly (outside of a valid math environment)
         # Remove \boldmath if it's used outside a valid math block, like an inline formula
-        #latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
+        latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
 
         # Remove everything after (and including) \hskip
         latex_str = re.sub(r"\\hskip.*", "", latex_str)
@@ -137,10 +137,10 @@ def processClassifierResponse(element):
         if element['element_type'] == 'formula':
             st.session_state.formulas_results_array.append(element) # Append element to the array
             st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}") # Display page number and formula number as the header
-            #if latex_validity(element.get('formula', 'N/A')):
-            st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
-            #else:
-            #   st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format        
+            if latex_validity(element.get('formula', 'N/A')):
+                st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
+            else:
+                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format        
 
         elif element['element_type'] == "figure":
             st.session_state.figures_results_array.append(element) # Append element to the array
@@ -732,10 +732,10 @@ def main():
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
                                                             st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}") # Display page number and formula number as the header
-                                                            #if latex_validity(formula.get('formula', 'N/A')):
-                                                            st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
-                                                            #else:
-                                                            #   st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format                                                      else:
+                                                            if latex_validity(formula.get('formula', 'N/A')):
+                                                                st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
+                                                            else:
+                                                                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format                                                      else:
                                                         st.warning("No formulas detected in PDF file.")
 
                                             # If 'Figures' is chosen, display XML result
