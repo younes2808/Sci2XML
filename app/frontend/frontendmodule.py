@@ -69,7 +69,6 @@ def startNgrok(port):
 
   # Lets user write their auth token:
   print("Enter your Ngrok Authtoken. Token can be found here: https://dashboard.ngrok.com/get-started/your-authtoken")
-  print("Please note: You may need to enter the token and press Enter twice before Ngrok responds.")
   conf.get_default().auth_token = getpass.getpass()
 
   # Open a ngrok tunnel to the localhost:

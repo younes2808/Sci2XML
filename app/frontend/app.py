@@ -22,57 +22,17 @@ logging.basicConfig(
     ]
 )
 
-import re
-import logging
-import streamlit as st
-
 def clean_latex(latex_str):
     """
-    Checks if the LaTeX string has matching \left and \right commands. 
-    Checks if the LaTeX string has matching \begin{array} and \end{array} commands. 
-    If not, it returns 'Invalid LaTeX format'.
+    Removes everything after (and including) hskip, eqno or tag.
 
-    Fixes the usage of \boldmath by replacing it with \mathbf{} or \boldsymbol{}
-    depending on the type of symbol being used. Keeps \boldmath when appropriate.
-    Removes everything after (and including) \hskip, \eqno or \tag.
-
-    Parameters:
-    latex_str (str): The formula in LaTeX format.
+    Paramaters:
+    latex_str (str): The formula on latex format
 
     Returns:
-    latex_str.strip (str): The cleaned formula or 'Invalid LaTeX format' if there's an imbalance in \left and \right or \begin and \end.
+    latex_str.strip (str): The stripped formula
     """
     try:
-        # Check for imbalance between \left and \right
-        left_count = latex_str.count(r"\left")
-        right_count = latex_str.count(r"\right")
-
-        # Check for imbalance between \begin and \end
-        begin_count = latex_str.count(r"\begin")
-        end_count = latex_str.count(r"\end")
-
-        if left_count != right_count:
-            logging.warning(f"Imbalanced \left and \right in formula {latex_str}")
-            return "Invalid LaTeX format"
-
-        if begin_count != end_count:
-            logging.warning(f"Imbalanced \begin and \end in formula {latex_str}")
-            return "Invalid LaTeX format"
-        
-        if r'\boldmath' in latex_str:
-            if re.match(r'.*\\begin\{equation\}.*\\end\{equation\}.*', latex_str):
-                # Valid case: \boldmath is used in a display math block like equation
-                pass
-            else:
-                # Invalid or unnecessary case, replace \boldmath with specific formatting
-                latex_str = re.sub(r'\\boldmath', '', latex_str)
-                latex_str = re.sub(r'([A-Za-z])', r'\\mathbf{\1}', latex_str)  # Bold Latin letters
-                latex_str = re.sub(r'([\\alpha|\\beta|\\gamma|\\omega|\\mu|\\sigma|\\lambda|\\delta])', r'\\boldsymbol{\1}', latex_str)  # Bold Greek letters
-
-        # For cases where it's not global bolding, replace \boldmath
-        latex_str = re.sub(r'([A-Za-z])', r'\\mathbf{\1}', latex_str)  # Replace letters with \mathbf{}
-        latex_str = re.sub(r'([\\alpha|\\beta|\\gamma|\\omega|\\mu|\\sigma|\\lambda|\\delta])', r'\\boldsymbol{\1}', latex_str)  # Replace Greek letters with \boldsymbol{}
-
         # Remove everything after (and including) \hskip
         latex_str = re.sub(r"\\hskip.*", "", latex_str)
 
@@ -89,7 +49,6 @@ def clean_latex(latex_str):
         st.error(f"An error occurred while trimming a formula.")
 
     return latex_str.strip()  # Trim any extra spaces
-
 
 def update_xml():
     """
