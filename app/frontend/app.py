@@ -32,7 +32,8 @@ def clean_latex(latex_str):
     Checks if the LaTeX string has matching \begin{array} and \end{array} commands. 
     If not, it returns 'Invalid LaTeX format'.
 
-    Fixes the incorrect usage of \boldmath
+    Fixes the usage of \boldmath by replacing it with \mathbf{} or \boldsymbol{}
+    depending on the type of symbol being used. Keeps \boldmath when appropriate.
     Removes everything after (and including) \hskip, \eqno or \tag.
 
     Parameters:
@@ -58,9 +59,19 @@ def clean_latex(latex_str):
             logging.warning(f"Imbalanced \begin and \end in formula {latex_str}")
             return "Invalid LaTeX format"
         
-        # Remove \boldmath if it's used incorrectly (outside of a valid math environment)
-        # Remove \boldmath if it's used outside a valid math block, like an inline formula
-        latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
+        if r'\boldmath' in latex_str:
+            if re.match(r'.*\\begin\{equation\}.*\\end\{equation\}.*', latex_str):
+                # Valid case: \boldmath is used in a display math block like equation
+                pass
+            else:
+                # Invalid or unnecessary case, replace \boldmath with specific formatting
+                latex_str = re.sub(r'\\boldmath', '', latex_str)
+                latex_str = re.sub(r'([A-Za-z])', r'\\mathbf{\1}', latex_str)  # Bold Latin letters
+                latex_str = re.sub(r'([\\alpha|\\beta|\\gamma|\\omega|\\mu|\\sigma|\\lambda|\\delta])', r'\\boldsymbol{\1}', latex_str)  # Bold Greek letters
+
+        # For cases where it's not global bolding, replace \boldmath
+        latex_str = re.sub(r'([A-Za-z])', r'\\mathbf{\1}', latex_str)  # Replace letters with \mathbf{}
+        latex_str = re.sub(r'([\\alpha|\\beta|\\gamma|\\omega|\\mu|\\sigma|\\lambda|\\delta])', r'\\boldsymbol{\1}', latex_str)  # Replace Greek letters with \boldsymbol{}
 
         # Remove everything after (and including) \hskip
         latex_str = re.sub(r"\\hskip.*", "", latex_str)
