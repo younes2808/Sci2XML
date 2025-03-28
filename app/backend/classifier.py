@@ -14,7 +14,8 @@ from pdf2image.exceptions import (
 import logging
 import sys
 import time
-
+import logging
+# Set configuration for logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -25,7 +26,8 @@ logging.basicConfig(
     ]
 )
 
-apiURL = "http://172.28.0.12:8000/"
+
+apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
 
 def openXMLfile(XMLfile, PDFfile, frontend):
     """
