@@ -3,13 +3,8 @@ from transformers import DonutProcessor, VisionEncoderDecoderModel
 import re
 from collections import Counter
 
-<<<<<<< HEAD
 # Determine the computation device: use GPU (CUDA) if available; otherwise, default to CPU
-=======
-
->>>>>>> parent of 2e24e00 (Merge branch 'main' of https://github.com/younes2808/Sci2XML)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 def load_UniChart():
     """
@@ -148,8 +143,4 @@ def parse_table_data(table_data):
         print(f"Error parsing table: {e}")
         parsed_data = []
 
-<<<<<<< HEAD
     return parsed_data  # Return the structured table data
-=======
-    return parsed_data
->>>>>>> parent of 2e24e00 (Merge branch 'main' of https://github.com/younes2808/Sci2XML)
