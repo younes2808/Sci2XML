@@ -75,12 +75,12 @@ def loadGrobidPythonway():
         res = requests.get('http://172.28.0.12:8070/api/isalive')
       except:
         print("Could not reach GROBID server.")
-      print("serverstatus up:", res)
+      print("GROBID Server Status: Down")
       if (res == "false"):
         print("-->GROBID server not up yet, trying again in 5 sec...")
         clock = 5
       elif (res.content.decode('utf8') == "true"):
-        print("GROBID server is up!")
+        print("GROBID Server Status: Up")
         logging.info(f"grobidmodule - GROBID server is up.")
         break
       else:
