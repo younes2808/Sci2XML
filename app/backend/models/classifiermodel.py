@@ -7,10 +7,11 @@ from skorch.dataset import ValidSplit
 from skorch.callbacks import LRScheduler, Checkpoint
 from skorch.callbacks import Freezer, EarlyStopping
 import torchvision
-## Classify-modules ##
 from PIL import Image
 import albumentations as A
 import numpy as np
+
+# This code is adapted from ---> https://www.kaggle.com/code/sunedition/classification-of-graphs <---
 
 def loadML():
   """
@@ -109,8 +110,6 @@ def callML(model, image):
   """
 
   # Load the image
-  #image_path = image  # Replace with the path to your image
-  #image = Image.open(image_path)
   image = image.convert("RGB")  # Ensure the image is in RGB format
 
   img_size = 224
