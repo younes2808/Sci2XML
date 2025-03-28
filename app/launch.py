@@ -3,6 +3,7 @@ import argparse
 import subprocess
 import logging
 import sys
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -116,5 +117,4 @@ def startEverything():
 
   print("\n\n#--------------------- ### User Interaction ### --------------------#\n")
   
-
 startEverything()
