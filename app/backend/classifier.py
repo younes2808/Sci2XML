@@ -6,7 +6,7 @@ import streamlit as st
 import logging
 import sys
 import logging
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup # For parsing XML and HTML documents
 from PIL import Image, ImageDraw
 from pdf2image import convert_from_path, convert_from_bytes # Module which turns each page of a PDF into an image.
 from pdf2image.exceptions import ( # Built-in exception handlers. 
@@ -81,7 +81,7 @@ def addToXMLfile(type, name, newContent, frontend):
 
     Paramaters:
     type: The type of the element. (figure or formula)
-    name: The name of the element. (fig_# or formula_# where # is the number Grobid gave it.)
+    name: The name of the element. (fig_# or formula_# where # is the number GROBID gave it.)
     newContent: The new content to be added to the XML file as a dict.
     frontend (bool): Tag stating if frontend is used or not. 
 
@@ -116,7 +116,7 @@ def addToXMLfile(type, name, newContent, frontend):
             newTag = Bs_data.new_tag("latex") # Create new tag
             if (len(textWithoutTag) == 0): # If no preexisting text content in tag:
                 parentTag.append(newTag) # Add the new tag to parentTag
-            else: # If there already is some text in tag (like the Grobids attempt at capturing formula):
+            else: # If there already is some text in tag (like the GROBID's attempt at capturing formula):
                 for text in textWithoutTag:
                     if (text in parentTag.contents): # Find the text
                         parentTag.contents[parentTag.contents.index(text)].replace_with(newTag) # Replace text with new tag 
@@ -131,7 +131,7 @@ def addToXMLfile(type, name, newContent, frontend):
             newTag = Bs_data.new_tag("llmgenerated")
             if (len(textWithoutTag) == 0): # If no preexisting text content in tag:
                 parentTag.append(newTag)
-            else:  # If there already is some text in tag (like the Grobids attempt at capturing formula):
+            else:  # If there already is some text in tag (like the GROBID's attempt at capturing formula):
                 for text in textWithoutTag:
                     if (text in parentTag.contents):
                         parentTag.contents[parentTag.contents.index(text)].replace_with(newTag) # Replace text with new tag 
@@ -146,7 +146,7 @@ def addToXMLfile(type, name, newContent, frontend):
             newTag = Bs_data.new_tag("tabledata")
             if (len(textWithoutTag) == 0): # If no preexisting text content in tag:
                 parentTag.append(newTag)
-            else: # If there already is some text in tag (like the Grobids attempt at capturing formula):
+            else: # If there already is some text in tag (like the GROBID's attempt at capturing formula):
                 for text in textWithoutTag:
                     if (text in parentTag.contents):
                         parentTag.contents[parentTag.contents.index(text)].replace_with(newTag)
@@ -204,10 +204,10 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
     Paramaters:
     XMLtype: the type of element. (figure or formula)
     image: the image of the element to be sent to the ML model and for processing.
-    elementNr: the number which Grobid gave this figure. Will be used when putting processed content back into the figure tag.
+    elementNr: the number which GROBID gave this figure. Will be used when putting processed content back into the figure tag.
     pagenr: the PDF page number of the element.
     regex: the formula string to be matched against regex.
-    PDFelementNr: the correct number for the figure, as it is in the PDF. Might not exist because Grobid finds un-numbered figures/formulas sometimes.
+    PDFelementNr: the correct number for the figure, as it is in the PDF. Might not exist because GROBID finds un-numbered figures/formulas sometimes.
     frontend (bool): Tag stating if frontend is used or not. 
     promptContext: A string with the figure description. Can be used to give context to the prompt for the VLM.
 
@@ -300,9 +300,9 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
     
         ## If the figure is of type 'other':
         # That is, 'just_image' elements are likely elements mistaken as figures, 'table' elements are processed separately and not here, 
-        # 'text_sentence' elements are mistakes from Grobid where it captures just raw text sentences or paragraphs as figures.
+        # 'text_sentence' elements are mistakes from GROBID where it captures just raw text sentences or paragraphs as figures.
         if (figureClass.lower() in ["just_image", "table", "text_sentence"]):
-            logging.info(f"Classifier - Element identified as 'other' or unknown. Likely a mistake from Grobid. Exiting...")
+            logging.info(f"Classifier - Element identified as 'other' or unknown. Likely a mistake from GROBID. Exiting...")
             return
 
         ## If the figure is a 'chart':
@@ -450,12 +450,12 @@ def processFigures(figures, images, frontend):
     """
     logging.info("Classifier - Starting function processFigures()")
 
-    figurnr = 0 # The number which Grobid gave this figure. Will be used when putting processed content back into the figure tag.
+    figurnr = 0 # The number which GROBID gave this figure. Will be used when putting processed content back into the figure tag.
     ## Iterate through all figures:
     for figure in figures:
 
         ## Getting correct figure number:
-        correctFigureNr = 0 # The correct number for the figure, as it is in the PDF. Might not exist because Grobid finds un-numbered figures sometimes.
+        correctFigureNr = 0 # The correct number for the figure, as it is in the PDF. Might not exist because GROBID finds un-numbered figures sometimes.
         try:
             # 1. Try to find <label> tag.
             label = figure.find("label")
@@ -478,7 +478,7 @@ def processFigures(figures, images, frontend):
                     correctFigureNr = int(re.sub("\D", "", compare[0]))
                 else:
                     # 4. If no label or figurnr in text, try to use <xml:id> tag:
-                    #print("nay, could not find figurenr in label or figuretext, using Grobid's number instead...")
+                    #print("nay, could not find figurenr in label or figuretext, using GROBID's number instead...")
                     logging.info(f"Classifier - No figure number in figure text.")
                     if (figure.get("xml:id") != None):
                         correctFigureNr = int(re.sub("\D", "", figure.get("xml:id"))) + 1
@@ -517,7 +517,7 @@ def processFigures(figures, images, frontend):
             coords = figure.get("coords")
             
         # The PDF page that this element is on. The page number is the first part of the coords.
-        imgside = images[int(coords.split(",")[0])-1] # With '-1' because pdf2image numbers differently than Grobid.
+        imgside = images[int(coords.split(",")[0])-1] # With '-1' because pdf2image numbers differently than GROBID.
         logging.info(f"Classifier - This element is on page nr: {int(coords.split(',')[0])}")
 
         # When cropping the image of the element from the PDF page we have to use a factor of ca 2.775 to get the correct position. This factor was found thhrough trial and error.
@@ -553,11 +553,11 @@ def processFormulas(formulas, images, mode, frontend):
     """
     logging.info("Classifier - Starting function processFormulas()")
 
-    formulanr = 0 # The number which Grobid gave this formula. Will be used when putting processed content back into the formula tag.
+    formulanr = 0 # The number which GROBID gave this formula. Will be used when putting processed content back into the formula tag.
     for formula in formulas:
 
         ## Getting formula number ##
-        correctFigureNr = 0 # The correct number for the formula, as it is in the PDF. Might not exist because Grobid finds un-numbered formulas sometimes.
+        correctFigureNr = 0 # The correct number for the formula, as it is in the PDF. Might not exist because GROBID finds un-numbered formulas sometimes.
         try:
             # 1. Try to find <label> tag.
             label = formula.find("label")
@@ -603,7 +603,7 @@ def processFormulas(formulas, images, mode, frontend):
             coords = formula.get("coords")
 
         # The PDF page that this element is on. The page number is the first part of the coords.
-        imgside = images[int(coords.split(",")[0])-1] # With '-1' because pdf2image numbers differently than Grobid.
+        imgside = images[int(coords.split(",")[0])-1] # With '-1' because pdf2image numbers differently than GROBID.
         logging.info(f"Classifier - This element is on page nr: {int(coords.split(',')[0])}")
 
         # When cropping the image of the element from the PDF page we have to use a factor of ca 2.775 to get the correct position. This factor was found thhrough trial and error.
@@ -617,7 +617,6 @@ def processFormulas(formulas, images, mode, frontend):
         imgFormula = imgside.crop((x*const,y*const,(x+x2)*const,(y+y2)*const))
 
         logging.info(f"Classifier - Cropped element : {formulanr}. Sending it to classifier...")
-
 
         ## Sending to classification:
 

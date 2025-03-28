@@ -4,17 +4,18 @@
 [![Streamlit](https://img.shields.io/badge/Framework-Streamlit-red)](https://streamlit.io/)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
 ## Overview  
-This repository provides a pipeline for converting research PDFs into structured XML using [**Grobid**](https://github.com/kermitt2/grobid), a **custom classification model**, and specialized OCR tools. It supports multiple execution modes: **Streamlit UI** and **terminal**.  
+This repository provides a pipeline for converting research PDFs into structured XML using [**GROBID**](https://github.com/kermitt2/grobid), a **custom classification model**, and specialized OCR tools. It supports multiple execution modes: **Streamlit UI** and **terminal**.  
 
 Developed as part of our **bachelor’s project in collaboration with SINTEF** for the [**enRichMyData**](https://www.sintef.no/en/projects/2022/enrichmydata/) initiative.  
 
 ## Features  
-- **Preprocessing with Grobid** to extract metadata and structure.  
+- **Preprocessing with GROBID** to extract metadata and structure.  
 - **Custom classification model** to validate extracted sections.  
 - **Specialized OCR and data extraction tools**:  
   - [**Sumen**](https://github.com/hoang-quoc-trung/sumen) – Converts formulas to LaTeX.  
   - [**Unichart**](https://github.com/vis-nlp/UniChart) – Extracts and summarizes chart data.  
-  - [**pdfplumber**](https://github.com/jsvine/pdfplumber) – Parses tables accurately.  
+  - [**pdfplumber**](https://github.com/jsvine/pdfplumber) – Parses tables accurately.
+  - [**Moondream**](https://github.com/vikhyat/moondream) - Captions figures  
 - **Multiple execution modes**: Streamlit UI, terminal, and direct code usage.  
 
 ## Installation  
@@ -28,4 +29,4 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
 - [Younes Benhaida](https://github.com/younes2808)
 
 ## Acknowledgements  
-We thank the developers and contributors of [pdfplumber](https://github.com/jsvine/pdfplumber), [Grobid](https://github.com/kermitt2/grobid), [Sumen](https://github.com/hoang-quoc-trung/sumen), and [Unichart](https://github.com/vis-nlp/UniChart) for their invaluable tools and contributions to document processing. This project would not have been possible without their dedication to open-source innovation. Thank you!
+We want to thank the developers and contributors of [pdfplumber](https://github.com/jsvine/pdfplumber), [GROBID](https://github.com/kermitt2/grobid), [Sumen](https://github.com/hoang-quoc-trung/sumen), [Moondream](https://github.com/vikhyat/moondream), and [Unichart](https://github.com/vis-nlp/UniChart) for their invaluable tools and contributions to document processing. This project would not have been possible without their dedication to open-source innovation. Thank you!

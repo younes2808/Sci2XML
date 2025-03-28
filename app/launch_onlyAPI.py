@@ -44,6 +44,7 @@ def startEverything():
   print("#-------------------- # Installing requirements # ------------------#\n")
   logging.info("Launch - Installing requirements.")
   try:
+      # Using subprocess to install the pip, apt-get and npm requirements.
       log = open("reqlog.txt", "a")
       print("----------> pip installs...")
       n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
@@ -68,6 +69,7 @@ def startEverything():
   print("\n\n#----------------- ### Launching API + Models ### ------------------#\n")
   logging.info("Launch - Launching API and models.")
   try:
+      # When importing the API code, the various models the system uses will also be loaded in now, as the API code is where these models are called on later. 
       import backend.APIcode as API
       API.API(args.port)
       logging.info(f"Launch - Finished launching API and models.")
@@ -81,28 +83,31 @@ def startEverything():
   logging.info(f"Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
   print(f"\n-----> Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
 
-  ## Load Grobid and launch Grobid server ##
-  print("\n\n#------------------- ### Load & launch Grobid ### ------------------#\n")
-  logging.info("Launch - Loading and launching Grobid.")
+  ## Load GROBID and launch GROBID server ##
+  print("\n\n#------------------- ### Load & launch GROBID ### ------------------#\n")
+  logging.info("Launch - Loading and launching GROBID.")
   try:
+      # Import GROBID module. This will also automatically download, install and launch GROBID server.
       import backend.grobidmodule as grobidmod
       grobidmod.loadGrobidPythonway()
-      logging.info(f"Launch - Finished loading and launching Grobid.")
+      logging.info(f"Launch - Finished loading and launching GROBID.")
   except Exception as e:
-    logging.error(f"Launch - An error occurred while trying to load and launch Grobid: {e}", exc_info=True)
+    logging.error(f"Launch - An error occurred while trying to load and launch GROBID: {e}", exc_info=True)
   
   # Time logging:
   grobid_time = time.time()
   minutes, seconds = divmod(grobid_time - api_time, 60)
-  time_array.append({"name": "Launching Grobid", "time": grobid_time - api_time})
-  logging.info(f"Launching Grobid time: {int(minutes)} minutes and {int(seconds)} seconds")
-  print(f"\n-----> Launching Grobid time: {int(minutes)} minutes and {int(seconds)} seconds")
+  time_array.append({"name": "Launching GROBID", "time": grobid_time - api_time})
+  logging.info(f"Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
+  print(f"\n-----> Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Start API using tunnel ##
   print("\n\n#------------ ### Starting API through tunnel ### ------------#\n")
   logging.info(f"Launch - Starting API through tunnel: {args.tunnel}.")
   try:
+      # Import frontendmodule, which will be used to expose localhost to internet.
       import frontend.frontendmodule as front
+      # Host frontend through streamlit
       front.startAPI(args.tunnel, args.port)
       logging.info(f"Launch - Finished starting API through tunnel.")
   except Exception as e:

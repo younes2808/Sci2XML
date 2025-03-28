@@ -35,23 +35,18 @@ def startLocaltunnel(port):
   logging.info(f"frontendmodule - Password is: {passw}.")
 
   # Running localtunnel command:
-  #URL = subprocess.run(["npx", "localtunnel", "--port", "8501"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
   URL = subprocess.Popen(["npx", "localtunnel", "--port", port], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-  #URL = subprocess.Popen(["ls"], stdout=subprocess.PIPE)
   logging.info(f"frontendmodule - URL is: {URL}, {URL.stdout.readline}.")
   for line in iter(URL.stdout.readline, ''):
-    #print(line)
     match = re.search(r"(https://[a-zA-Z0-9-]+\.loca\.lt)", line)
     if match:
         public_url = match.group(1)
-        #print(f"Public URL: {public_url}")
-        logging.info(f"frontendmodule - URL Found.")
+        logging.info(f"frontendmodule - URL Found: {public_url}")
         break
     else:
       logging.error(f"frontendmodule - Could not find URL.")
       public_url = "URL NOT FOUND"
       break
-  print("done")
 
   return public_url, passw
 
@@ -69,6 +64,7 @@ def startNgrok(port):
 
   # Lets user write their auth token:
   print("Enter your Ngrok Authtoken. Token can be found here: https://dashboard.ngrok.com/get-started/your-authtoken")
+  print("Please note: You may need to enter the token and press Enter twice before Ngrok responds.")
   conf.get_default().auth_token = getpass.getpass()
 
   # Open a ngrok tunnel to the localhost:
@@ -94,8 +90,7 @@ def startStreamlit(tunnel, portnr):
   """
   logging.info(f"frontendmodule - Starting Streamlit.")
   # Launching streamlit on localhost:
-  logfile = open("logs.txt", "w")
-  URL = subprocess.Popen(["streamlit", "run", "app/frontend/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML")
+  URL = subprocess.Popen(["streamlit", "run", "app/frontend/app.py", "&"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd="/content/Sci2XML")
 
   # Exposing localhost through tunnel, depending on which tunnel is selected at launch:
   if (tunnel == "localtunnel"):
@@ -127,7 +122,6 @@ def startAPI(tunnel, portnr):
   None
   """
   logging.info(f"frontendmodule - Exposing API.")
-  logfile = open("logs.txt", "w")
 
   # Exposing localhost through tunnel, depending on which tunnel is selected at launch:
   if (tunnel == "localtunnel"):

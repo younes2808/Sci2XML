@@ -102,20 +102,20 @@ def extract_tables_from_pdf(pdf_path, max_margin=50):
 
 def remove_tables_from_grobid_xml(grobid_file):
     """
-    Removes existing table figures from the Grobid XML file and returns the updated XML content
+    Removes existing table figures from the GROBID XML file and returns the updated XML content
     along with the position of the first removed table.
 
     Parameters:
-        grobid_file (str): Path to the Grobid XML file.
+        grobid_file (str): Path to the GROBID XML file.
 
     Returns:
-        tuple: A tuple (updated_content, first_table_position) where updated_content is the Grobid XML without table figures,
+        tuple: A tuple (updated_content, first_table_position) where updated_content is the GROBID XML without table figures,
                and first_table_position is the position (offset) of the first removed table (or None if not found).
     """
     with open(grobid_file, 'r', encoding='utf-8') as file:
         grobid_content = file.read()
     
-    # Find all table figure elements in the Grobid XML
+    # Find all table figure elements in the GROBID XML
     matches = list(re.finditer(r'<figure[^>]*\s+type="table"[^>]*>.*?</figure>', grobid_content, flags=re.DOTALL))
     
     if matches:
@@ -124,7 +124,7 @@ def remove_tables_from_grobid_xml(grobid_file):
     else:
         first_table_position = None
     
-    # Remove all table figure elements from the Grobid XML
+    # Remove all table figure elements from the GROBID XML
     updated_content = re.sub(r'<figure[^>]*\s+type="table"[^>]*>.*?</figure>', '', grobid_content, flags=re.DOTALL)
     
     removed_tables = len(matches)
@@ -134,16 +134,16 @@ def remove_tables_from_grobid_xml(grobid_file):
 
 def insert_pdfplumber_content(grobid_xml, pdfplumber_xml, insert_position):
     """
-    Inserts the PDFplumber XML content into the Grobid XML content at the specified position.
+    Inserts the PDFplumber XML content into the GROBID XML content at the specified position.
 
     Parameters:
-        grobid_xml (str): The updated Grobid XML content.
+        grobid_xml (str): The updated GROBID XML content.
         pdfplumber_xml (str): The XML content extracted from the PDF.
         insert_position (int or None): The position at which to insert the PDFplumber content.
                                        If None, the content is appended at the end.
 
     Returns:
-        str: The final Grobid XML content with the PDFplumber tables inserted.
+        str: The final GROBID XML content with the PDFplumber tables inserted.
     """
     # Create a section to mark the beginning and end of the inserted tables
     table_section = (

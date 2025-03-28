@@ -28,17 +28,16 @@ logging.basicConfig(
     ]
 )
 
+# Classifier code:
 ## Our own modules ##
 import importlib.util
 spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/backend/classifier.py")
 classifier = importlib.util.module_from_spec(spec)
 sys.modules["classifiermodule"] = classifier
 spec.loader.exec_module(classifier)
-# import Sci2XML.app.modules.classifiermodel as classifier
+# Models:
 import backend.models.classifiermodel as classifierML
-# import Sci2XML.app.modules.chartparser as charter
 import backend.models.chartparser as charter
-# import Sci2XML.app.modules.formulaparser as formula
 import backend.models.formulaparser as formula
 import backend.models.figureparser as figure
 import backend.models.tableparser as tableParser
@@ -54,8 +53,6 @@ try:
     logging.info(f"APIcode - Finished loading models.")
 except Exception as e:
     logging.error(f"APIcode - An error occurred while loading the models: {e}", exc_info=True)
-  
-
 
 def API(portnr):
   """
@@ -193,7 +190,7 @@ def API(portnr):
 
       # Check if both required files are provided
       if 'pdf' not in request.files or 'grobid_xml' not in request.files:
-        return jsonify({"error": "Both PDF and Grobid XML files are required."}), 400
+        return jsonify({"error": "Both PDF and GROBID XML files are required."}), 400
 
       # Retrieve the uploaded files from the request
       pdf_file = request.files['pdf']
@@ -206,7 +203,7 @@ def API(portnr):
       except Exception as e:
         logging.error(f"APIcode - An error occurred while processing table: {e}", exc_info=True)
 
-      #Return the final Grobid XML as a downloadable file (with content type "application/xml")
+      #Return the final GROBID XML as a downloadable file (with content type "application/xml")
       return Response(
           processedTablesXML,
           mimetype="application/xml",
@@ -306,17 +303,17 @@ def API(portnr):
         """
         API endpoint that expects two files:
         - 'pdf': A PDF file to be processed with PDFplumber.
-        - 'grobid_xml': A Grobid XML file in which the tables will be replaced.
+        - 'grobid_xml': A GROBID XML file in which the tables will be replaced.
 
         Process:
         1. Save the uploaded files temporarily.
         2. Extract tables from the PDF file (using PDFplumber) and get the XML content directly.
-        3. Remove existing table figures from the Grobid XML and get the position of the first removed table.
-        4. Insert the PDFplumber XML content into the Grobid XML at that position (or append if no tables are found).
-        5. Remove empty lines and return the updated Grobid XML as a downloadable file.
+        3. Remove existing table figures from the GROBID XML and get the position of the first removed table.
+        4. Insert the PDFplumber XML content into the GROBID XML at that position (or append if no tables are found).
+        5. Remove empty lines and return the updated GROBID XML as a downloadable file.
         
         Returns:
-            Response: A Flask Response object with the updated Grobid XML, served as an XML file.
+            Response: A Flask Response object with the updated GROBID XML, served as an XML file.
         """
         logging.info(f"API - processTable - processing table...")
         
@@ -324,22 +321,23 @@ def API(portnr):
         with NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
             pdf_file.save(temp_pdf)
             pdf_path = temp_pdf.name
-        # Save the Grobid XML file temporarily
+
+        # Save the GROBID XML file temporarily
         with NamedTemporaryFile(delete=False, suffix=".xml") as temp_grobid:
             grobid_xml_file.save(temp_grobid)
             grobid_path = temp_grobid.name
         
-        # Read the content of the Grobid XML file
+        # Read the content of the GROBID XML file
         with open(grobid_path, "r", encoding="utf-8") as file:
             grobid_content = file.read()
         
-        # Remove existing table figures from the Grobid XML and get the insert position
+        # Remove existing table figures from the GROBID XML and get the insert position
         grobid_updated, insert_position = tableParser.remove_tables_from_grobid_xml(grobid_path)
         
         # Extract tables from the PDF and obtain the XML content and table count
         pdfplumber_xml, table_count = tableParser.extract_tables_from_pdf(pdf_path)
         
-        # Insert the PDFplumber XML content into the Grobid XML content
+        # Insert the PDFplumber XML content into the GROBID XML content
         final_grobid_xml = tableParser.insert_pdfplumber_content(grobid_updated, pdfplumber_xml, insert_position)
         # Remove any empty lines from the final XML
         final_grobid_xml = tableParser.remove_empty_lines(final_grobid_xml)
@@ -351,9 +349,9 @@ def API(portnr):
         data = final_grobid_xml
         return data
 
-  def callVLM(pipe, image, query): # NOT IN USE, WE USE ML FOR CLASSIFICATION INSTEAD.
+  def callVLM(pipe, image, query):
     """
-    Calls the VLM model.
+    Calls the InternVL2 VLM model. Not used in current deployment, as we have chosen to use ML model for the classifier and another VLM for the figure parser.
 
     Paramaters:
     pipe: The VLM model.
@@ -364,77 +362,22 @@ def API(portnr):
     response.text: The response from the VLM model.
     """
     print("\n- Calling VLM -")
-    #image = load_image('testimagetext.png')
     image = load_image(image)
     response = pipe((query, image))
     #print(response.text)
     return response.text
 
-  def callML(model, image):
-    """
-    Calls the ML model that will classify the image.
-
-    Paramaters:
-    model: The ML model.
-    image: The image to be classified.
-
-    Returns:
-    predicted_class_name: The name of the predicted class.
-    """
-    print(f'callML is running with model: {model} and image: {image}')
-    # Load the image
-    #image_path = image  # Replace with the path to your image
-    #image = Image.open(image_path)
-    image = image.convert("RGB")  # Ensure the image is in RGB format
-
-    img_size = 224
-
-    # Define the same transformations used during training
-    data_transforms = A.Compose([
-        A.Resize(img_size, img_size),
-        A.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-        A.pytorch.transforms.ToTensorV2()
-    ])
-
-    # Apply transformations
-    transformed_image = data_transforms(image=np.array(image))["image"]
-
-    # Add a batch dimension
-    transformed_image = transformed_image.unsqueeze(0)
-
-    # Move the image to the appropriate device (GPU or CPU)
-    device = "cuda:0" if torch.cuda.is_available() else "cpu"
-    transformed_image = transformed_image.to(device)
-
-    # Make prediction
-    predicted_class = model.predict(transformed_image)
-
-    # Get the class name
-    class_names = ['just_image', 'bar_chart', 'diagram', 'flow_chart', 'graph',
-                  'growth_chart', 'pie_chart', 'table', 'text_sentence']
-    predicted_class_name = class_names[predicted_class[0]]
-
-    print(f"Predicted class: {predicted_class_name}")
-    return predicted_class_name
-
- 
-  @app.route('/callVLM', methods=['POST'])
-  def call_vlm(): # NOT IN USE
-      print("-- You have reached endpoint for classifier VLM --")
-
-      image = request.files['image']
-      image = Image.open(image)
-
-      query = request.files['query']
-
-      ## PROCESS IMAGE
-      response = callVLM(VLM, image, query.getvalue().decode("utf-8"))
-      #response = "VLMresponse"
-
-      return jsonify({'VLMresponse':response})
-
   @app.route('/callClassifier', methods=['POST'])
   def call_ml():
+      """
+      Endpoint for classifying images. It accepts an image file in POST body.
+
+      Paramaters:
+      None
+
+      Returns:
+      JSON response object
+      """
       print("\n")
       logging.info(f"API - callClassifier - You have reached endpoint for classifier ML.")
 
@@ -461,7 +404,7 @@ def API(portnr):
   def initiate_processing():
       """
       Endpoint for initiating the entire process.
-      First reads the uploaded PDF, then sends it to Grobid server.
+      First reads the uploaded PDF, then sends it to GROBID server.
       Then calls the classifier functions to process the figures and formulas.
       In the end it calls on getXML() and returns the result.
 
@@ -482,12 +425,8 @@ def API(portnr):
       file = request.files['pdffile']
       byte_data_PDF = file.read()
 
-      #print("\n----- Saving PDF file... -----")
-      #with open("TESTING_temp_pdffile.pdf", "wb") as file:
-      #    file.write(byte_data_PDF)
-
-      ## Calling Grobid ##
-      logging.info(f"API - process - Calling Grobid.")
+      ## Calling GROBID ##
+      logging.info(f"API - process - Calling GROBID.")
       grobid_url="http://172.28.0.12:8070/api/processFulltextDocument"
       files = {'input': byte_data_PDF}
       params = {
@@ -499,22 +438,22 @@ def API(portnr):
                     "segmentSentences": 1,
                     "teiCoordinates": ["ref", "s", "biblStruct", "persName", "figure", "formula", "head", "note", "title", "affiliation"]
                 }
-      # Call grobid server:
+      # Call GROBID server:
       try:
         response = requests.post(grobid_url, files=files, data=params)  # Use 'data' for form-data
         response.raise_for_status()  # Raise exception if status is not 200
         string_data_XML = response.text
-        logging.info(f"APIcode - Successfully called Grobid server.")
+        logging.info(f"APIcode - Successfully called GROBID server.")
         # Check if coordinates are missing in the response
         if 'coords' not in response.text:
             logging.warning("APIcode - No coordinates found in PDF file. Please check GROBID settings.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while calling Grobid server: {e}", exc_info=True)
+        logging.error(f"APIcode - An error occurred while calling GROBID server: {e}", exc_info=True)
 
       ## Table Parser ##
       logging.info(f"API - process - Initiating Table parser.")
       ## Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
-      # Ready the files
+      # Ready the files:
       files = {"grobid_xml": ("xmlfile.xml", string_data_XML, "application/json"), "pdf": ("pdffile.pdf", byte_data_PDF)}
 
       try:
