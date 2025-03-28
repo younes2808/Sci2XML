@@ -14,6 +14,7 @@ from pdf2image.exceptions import (
 import logging
 import sys
 import time
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -23,7 +24,6 @@ logging.basicConfig(
         logging.StreamHandler(sys.stdout)  # Also log to console
     ]
 )
-
 
 apiURL = "http://172.28.0.12:8000/"
 
