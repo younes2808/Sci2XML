@@ -81,22 +81,22 @@ def startEverything():
   logging.info(f"Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
   print(f"\n-----> Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
 
-  ## Load Grobid and launch Grobid server ##
-  print("\n\n#------------------- ### Load & launch Grobid ### ------------------#\n")
-  logging.info("Launch - Loading and launching Grobid.")
+  ## Load GROBID and launch GROBID server ##
+  print("\n\n#------------------- ### Load & launch GROBID ### ------------------#\n")
+  logging.info("Launch - Loading and launching GROBID.")
   try:
       import backend.grobidmodule as grobidmod
       grobidmod.loadGrobidPythonway()
-      logging.info(f"Launch - Finished loading and launching Grobid.")
+      logging.info(f"Launch - Finished loading and launching GROBID.")
   except Exception as e:
-    logging.error(f"Launch - An error occurred while trying to load and launch Grobid: {e}", exc_info=True)
+    logging.error(f"Launch - An error occurred while trying to load and launch GROBID: {e}", exc_info=True)
   
   # Time logging:
   grobid_time = time.time()
   minutes, seconds = divmod(grobid_time - api_time, 60)
-  time_array.append({"name": "Launching Grobid", "time": grobid_time - api_time})
-  logging.info(f"Launching Grobid time: {int(minutes)} minutes and {int(seconds)} seconds")
-  print(f"\n-----> Launching Grobid time: {int(minutes)} minutes and {int(seconds)} seconds")
+  time_array.append({"name": "Launching GROBID", "time": grobid_time - api_time})
+  logging.info(f"Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
+  print(f"\n-----> Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Start API using tunnel ##
   print("\n\n#------------ ### Starting API through tunnel ### ------------#\n")
