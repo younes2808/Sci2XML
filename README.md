@@ -28,4 +28,4 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
 - [Younes Benhaida](https://github.com/younes2808)
 
 ## Acknowledgements  
-We thank the developers and contributors of [pdfplumber](https://github.com/jsvine/pdfplumber), [GROBID](https://github.com/kermitt2/grobid), [Sumen](https://github.com/hoang-quoc-trung/sumen), and [Unichart](https://github.com/vis-nlp/UniChart) for their invaluable tools and contributions to document processing. This project would not have been possible without their dedication to open-source innovation. Thank you!
+We thank the developers and contributors of [pdfplumber](https://github.com/jsvine/pdfplumber), [Grobid](https://github.com/kermitt2/grobid), [Sumen](https://github.com/hoang-quoc-trung/sumen), and [Unichart](https://github.com/vis-nlp/UniChart) for their invaluable tools and contributions to document processing. This project would not have been possible without their dedication to open-source innovation. Thank you!

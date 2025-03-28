@@ -206,7 +206,7 @@ def API(portnr):
       except Exception as e:
         logging.error(f"APIcode - An error occurred while processing table: {e}", exc_info=True)
 
-      #Return the final GROBID XML as a downloadable file (with content type "application/xml")
+      #Return the final Grobid XML as a downloadable file (with content type "application/xml")
       return Response(
           processedTablesXML,
           mimetype="application/xml",
@@ -306,17 +306,17 @@ def API(portnr):
         """
         API endpoint that expects two files:
         - 'pdf': A PDF file to be processed with PDFplumber.
-        - 'grobid_xml': A GROBID XML file in which the tables will be replaced.
+        - 'grobid_xml': A Grobid XML file in which the tables will be replaced.
 
         Process:
         1. Save the uploaded files temporarily.
         2. Extract tables from the PDF file (using PDFplumber) and get the XML content directly.
-        3. Remove existing table figures from the GROBID XML and get the position of the first removed table.
-        4. Insert the PDFplumber XML content into the GROBID XML at that position (or append if no tables are found).
-        5. Remove empty lines and return the updated GROBID XML as a downloadable file.
+        3. Remove existing table figures from the Grobid XML and get the position of the first removed table.
+        4. Insert the PDFplumber XML content into the Grobid XML at that position (or append if no tables are found).
+        5. Remove empty lines and return the updated Grobid XML as a downloadable file.
         
         Returns:
-            Response: A Flask Response object with the updated GROBID XML, served as an XML file.
+            Response: A Flask Response object with the updated Grobid XML, served as an XML file.
         """
         logging.info(f"API - processTable - processing table...")
         
@@ -324,23 +324,22 @@ def API(portnr):
         with NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
             pdf_file.save(temp_pdf)
             pdf_path = temp_pdf.name
-
-        # Save the GROBID XML file temporarily
+        # Save the Grobid XML file temporarily
         with NamedTemporaryFile(delete=False, suffix=".xml") as temp_grobid:
             grobid_xml_file.save(temp_grobid)
             grobid_path = temp_grobid.name
         
-        # Read the content of the GROBID XML file
+        # Read the content of the Grobid XML file
         with open(grobid_path, "r", encoding="utf-8") as file:
             grobid_content = file.read()
         
-        # Remove existing table figures from the GROBID XML and get the insert position
+        # Remove existing table figures from the Grobid XML and get the insert position
         grobid_updated, insert_position = tableParser.remove_tables_from_grobid_xml(grobid_path)
         
         # Extract tables from the PDF and obtain the XML content and table count
         pdfplumber_xml, table_count = tableParser.extract_tables_from_pdf(pdf_path)
         
-        # Insert the PDFplumber XML content into the GROBID XML content
+        # Insert the PDFplumber XML content into the Grobid XML content
         final_grobid_xml = tableParser.insert_pdfplumber_content(grobid_updated, pdfplumber_xml, insert_position)
         # Remove any empty lines from the final XML
         final_grobid_xml = tableParser.remove_empty_lines(final_grobid_xml)
@@ -487,8 +486,8 @@ def API(portnr):
       #with open("TESTING_temp_pdffile.pdf", "wb") as file:
       #    file.write(byte_data_PDF)
 
-      ## Calling GROBID ##
-      logging.info(f"API - process - Calling GROBID.")
+      ## Calling Grobid ##
+      logging.info(f"API - process - Calling Grobid.")
       grobid_url="http://172.28.0.12:8070/api/processFulltextDocument"
       files = {'input': byte_data_PDF}
       params = {
@@ -500,17 +499,17 @@ def API(portnr):
                     "segmentSentences": 1,
                     "teiCoordinates": ["ref", "s", "biblStruct", "persName", "figure", "formula", "head", "note", "title", "affiliation"]
                 }
-      # Call GROBID server:
+      # Call grobid server:
       try:
         response = requests.post(grobid_url, files=files, data=params)  # Use 'data' for form-data
         response.raise_for_status()  # Raise exception if status is not 200
         string_data_XML = response.text
-        logging.info(f"APIcode - Successfully called GROBID server.")
+        logging.info(f"APIcode - Successfully called Grobid server.")
         # Check if coordinates are missing in the response
         if 'coords' not in response.text:
             logging.warning("APIcode - No coordinates found in PDF file. Please check GROBID settings.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while calling GROBID server: {e}", exc_info=True)
+        logging.error(f"APIcode - An error occurred while calling Grobid server: {e}", exc_info=True)
 
       ## Table Parser ##
       logging.info(f"API - process - Initiating Table parser.")
