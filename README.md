@@ -14,7 +14,8 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
 - **Specialized OCR and data extraction tools**:  
   - [**Sumen**](https://github.com/hoang-quoc-trung/sumen) – Converts formulas to LaTeX.  
   - [**Unichart**](https://github.com/vis-nlp/UniChart) – Extracts and summarizes chart data.  
-  - [**pdfplumber**](https://github.com/jsvine/pdfplumber) – Parses tables accurately.  
+  - [**pdfplumber**](https://github.com/jsvine/pdfplumber) – Parses tables accurately.
+  - [**Moondream**](https://github.com/vikhyat/moondream) - Captions figures
 - **Multiple execution modes**: Streamlit UI, terminal, and direct code usage.  
 
 ## Installation  
@@ -28,4 +29,4 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
 - [Younes Benhaida](https://github.com/younes2808)
 
 ## Acknowledgements  
-We thank the developers and contributors of [pdfplumber](https://github.com/jsvine/pdfplumber), [GROBID](https://github.com/kermitt2/grobid), [Sumen](https://github.com/hoang-quoc-trung/sumen), and [Unichart](https://github.com/vis-nlp/UniChart) for their invaluable tools and contributions to document processing. This project would not have been possible without their dedication to open-source innovation. Thank you!
+We thank the developers and contributors of [pdfplumber](https://github.com/jsvine/pdfplumber), [GROBID](https://github.com/kermitt2/grobid), [Sumen](https://github.com/hoang-quoc-trung/sumen), [Moondream](https://github.com/vikhyat/moondream), and [Unichart](https://github.com/vis-nlp/UniChart) for their invaluable tools and contributions to document processing. This project would not have been possible without their dedication to open-source innovation. Thank you!
