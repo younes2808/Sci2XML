@@ -1,14 +1,14 @@
-import requests
-import os
-import re
-import logging
-import sys
-import time
-import pandas as pd
-import streamlit as st
-import xml.etree.ElementTree as ET
-import xml.dom.minidom
-import importlib.util
+import streamlit as st # Streamlit library for building web apps
+import requests # Library for making HTTP requests
+import os # OS library for interacting with the operating system (file management)
+import pandas as pd # Pandas library for data manipulation and analysis
+import re # Regular expression library for pattern matching in strings
+import xml.etree.ElementTree as ET # XML parsing library for handling XML data
+import xml.dom.minidom # XML library for handling XML data (pretty printing)
+import logging # Logging library for generating logs
+import sys # System library for interacting with the Python runtime environment
+import time # Time library for handling time-related tasks
+import importlib.util # Module for importing Python modules dynamically
 from streamlit_pdf_viewer import pdf_viewer # PDF viewer for displaying PDFs in Streamlit
 from annotated_text import annotated_text, annotation # Annotated text library for displaying styled and annotated text
 
@@ -49,40 +49,6 @@ def clean_latex(latex_str):
         st.error(f"An error occurred while trimming a formula.")
 
     return latex_str.strip()  # Trim any extra spaces
-
-def update_xml():
-    """
-    Update the XML content in the session state based on the user's input in the text area.
-
-    Updates:
-    st.session_state.xml_text (str): The updated XML content from the text area (st.session_state.xml_editor).
-
-    Parameters & Returns:
-    None
-    """
-    try:
-        st.session_state.xml_text = st.session_state.xml_editor  # Update xml_text with the current content in text area
-        logging.info(f"Variable xml_text successfully set to the current content in text area.")
-    except Exception as e:
-        logging.error(f"An error occurred while setting variable xml_text to the current content in text area: {e}", exc_info=True)
-        st.error(f"An error occurred while setting variable xml_text to the current content in text area")
-
-def update_interpreted_xml():
-    """
-    Update the XML content in the session state based on the user's input in the text area.
-
-    Updates:
-    st.session_state.interpreted_xml_text (str): The updated XML content from the text area (st.session_state.interpreted_xml_editor).
-
-    Parameters & Returns:
-    None
-    """
-    try:
-        st.session_state.interpreted_xml_text = st.session_state.interpreted_xml_editor  # Update xml_text with the current content in text area
-        logging.info(f"Variable interpreted_xml_text successfully set to the current content in text area.")
-    except Exception as e:
-        logging.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area: {e}", exc_info=True)
-        st.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area")
 
 def processClassifierResponse(element):
     """
@@ -129,327 +95,10 @@ def processClassifierResponse(element):
         logging.error(f"An error occurred while processing the classifier response for element: {e}", exc_info=True)
         st.error(f"An error occurred while processing the classifier response")
 
-def process_classifier(xml_input, pdf_file):
-    """
-    Processes the input data, including table extraction, figure/formula classification, and parsing, 
-    then prettifies the XML output.
-
-    Parameters:
-    xml_input (str): The XML file content from GROBID.
-    pdf_file (file-object): The PDF file uploaded by the user to extract additional data.
-
-    Returns:
-    None
-
-    Process:
-    1. Calls the table parser to extract table data from the provided XML input.
-    2. Processes the extracted data from the table parser.
-    3. Uses a classifier to identify figures and formulas in the XML.
-    4. Calls the figure and formula parsers to handle the classified figures and formulas.
-    5. Processes the parsed figure and formula data.
-    6. Prettifies the final XML file to improve human readability.
-    """
-
-    # Check if the session state arrays for the different elements exist or are non-empty.
-    # If the arrays exist and are not empty, it means the user has uploaded a second file.
-    # In this case, the arrays need to be cleared so that the new results from the second file can be added without conflicts.
-    if "formulas_results_array" not in st.session_state or len(st.session_state.formulas_results_array) != 0:
-        st.session_state.formulas_results_array = []
-    if "figures_results_array" not in st.session_state or len(st.session_state.figures_results_array) != 0:
-        st.session_state.figures_results_array = []
-    if "charts_results_array" not in st.session_state or len(st.session_state.charts_results_array) != 0:
-        st.session_state.charts_results_array = []
-    if "tables_results_array" not in st.session_state or len(st.session_state.tables_results_array) != 0:
-        st.session_state.tables_results_array = []
-    logging.info("All session state result arrays for the different elements exist and are empty")
-
-    # Start of the progress bar
-    for percent_complete in range(1):
-        try:
-            # Prepare the files dict to be sent in the request.
-            files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
-
-            logging.info(f"Call the table parser API endpoint")
-            # Send to API endpoint for processing of tables
-            response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
-            response.raise_for_status()  # Raise exception if status is not 200
-            logging.info(f'Response from table parser: {response}')
-
-        except requests.exceptions.RequestException as e:
-            logging.error(f"An error occurred while communication with the table parser: {e}", exc_info=True)
-            st.error(f"An error occurred while communication with the table parser.")
-        
-        try:
-            # Define the xml_input and XML namespace
-            xml_input = response.text
-            namespace = {"tei": "http://www.tei-c.org/ns/1.0"}
-
-            # Parse XML
-            root = ET.fromstring(xml_input)
-
-            # Find all <table> elements
-            tables = root.findall(".//tei:table", namespace)
-
-            for table in tables:
-                page_number = int(table.get("page")) # Retrieve the page number for each table
-                table_number = int(table.get("table_number")) # Retrieve the table number for each table
-
-                table_context_element = table.find("tei:context", namespace) # Retrieve the context for each table
-                table_context = table_context_element.text.strip() if table_context_element is not None else "Untitled Table" # Strip the context for each table
-
-                # Extract rows inside "this specific table"
-                table_rows = table.findall("tei:row", namespace) 
-
-                if table_rows:
-                    # Extract headers from the first row of "this specific table"
-                    headers = [cell.text.strip() if cell.text else "" for cell in table_rows[0].findall("tei:cell", namespace)]
-
-                    # Ensure headers are not empty before processing rows
-                    if headers:
-                        table_data = []  # Reset table data for each table
-
-                        # Extract data rows for "this specific table" only
-                        for row in table_rows[1:]:  # Skip the header
-                            row_data = {}  
-                            cells = row.findall("tei:cell", namespace)  # Get cells for the current row
-                            for i, cell in enumerate(cells):
-                                if i < len(headers):  # Ensure index is within header bounds
-                                    row_data[headers[i]] = cell.text.strip() if cell.text else ""  # Strip and add cell text
-                            table_data.append(row_data)  # Append the row data to the table
-
-                        # The parsed data will be stored in a results array and displayed to the user
-                        processClassifierResponse({
-                            "element_type": 'table',
-                            "page_number": page_number,
-                            "table_number": table_number,
-                            "table_context": table_context,
-                            "table_data": table_data
-                        })
-            logging.info(f'The XML was parsed successfully!')
-
-        except ET.ParseError as e:
-            logging.error(f"An error occured while parsing the XML file: {e}", exc_info=True)
-            st.error(f"An error occured while parsing the XML file")
-        
-        # Update progress bar
-        st.session_state.progress_bar.progress(percent_complete + 33, text="Classifying elements, and parsing figures & charts... 🔄")
-
-        try:
-            # Load classifier module dynamically from specified file location
-            spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/backend/classifier.py")
-            classifier = importlib.util.module_from_spec(spec)
-            sys.modules["classifiermodule"] = classifier  # Register the module in sys.modules
-            spec.loader.exec_module(classifier)  # Execute the module
-
-            # Classify the figures and formulas by calling 'openXMLfile' from the classifier module
-            images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
-            logging.info(f'The non-textual elements were classified successfully!')
-
-        except Exception as e:
-            logging.error(f"An error occured while classifying the non-textual elements: {e}", exc_info=True)
-            st.error(f"An error occured while classifying the non-textual elements.")
-
-        try:
-            # Parse the figures by calling 'processFigures' from the classifier module
-            classifier.processFigures(figures, images, frontend=True)
-            logging.info(f'The figures were parsed successfully!')
-
-        except Exception as e:
-            logging.error(f"An error occured while parsing the figures: {e}", exc_info=True)
-            st.error(f"An error occured while parsing the figures.")
-
-        # Update progress bar
-        st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and updating XML file... 🔄")
-        
-        try:
-            # Parse the formulas by calling 'processFormulas' from the classifier module
-            classifier.processFormulas(formulas, images, mode="regex", frontend=True)
-            logging.info(f'The formulas were parsed successfully!')
-
-        except Exception as e:
-            logging.error(f"An error occured while parsing the formulas: {e}", exc_info=True)
-            st.error(f"An error occured while parsing the formulas.")
-
-        try:
-            # Extract the version and encoding from the XML declaration using a regex
-            version_match = re.search(r'xml version="([^"]+)"', str(st.session_state.Bs_data))
-            encoding_match = re.search(r'encoding="([^"]+)"', str(st.session_state.Bs_data))
-            version = version_match.group(1) if version_match else '?'  # Default to '?' if no match
-            encoding = encoding_match.group(1) if encoding_match else '?'  # Default to '?' if no match
-
-            # Parse the raw XML string into a DOM object
-            xml_doc = xml.dom.minidom.parseString(str(st.session_state.Bs_data))
-
-            # Convert the DOM object to a pretty-printed string with a custom indent
-            pretty_xml = xml_doc.toprettyxml(indent="	")
-
-            # Remove extra newlines between lines to make the output more compact
-            # Split by lines and join back, while skipping any unnecessary empty lines
-            pretty_xml_lines = pretty_xml.splitlines()
-            cleaned_xml_lines = [line for line in pretty_xml_lines if line.strip()]
-
-            # Join the lines back into a single string
-            final_pretty_xml = "\n".join(cleaned_xml_lines)
-
-            #Remove the first line of the XML file
-            final_pretty_xml = re.sub(r'<\?xml version="1.0" \?>', '', final_pretty_xml)
-
-            # Add the XML declaration with the correct version and encoding as the first line
-            final_xml_with_encoding = f'<?xml version="{version}" encoding="{encoding}"?>{final_pretty_xml}'
-
-            # Store the cleaned, prettified XML back into session state
-            st.session_state.interpreted_xml_text = final_xml_with_encoding
-            logging.info(f'The XML file was prettified successfully!')
-
-        except Exception as e:
-            logging.error(f"An error occured while prettifying the XML file: {e}", exc_info=True)
-            st.error(f"An error occured while pprettifying the XML file.")
-
-        # Update the progress bar
-        st.session_state.progress_bar.progress(percent_complete + 100, text="Non-textual elements were interpreted successfully ✅")
-    
-    # Let the user register the update progress bar before removing it
-    time.sleep(4) # Wait 4 seconds
-    st.session_state.progress_bar.empty() 
-
-def process_pdf(file, params=None):
-    """
-    Process a PDF file using the GROBID API and return the response content.
-
-    Parameters:
-    file (file-object): The PDF file to process.
-    params (dict): Additional parameters for the GROBID request.
-
-    Returns:
-    response.text: The XML content returned by the GROBID API as a string, or None if an error occurred.
-    """
-
-    # Create a dict with the value as the file to be sent.
-    files = {'input': file}
-
-    # Define the URL for the GROBID API endpoint
-    grobid_url = "http://172.28.0.12:8070/api/processFulltextDocument"
-
-    try:
-        logging.info(f"Call GROBID API endpoint")
-        response = requests.post(grobid_url, files=files, data=params) # Send request to GROBID
-        response.raise_for_status()  # Raise exception if status is not 200
-        logging.info(f'Response from GROBID: {response}')
-
-        # Check if coordinates are missing in the response
-        if 'coords' not in response.text:
-            logging.warning("No coordinates found in PDF file. Please check GROBID settings.")
-            st.warning("No coordinates found in PDF file. Please check GROBID settings.")
-
-        return response.text  # Return XML recevied from GROBID
-
-    except requests.exceptions.RequestException as e:
-        logging.error(f"An error occured while communicating with GROBID: {e}", exc_info=True)
-        st.error(f"An error occured while communicating with GROBID.")
-        return None  # Return None on error
-
-def parse_coords_for_figures(xml_content):
-    """
-    Extract and parse the 'coords' attribute for <figure> and <formula> elements
-    from the GROBID XML output while counting the number of occurrences.
-
-    Parameters:
-    xml_content (str): The XML content returned by the GROBID API.
-
-    Returns:
-    annotations (array): List of annotations with details like page, coordinates, and color.         
-    """
-
-    annotations = []
-
-    try:
-        # Define the XML namespace
-        namespace = {"tei": "http://www.tei-c.org/ns/1.0"}
-
-        # Parse XML
-        root = ET.fromstring(xml_content)
-
-        # Find all <figure> and <formula> elements in the XML
-        figures = root.findall(".//tei:figure", namespace)
-        formulas = root.findall(".//tei:formula", namespace)
-
-        st.session_state.count_figures = len(figures)  # Count figures
-        st.session_state.count_formulas = len(formulas)  # Count formulas
-        logging.info(f"Found {st.session_state.count_figures} figures and {st.session_state.count_formulas} formulas in PDF file.")
-
-        # Process each figure
-        for figure in figures:
-            coords = figure.attrib.get("coords", None)  # Get 'coords' attribute
-            if coords:
-                for group in coords.split(';'):  # Loop through each group in 'coords'
-                    try:
-                        values = list(map(float, group.split(',')))  # Convert to float values
-                        if len(values) >= 5:
-                            # Extract page and coordinates, add to annotations with red color
-                            page, x0, y0, x1, y1 = values[:5]
-                            annotations.append({
-                                "page": int(page),
-                                "x": float(x0),
-                                "y": float(y0),
-                                "width": x1,
-                                "height": y1,
-                                "color": "#CC0000"
-                            })
-
-                    except ValueError as e:
-                        logging.error(f"An error occured while parsing figure group '{group}': {e}")
-                        st.error(f"An error occured while parsing a figure group.")
-
-        # Process each formula
-        for formula in formulas:
-            coords = formula.attrib.get("coords", None)  # Get 'coords' attribute
-            if coords:
-                for group in coords.split(';'):  # Loop through each group in 'coords'
-                    try:
-                        values = list(map(float, group.split(',')))  # Convert to float values
-                        if len(values) >= 5:
-                            # Extract page and coordinates, add to annotations with blue color
-                            page, x0, y0, x1, y1 = values[:5]
-                            annotations.append({
-                                "page": int(page),
-                                "x": float(x0),
-                                "y": float(y0),
-                                "width": x1,
-                                "height": y1,
-                                "color": "#0000FF"
-                            })
-
-                    except ValueError as e:
-                        logging.error(f"An error occured while parsing figure group '{group}': {e}")
-                        st.error(f"An error occured while parsing a figure group.")
-
-    except ET.ParseError as e:
-        logging.error(f"An error occured while parsing GROBID XML: {e}", exc_info=True)
-        st.error(f"An error occured while parsing the GROBID XML.")
-
-    return annotations
-
 def main():
     """
-    Extract, process, and display the scientific paper uploaded by the user in PDF format, using GROBID for automatic metadata extraction.
-
-    Parameters:
-    None (User uploads a PDF file)
-    
-    Returns:
-    None (Displays the extracted results as a PDF and XML view, allowing the user to edit the XML and download it after processing.
-    
-    Process:
-    1. Initializes the UI with a custom design using st.markdown and applies the provided css.html file.
-    2. Accepts a scientific paper in PDF format uploaded by the user.
-    3. Sends the PDF to GROBID for metadata extraction and parsing.
-    4. Displays the GROBID output both as a rendered PDF and an editable XML text.
-    5. Allows the user to modify the XML, if necessary.
-    6. Processes the XML by invoking the process_classifier, which classifies and interprets the document's structure.
-    7. Displays the interpreted results in views for each element type as well an editable XML text.
-    8. Enables the user to refine and download the final XML file.
+    Add main explanation later!!
     """
-    
     st.set_page_config(layout="wide") # Configure the page layout to be wide
     logging.info("Streamlit page configuration set successfully.")
 
@@ -474,6 +123,340 @@ def main():
     except Exception as e:
         logging.error(f"An error occurred while applying CSS: {e}", exc_info=True)
         st.error(f"An error occurred while applying CSS.")
+
+    def process_classifier(xml_input, pdf_file):
+        """
+        Processes the input data, including table extraction, figure/formula classification, and parsing, 
+        then prettifies the XML output.
+
+        This function performs the following steps:
+        1. Calls the table parser to extract table data from the provided XML input.
+        2. Processes the extracted data from the table parser.
+        3. Uses a classifier to identify figures and formulas in the XML.
+        4. Calls the figure and formula parsers to handle the classified figures and formulas.
+        5. Processes the parsed figure and formula data.
+        6. Prettifies the final XML file to improve human readability.
+
+        Parameters:
+        xml_input (str): The XML file content from GROBID.
+        pdf_file (file-object): The PDF file uploaded by the user to extract additional data.
+
+        Returns:
+        None
+        """
+
+        # Check if the session state arrays for the different elements exist or are non-empty.
+        # If the arrays exist and are not empty, it means the user has uploaded a second file.
+        # In this case, the arrays need to be cleared so that the new results from the second file can be added without conflicts.
+        if "formulas_results_array" not in st.session_state or len(st.session_state.formulas_results_array) != 0:
+            st.session_state.formulas_results_array = []
+        if "figures_results_array" not in st.session_state or len(st.session_state.figures_results_array) != 0:
+            st.session_state.figures_results_array = []
+        if "charts_results_array" not in st.session_state or len(st.session_state.charts_results_array) != 0:
+            st.session_state.charts_results_array = []
+        if "tables_results_array" not in st.session_state or len(st.session_state.tables_results_array) != 0:
+            st.session_state.tables_results_array = []
+        logging.info("All session state result arrays for the different elements exist and are empty")
+
+        # Start of the progress bar
+        for percent_complete in range(1):
+            try:
+                # Prepare the files dict to be sent in the request.
+                files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
+
+                logging.info(f"Call the table parser API endpoint")
+                # Send to API endpoint for processing of tables
+                response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
+                response.raise_for_status()  # Raise exception if status is not 200
+                logging.info(f'Response from table parser: {response}')
+
+            except requests.exceptions.RequestException as e:
+                logging.error(f"An error occurred while communication with the table parser: {e}", exc_info=True)
+                st.error(f"An error occurred while communication with the table parser.")
+            
+            try:
+                # Define the xml_input and XML namespace
+                xml_input = response.text
+                namespace = {"tei": "http://www.tei-c.org/ns/1.0"}
+
+                # Parse XML
+                root = ET.fromstring(xml_input)
+
+                # Find all <table> elements
+                tables = root.findall(".//tei:table", namespace)
+
+                for table in tables:
+                    page_number = int(table.get("page")) # Retrieve the page number for each table
+                    table_number = int(table.get("table_number")) # Retrieve the table number for each table
+
+                    table_context_element = table.find("tei:context", namespace) # Retrieve the context for each table
+                    table_context = table_context_element.text.strip() if table_context_element is not None else "Untitled Table" # Strip the context for each table
+
+                    # Extract rows inside "this specific table"
+                    table_rows = table.findall("tei:row", namespace) 
+
+                    if table_rows:
+                        # Extract headers from the first row of "this specific table"
+                        headers = [cell.text.strip() if cell.text else "" for cell in table_rows[0].findall("tei:cell", namespace)]
+
+                        # Ensure headers are not empty before processing rows
+                        if headers:
+                            table_data = []  # Reset table data for each table
+
+                            # Extract data rows for "this specific table" only
+                            for row in table_rows[1:]:  # Skip the header
+                                row_data = {}  
+                                cells = row.findall("tei:cell", namespace)  # Get cells for the current row
+                                for i, cell in enumerate(cells):
+                                    if i < len(headers):  # Ensure index is within header bounds
+                                        row_data[headers[i]] = cell.text.strip() if cell.text else ""  # Strip and add cell text
+                                table_data.append(row_data)  # Append the row data to the table
+
+                            # The parsed data will be stored in a results array and displayed to the user
+                            processClassifierResponse({
+                                "element_type": 'table',
+                                "page_number": page_number,
+                                "table_number": table_number,
+                                "table_context": table_context,
+                                "table_data": table_data
+                            })
+                logging.info(f'The XML was parsed successfully!')
+
+            except ET.ParseError as e:
+                logging.error(f"An error occured while parsing the XML file: {e}", exc_info=True)
+                st.error(f"An error occured while parsing the XML file")
+            
+            # Update progress bar
+            st.session_state.progress_bar.progress(percent_complete + 33, text="Classifying elements, and parsing figures & charts... 🔄")
+
+            try:
+                # Load classifier module dynamically from specified file location
+                spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/backend/classifier.py")
+                classifier = importlib.util.module_from_spec(spec)
+                sys.modules["classifiermodule"] = classifier  # Register the module in sys.modules
+                spec.loader.exec_module(classifier)  # Execute the module
+
+                # Classify the figures and formulas by calling 'openXMLfile' from the classifier module
+                images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
+                logging.info(f'The non-textual elements were classified successfully!')
+
+            except Exception as e:
+                logging.error(f"An error occured while classifying the non-textual elements: {e}", exc_info=True)
+                st.error(f"An error occured while classifying the non-textual elements.")
+
+            try:
+                # Parse the figures by calling 'processFigures' from the classifier module
+                classifier.processFigures(figures, images, frontend=True)
+                logging.info(f'The figures were parsed successfully!')
+
+            except Exception as e:
+                logging.error(f"An error occured while parsing the figures: {e}", exc_info=True)
+                st.error(f"An error occured while parsing the figures.")
+
+            # Update progress bar
+            st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and updating XML file... 🔄")
+            
+            try:
+                # Parse the formulas by calling 'processFormulas' from the classifier module
+                classifier.processFormulas(formulas, images, mode="regex", frontend=True)
+                logging.info(f'The formulas were parsed successfully!')
+
+            except Exception as e:
+                logging.error(f"An error occured while parsing the formulas: {e}", exc_info=True)
+                st.error(f"An error occured while parsing the formulas.")
+
+            try:
+                # Extract the version and encoding from the XML declaration using a regex
+                version_match = re.search(r'xml version="([^"]+)"', str(st.session_state.Bs_data))
+                encoding_match = re.search(r'encoding="([^"]+)"', str(st.session_state.Bs_data))
+                version = version_match.group(1) if version_match else '?'  # Default to '?' if no match
+                encoding = encoding_match.group(1) if encoding_match else '?'  # Default to '?' if no match
+
+                # Parse the raw XML string into a DOM object
+                xml_doc = xml.dom.minidom.parseString(str(st.session_state.Bs_data))
+
+                # Convert the DOM object to a pretty-printed string with a custom indent
+                pretty_xml = xml_doc.toprettyxml(indent="	")
+
+                # Remove extra newlines between lines to make the output more compact
+                # Split by lines and join back, while skipping any unnecessary empty lines
+                pretty_xml_lines = pretty_xml.splitlines()
+                cleaned_xml_lines = [line for line in pretty_xml_lines if line.strip()]
+
+                # Join the lines back into a single string
+                final_pretty_xml = "\n".join(cleaned_xml_lines)
+
+                #Remove the first line of the XML file
+                final_pretty_xml = re.sub(r'<\?xml version="1.0" \?>', '', final_pretty_xml)
+
+                # Add the XML declaration with the correct version and encoding as the first line
+                final_xml_with_encoding = f'<?xml version="{version}" encoding="{encoding}"?>{final_pretty_xml}'
+
+                # Store the cleaned, prettified XML back into session state
+                st.session_state.interpreted_xml_text = final_xml_with_encoding
+                logging.info(f'The XML file was prettified successfully!')
+
+            except Exception as e:
+                logging.error(f"An error occured while prettifying the XML file: {e}", exc_info=True)
+                st.error(f"An error occured while pprettifying the XML file.")
+
+            # Update the progress bar
+            st.session_state.progress_bar.progress(percent_complete + 100, text="Non-textual elements were interpreted successfully ✅")
+        
+        # Let the user register the update progress bar before removing it
+        time.sleep(4) # Wait 4 seconds
+        st.session_state.progress_bar.empty() 
+
+    def process_pdf(file, params=None):
+        """
+        Process a PDF file using the GROBID API and return the response content.
+
+        Parameters:
+        file (file-object): The PDF file to process.
+        params (dict): Additional parameters for the GROBID request.
+
+        Returns:
+        response.text: The XML content returned by the GROBID API as a string, or None if an error occurred.
+        """
+
+        # Create a dict with the value as the file to be sent.
+        files = {'input': file}
+
+        # Define the URL for the GROBID API endpoint
+        grobid_url = "http://172.28.0.12:8070/api/processFulltextDocument"
+
+        try:
+            logging.info(f"Call GROBID API endpoint")
+            response = requests.post(grobid_url, files=files, data=params) # Send request to GROBID
+            response.raise_for_status()  # Raise exception if status is not 200
+            logging.info(f'Response from GROBID: {response}')
+
+            # Check if coordinates are missing in the response
+            if 'coords' not in response.text:
+                logging.warning("No coordinates found in PDF file. Please check GROBID settings.")
+                st.warning("No coordinates found in PDF file. Please check GROBID settings.")
+
+            return response.text  # Return XML recevied from GROBID
+
+        except requests.exceptions.RequestException as e:
+            logging.error(f"An error occured while communicating with GROBID: {e}", exc_info=True)
+            st.error(f"An error occured while communicating with GROBID.")
+            return None  # Return None on error
+
+    def parse_coords_for_figures(xml_content):
+        """
+        Extract and parse the 'coords' attribute for <figure> and <formula> elements
+        from the GROBID XML output while counting the number of occurrences.
+
+        Parameters:
+        xml_content (str): The XML content returned by the GROBID API.
+
+        Returns:
+        annotations (array): List of annotations with details like page, coordinates, and color.         
+        """
+
+        annotations = []
+
+        try:
+            # Define the XML namespace
+            namespace = {"tei": "http://www.tei-c.org/ns/1.0"}
+
+            # Parse XML
+            root = ET.fromstring(xml_content)
+
+            # Find all <figure> and <formula> elements in the XML
+            figures = root.findall(".//tei:figure", namespace)
+            formulas = root.findall(".//tei:formula", namespace)
+
+            st.session_state.count_figures = len(figures)  # Count figures
+            st.session_state.count_formulas = len(formulas)  # Count formulas
+            logging.info(f"Found {st.session_state.count_figures} figures and {st.session_state.count_formulas} formulas in PDF file.")
+
+            # Process each figure
+            for figure in figures:
+                coords = figure.attrib.get("coords", None)  # Get 'coords' attribute
+                if coords:
+                    for group in coords.split(';'):  # Loop through each group in 'coords'
+                        try:
+                            values = list(map(float, group.split(',')))  # Convert to float values
+                            if len(values) >= 5:
+                                # Extract page and coordinates, add to annotations with red color
+                                page, x0, y0, x1, y1 = values[:5]
+                                annotations.append({
+                                    "page": int(page),
+                                    "x": float(x0),
+                                    "y": float(y0),
+                                    "width": x1,
+                                    "height": y1,
+                                    "color": "#CC0000"
+                                })
+
+                        except ValueError as e:
+                            logging.error(f"An error occured while parsing figure group '{group}': {e}")
+                            st.error(f"An error occured while parsing a figure group.")
+
+            # Process each formula
+            for formula in formulas:
+                coords = formula.attrib.get("coords", None)  # Get 'coords' attribute
+                if coords:
+                    for group in coords.split(';'):  # Loop through each group in 'coords'
+                        try:
+                            values = list(map(float, group.split(',')))  # Convert to float values
+                            if len(values) >= 5:
+                                # Extract page and coordinates, add to annotations with blue color
+                                page, x0, y0, x1, y1 = values[:5]
+                                annotations.append({
+                                    "page": int(page),
+                                    "x": float(x0),
+                                    "y": float(y0),
+                                    "width": x1,
+                                    "height": y1,
+                                    "color": "#0000FF"
+                                })
+
+                        except ValueError as e:
+                            logging.error(f"An error occured while parsing figure group '{group}': {e}")
+                            st.error(f"An error occured while parsing a figure group.")
+
+        except ET.ParseError as e:
+            logging.error(f"An error occured while parsing GROBID XML: {e}", exc_info=True)
+            st.error(f"An error occured while parsing the GROBID XML.")
+
+        return annotations
+
+    def update_xml():
+        """
+        Update the XML content in the session state based on the user's input in the text area.
+
+        Updates:
+        st.session_state.xml_text (str): The updated XML content from the text area (st.session_state.xml_editor).
+
+        Parameters & Returns:
+        None
+        """
+        try:
+            st.session_state.xml_text = st.session_state.xml_editor  # Update xml_text with the current content in text area
+            logging.info(f"Variable xml_text successfully set to the current content in text area.")
+        except Exception as e:
+            logging.error(f"An error occurred while setting variable xml_text to the current content in text area: {e}", exc_info=True)
+            st.error(f"An error occurred while setting variable xml_text to the current content in text area")
+
+    def update_interpreted_xml():
+        """
+        Update the XML content in the session state based on the user's input in the text area.
+
+        Updates:
+        st.session_state.interpreted_xml_text (str): The updated XML content from the text area (st.session_state.interpreted_xml_editor).
+
+        Parameters & Returns:
+        None
+        """
+        try:
+            st.session_state.interpreted_xml_text = st.session_state.interpreted_xml_editor  # Update xml_text with the current content in text area
+            logging.info(f"Variable interpreted_xml_text successfully set to the current content in text area.")
+        except Exception as e:
+            logging.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area: {e}", exc_info=True)
+            st.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area")
 
     # Title/logo
     st.image("app/images/Sci2XML_logo.png")
@@ -590,13 +573,11 @@ def main():
                                     annotation("Formulas", "", background="#0000FF", color="#FFFFFF"), " ",
                                     annotation("Figures", "", background="#CC0000", color="#FFFFFF")
                                 )
-
                             elif st.session_state.count_formulas > 0:
                                 # Annotate only formulas
                                 annotated_text(
                                     annotation("Formulas", "", background="#0000FF", color="#FFFFFF")
                                 )
-
                             elif st.session_state.count_figures > 0:
                                 # Annotate only figures
                                 annotated_text(
