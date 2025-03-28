@@ -4,7 +4,7 @@ import io
 import re
 import streamlit as st
 import pandas as pd
-from bs4 import BeautifulSoup # For parsing XML and HTML documents
+from bs4 import BeautifulSoup
 from PIL import Image, ImageDraw
 from pdf2image import convert_from_path, convert_from_bytes # Module which turns each page of a PDF into an image.
 from pdf2image.exceptions import ( # Built-in exception handlers. 
@@ -25,6 +25,7 @@ logging.basicConfig(
         logging.StreamHandler(sys.stdout)  # Also log to console
     ]
 )
+
 
 apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
 

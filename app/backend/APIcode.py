@@ -29,15 +29,16 @@ logging.basicConfig(
 )
 
 ## Our own modules ##
-# Classifier code:
 import importlib.util
 spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/backend/classifier.py")
 classifier = importlib.util.module_from_spec(spec)
 sys.modules["classifiermodule"] = classifier
 spec.loader.exec_module(classifier)
-# Models:
+# import Sci2XML.app.modules.classifiermodel as classifier
 import backend.models.classifiermodel as classifierML
+# import Sci2XML.app.modules.chartparser as charter
 import backend.models.chartparser as charter
+# import Sci2XML.app.modules.formulaparser as formula
 import backend.models.formulaparser as formula
 import backend.models.figureparser as figure
 import backend.models.tableparser as tableParser
@@ -54,6 +55,7 @@ try:
 except Exception as e:
     logging.error(f"APIcode - An error occurred while loading the models: {e}", exc_info=True)
   
+
 
 def API(portnr):
   """
@@ -350,10 +352,9 @@ def API(portnr):
         data = final_grobid_xml
         return data
 
-  def callVLM(pipe, image, query):
+  def callVLM(pipe, image, query): # NOT IN USE, WE USE ML FOR CLASSIFICATION INSTEAD.
     """
-    Calls the InternVL2 VLM model. Not used in current deployment, as we have chosen to use ML model for the classifier
-     and another VLM for the figure parser.
+    Calls the VLM model.
 
     Paramaters:
     pipe: The VLM model.
@@ -364,23 +365,77 @@ def API(portnr):
     response.text: The response from the VLM model.
     """
     print("\n- Calling VLM -")
+    #image = load_image('testimagetext.png')
     image = load_image(image)
     response = pipe((query, image))
     #print(response.text)
     return response.text
 
+  def callML(model, image):
+    """
+    Calls the ML model that will classify the image.
+
+    Paramaters:
+    model: The ML model.
+    image: The image to be classified.
+
+    Returns:
+    predicted_class_name: The name of the predicted class.
+    """
+    print(f'callML is running with model: {model} and image: {image}')
+    # Load the image
+    #image_path = image  # Replace with the path to your image
+    #image = Image.open(image_path)
+    image = image.convert("RGB")  # Ensure the image is in RGB format
+
+    img_size = 224
+
+    # Define the same transformations used during training
+    data_transforms = A.Compose([
+        A.Resize(img_size, img_size),
+        A.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+        A.pytorch.transforms.ToTensorV2()
+    ])
+
+    # Apply transformations
+    transformed_image = data_transforms(image=np.array(image))["image"]
+
+    # Add a batch dimension
+    transformed_image = transformed_image.unsqueeze(0)
+
+    # Move the image to the appropriate device (GPU or CPU)
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    transformed_image = transformed_image.to(device)
+
+    # Make prediction
+    predicted_class = model.predict(transformed_image)
+
+    # Get the class name
+    class_names = ['just_image', 'bar_chart', 'diagram', 'flow_chart', 'graph',
+                  'growth_chart', 'pie_chart', 'table', 'text_sentence']
+    predicted_class_name = class_names[predicted_class[0]]
+
+    print(f"Predicted class: {predicted_class_name}")
+    return predicted_class_name
+
+ 
+  @app.route('/callVLM', methods=['POST'])
+  def call_vlm(): # NOT IN USE
+      print("-- You have reached endpoint for classifier VLM --")
+
+      image = request.files['image']
+      image = Image.open(image)
+
+      query = request.files['query']
+
+      ## PROCESS IMAGE
+      response = callVLM(VLM, image, query.getvalue().decode("utf-8"))
+      #response = "VLMresponse"
+
+      return jsonify({'VLMresponse':response})
 
   @app.route('/callClassifier', methods=['POST'])
   def call_ml():
-      """
-      Endpoint for classifying images. It accepts an image file in POST body.
-
-      Paramaters:
-      None
-
-      Returns:
-      JSON response object
-      """
       print("\n")
       logging.info(f"API - callClassifier - You have reached endpoint for classifier ML.")
 
@@ -428,6 +483,10 @@ def API(portnr):
       file = request.files['pdffile']
       byte_data_PDF = file.read()
 
+      #print("\n----- Saving PDF file... -----")
+      #with open("TESTING_temp_pdffile.pdf", "wb") as file:
+      #    file.write(byte_data_PDF)
+
       ## Calling GROBID ##
       logging.info(f"API - process - Calling GROBID.")
       grobid_url="http://172.28.0.12:8070/api/processFulltextDocument"
@@ -456,7 +515,7 @@ def API(portnr):
       ## Table Parser ##
       logging.info(f"API - process - Initiating Table parser.")
       ## Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
-      # Ready the files:
+      # Ready the files
       files = {"grobid_xml": ("xmlfile.xml", string_data_XML, "application/json"), "pdf": ("pdffile.pdf", byte_data_PDF)}
 
       try:

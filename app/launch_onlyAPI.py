@@ -44,7 +44,6 @@ def startEverything():
   print("#-------------------- # Installing requirements # ------------------#\n")
   logging.info("Launch - Installing requirements.")
   try:
-      # Using subprocess to install the pip, apt-get and npm requirements.
       log = open("reqlog.txt", "a")
       print("----------> pip installs...")
       n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
@@ -69,7 +68,6 @@ def startEverything():
   print("\n\n#----------------- ### Launching API + Models ### ------------------#\n")
   logging.info("Launch - Launching API and models.")
   try:
-      # When importing the API code, the various models the system uses will also be loaded in now, as the API code is where these models are called on later. 
       import backend.APIcode as API
       API.API(args.port)
       logging.info(f"Launch - Finished launching API and models.")
@@ -87,7 +85,6 @@ def startEverything():
   print("\n\n#------------------- ### Load & launch GROBID ### ------------------#\n")
   logging.info("Launch - Loading and launching GROBID.")
   try:
-      # Import grobid module. This will also automatically download, install and launch Grobid server.
       import backend.grobidmodule as grobidmod
       grobidmod.loadGrobidPythonway()
       logging.info(f"Launch - Finished loading and launching GROBID.")
@@ -105,9 +102,7 @@ def startEverything():
   print("\n\n#------------ ### Starting API through tunnel ### ------------#\n")
   logging.info(f"Launch - Starting API through tunnel: {args.tunnel}.")
   try:
-      # Import frontendmodule, which will be used to expose localhost to internet.
       import frontend.frontendmodule as front
-      # Host frontend through streamlit
       front.startAPI(args.tunnel, args.port)
       logging.info(f"Launch - Finished starting API through tunnel.")
   except Exception as e:

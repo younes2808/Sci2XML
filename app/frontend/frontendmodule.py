@@ -35,18 +35,23 @@ def startLocaltunnel(port):
   logging.info(f"frontendmodule - Password is: {passw}.")
 
   # Running localtunnel command:
+  #URL = subprocess.run(["npx", "localtunnel", "--port", "8501"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
   URL = subprocess.Popen(["npx", "localtunnel", "--port", port], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+  #URL = subprocess.Popen(["ls"], stdout=subprocess.PIPE)
   logging.info(f"frontendmodule - URL is: {URL}, {URL.stdout.readline}.")
   for line in iter(URL.stdout.readline, ''):
+    #print(line)
     match = re.search(r"(https://[a-zA-Z0-9-]+\.loca\.lt)", line)
     if match:
         public_url = match.group(1)
-        logging.info(f"frontendmodule - URL Found: {public_url}")
+        #print(f"Public URL: {public_url}")
+        logging.info(f"frontendmodule - URL Found.")
         break
     else:
       logging.error(f"frontendmodule - Could not find URL.")
       public_url = "URL NOT FOUND"
       break
+  print("done")
 
   return public_url, passw
 
@@ -122,6 +127,7 @@ def startAPI(tunnel, portnr):
   None
   """
   logging.info(f"frontendmodule - Exposing API.")
+  logfile = open("logs.txt", "w")
 
   # Exposing localhost through tunnel, depending on which tunnel is selected at launch:
   if (tunnel == "localtunnel"):
