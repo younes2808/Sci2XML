@@ -128,7 +128,7 @@ def remove_tables_from_grobid_xml(grobid_file):
     updated_content = re.sub(r'<figure[^>]*\s+type="table"[^>]*>.*?</figure>', '', grobid_content, flags=re.DOTALL)
     
     removed_tables = len(matches)
-    logging.info(f"{removed_tables} tables removed from {grobid_file}.")
+    logging.info(f"[tableparser] {removed_tables} tables removed from {grobid_file}.")
     
     return updated_content, first_table_position
 

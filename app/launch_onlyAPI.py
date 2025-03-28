@@ -31,18 +31,18 @@ def startEverything():
   print("#----------------------- ################### -----------------------#")
   print("#----------------------- ##### Sci2XML ##### -----------------------#")
   print("#----------------------- ################### -----------------------#\n")
-  logging.info("Launch - Starting function startEverything()")
+  logging.info("[launch_onlyAPI] Starting function startEverything()")
   # Parsing arguments from terminal:
   parser = argparse.ArgumentParser()
   parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
   parser.add_argument('--port', dest='port', type=str, help='Set port number', default ="8000")
   args = parser.parse_args()
-  logging.info("Launch - Arguments parsed.")
+  logging.info("[launch_onlyAPI] Arguments parsed.")
 
   ## Setup ##
   print("#-------------------------- ### Setup ### --------------------------#\n")
   print("#-------------------- # Installing requirements # ------------------#\n")
-  logging.info("Launch - Installing requirements.")
+  logging.info("[launch_onlyAPI] Installing requirements.")
   try:
       # Using subprocess to install the pip, apt-get and npm requirements.
       log = open("reqlog.txt", "a")
@@ -54,64 +54,64 @@ def startEverything():
       n = subprocess.run(["apt-get", "install", "-y", "libvips"], stdout=log, stderr=log, text=True)
       print("----------> npm installs...")
       n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
-      logging.info(f"Launch - Finished installing requirements.")
+      logging.info(f"[launch_onlyAPI] Finished installing requirements.")
   except Exception as e:
-      logging.error(f"Launch - An error occurred while trying to install requirements: {e}", exc_info=True)
+      logging.error(f"[launch_onlyAPI] An error occurred while trying to install requirements: {e}", exc_info=True)
   
   # Time logging:
   requirements_time = time.time()
   minutes, seconds = divmod(requirements_time - start_time, 60)
   time_array.append({"name": "Installing requirements", "time": requirements_time - start_time})
-  logging.info(f"Launch - Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
+  logging.info(f"[launch_onlyAPI] Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
   print(f"\n-----> Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Launch API ##
   print("\n\n#----------------- ### Launching API + Models ### ------------------#\n")
-  logging.info("Launch - Launching API and models.")
+  logging.info("[launch_onlyAPI] Launching API and models.")
   try:
       # When importing the API code, the various models the system uses will also be loaded in now, as the API code is where these models are called on later. 
       import backend.APIcode as API
       API.API(args.port)
-      logging.info(f"Launch - Finished launching API and models.")
+      logging.info(f"[launch_onlyAPI] Finished launching API and models.")
   except Exception as e:
-      logging.error(f"Launch - An error occurred while trying to launch the API and models: {e}", exc_info=True)
+      logging.error(f"[launch_onlyAPI] An error occurred while trying to launch the API and models: {e}", exc_info=True)
   
   # Time logging:
   api_time = time.time() 
   minutes, seconds = divmod(api_time - requirements_time, 60)
   time_array.append({"name": "Launching APIs", "time": api_time - requirements_time})
-  logging.info(f"Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
+  logging.info(f"[launch_onlyAPI] Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
   print(f"\n-----> Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Load GROBID and launch GROBID server ##
   print("\n\n#------------------- ### Load & launch GROBID ### ------------------#\n")
-  logging.info("Launch - Loading and launching GROBID.")
+  logging.info("[launch_onlyAPI] Loading and launching GROBID.")
   try:
       # Import grobid module. This will also automatically download, install and launch Grobid server.
       import backend.grobidmodule as grobidmod
       grobidmod.loadGrobidPythonway()
-      logging.info(f"Launch - Finished loading and launching GROBID.")
+      logging.info(f"[launch_onlyAPI] Finished loading and launching GROBID.")
   except Exception as e:
-    logging.error(f"Launch - An error occurred while trying to load and launch GROBID: {e}", exc_info=True)
+    logging.error(f"[launch_onlyAPI] An error occurred while trying to load and launch GROBID: {e}", exc_info=True)
   
   # Time logging:
   grobid_time = time.time()
   minutes, seconds = divmod(grobid_time - api_time, 60)
   time_array.append({"name": "Launching GROBID", "time": grobid_time - api_time})
-  logging.info(f"Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
+  logging.info(f"[launch_onlyAPI] Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
   print(f"\n-----> Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Start API using tunnel ##
   print("\n\n#------------ ### Starting API through tunnel ### ------------#\n")
-  logging.info(f"Launch - Starting API through tunnel: {args.tunnel}.")
+  logging.info(f"[launch_onlyAPI] Starting API through tunnel: {args.tunnel}.")
   try:
       # Import frontendmodule, which will be used to expose localhost to internet.
       import frontend.frontendmodule as front
       # Host frontend through streamlit
       front.startAPI(args.tunnel, args.port)
-      logging.info(f"Launch - Finished starting API through tunnel.")
+      logging.info(f"[launch_onlyAPI] Finished starting API through tunnel.")
   except Exception as e:
-    logging.error(f"Launch - An error occurred while trying to start API through tunnel: {e}", exc_info=True)
+    logging.error(f"[launch_onlyAPI] An error occurred while trying to start API through tunnel: {e}", exc_info=True)
   
   # Time logging:
   localtunnel_api_time = time.time()
@@ -123,9 +123,8 @@ def startEverything():
   print("\n\n")
   for time_object in time_array:
     minutes, seconds = divmod(time_object["time"], 60)
-    logging.info(f"{time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")
+    logging.info(f"[launch_onlyAPI] {time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   print("\n\n#--------------------- ### User Interaction ### --------------------#\n")
-
 
 startEverything()
