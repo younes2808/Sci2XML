@@ -366,6 +366,69 @@ def API(portnr):
     response = pipe((query, image))
     #print(response.text)
     return response.text
+  
+  def callML(model, image):
+    """
+    Calls the ML model that will classify the image.
+
+    Paramaters:
+    model: The ML model.
+    image: The image to be classified.
+
+    Returns:
+    predicted_class_name: The name of the predicted class.
+    """
+    print(f'callML is running with model: {model} and image: {image}')
+    # Load the image
+    #image_path = image  # Replace with the path to your image
+    #image = Image.open(image_path)
+    image = image.convert("RGB")  # Ensure the image is in RGB format
+
+    img_size = 224
+
+    # Define the same transformations used during training
+    data_transforms = A.Compose([
+        A.Resize(img_size, img_size),
+        A.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+        A.pytorch.transforms.ToTensorV2()
+    ])
+
+    # Apply transformations
+    transformed_image = data_transforms(image=np.array(image))["image"]
+
+    # Add a batch dimension
+    transformed_image = transformed_image.unsqueeze(0)
+
+    # Move the image to the appropriate device (GPU or CPU)
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    transformed_image = transformed_image.to(device)
+
+    # Make prediction
+    predicted_class = model.predict(transformed_image)
+
+    # Get the class name
+    class_names = ['just_image', 'bar_chart', 'diagram', 'flow_chart', 'graph',
+                  'growth_chart', 'pie_chart', 'table', 'text_sentence']
+    predicted_class_name = class_names[predicted_class[0]]
+
+    print(f"Predicted class: {predicted_class_name}")
+    return predicted_class_name
+
+ 
+  @app.route('/callVLM', methods=['POST'])
+  def call_vlm(): # NOT IN USE
+      print("-- You have reached endpoint for classifier VLM --")
+
+      image = request.files['image']
+      image = Image.open(image)
+
+      query = request.files['query']
+
+      ## PROCESS IMAGE
+      response = callVLM(VLM, image, query.getvalue().decode("utf-8"))
+      #response = "VLMresponse"
+
+      return jsonify({'VLMresponse':response})
 
   @app.route('/callClassifier', methods=['POST'])
   def call_ml():
