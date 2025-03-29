@@ -40,7 +40,7 @@ def latex_validity(latex_str):
         end_count = latex_str.count(r"\end")
 
         if begin_count != end_count:
-            logging.warning(f"[app] Imbalanced \begin and \end in formula {latex_str}")
+            logging.warning(f"[app.py] Imbalanced \begin and \end in formula {latex_str}")
             return False
         
         # Check for imbalance between \left and \right
@@ -48,11 +48,11 @@ def latex_validity(latex_str):
         right_count = latex_str.count(r"\right")
 
         if left_count != right_count:
-            logging.warning(f"[app] Imbalanced \left and \right in formula {latex_str}")
+            logging.warning(f"[app.py] Imbalanced \left and \right in formula {latex_str}")
             return False
         
     except Exception as e:
-        logging.error(f"[app] An error occurred while validating formula {latex_str}: {e}", exc_info=True)
+        logging.error(f"[app.py] An error occurred while validating formula {latex_str}: {e}", exc_info=True)
         st.error(f"An error occurred while validating a formula.")
 
     return True
@@ -82,10 +82,10 @@ def clean_latex(latex_str):
         # Remove everything after (and including) \eqno
         latex_str = re.sub(r"\\eqno.*", "", latex_str)
 
-        logging.info(f"Formula {latex_str} was cleaned successfully!")
+        logging.info(f"[app.py] Formula {latex_str} was cleaned successfully!")
 
     except Exception as e:
-        logging.error(f"An error occurred while trimming formula {latex_str}: {e}", exc_info=True)
+        logging.error(f"[app.py] An error occurred while trimming formula {latex_str}: {e}", exc_info=True)
         st.error(f"An error occurred while trimming a formula.")
 
     return latex_str.strip()  # Trim any extra spaces
@@ -132,10 +132,10 @@ def processClassifierResponse(element):
                 # Inform the user if no table data is found for the current page
                 st.write(f"No data found in table on page {element.get('page_number', 'N/A')}.")
 
-        logging.info(f"Element was processed successfully!")
+        logging.info(f"[app.py] Element was processed successfully!")
 
     except Exception as e:
-        logging.error(f"An error occurred while processing the classifier response for element: {e}", exc_info=True)
+        logging.error(f"[app.py] An error occurred while processing the classifier response for element: {e}", exc_info=True)
         st.error(f"An error occurred while processing the classifier response")
 
 def process_classifier(xml_input, pdf_file):
@@ -170,7 +170,7 @@ def process_classifier(xml_input, pdf_file):
         st.session_state.charts_results_array = []
     if "tables_results_array" not in st.session_state or len(st.session_state.tables_results_array) != 0:
         st.session_state.tables_results_array = []
-    logging.info("All session state result arrays for the different elements exist and are empty")
+    logging.info("[app.py] All session state result arrays for the different elements exist and are empty")
 
     # Start of the progress bar
     for percent_complete in range(1):
@@ -178,14 +178,14 @@ def process_classifier(xml_input, pdf_file):
             # Prepare the files dict to be sent in the request.
             files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
 
-            logging.info(f"Call the table parser API endpoint")
+            logging.info(f"[app.py] Call the table parser API endpoint")
             # Send to API endpoint for processing of tables
             response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
             response.raise_for_status()  # Raise exception if status is not 200
             logging.info(f'Response from table parser: {response}')
 
         except requests.exceptions.RequestException as e:
-            logging.error(f"An error occurred while communication with the table parser: {e}", exc_info=True)
+            logging.error(f"[app.py] An error occurred while communication with the table parser: {e}", exc_info=True)
             st.error(f"An error occurred while communication with the table parser.")
         
         try:
@@ -234,10 +234,10 @@ def process_classifier(xml_input, pdf_file):
                             "table_context": table_context,
                             "table_data": table_data
                         })
-            logging.info(f'The XML was parsed successfully!')
+            logging.info(f'[app.py] The XML was parsed successfully!')
 
         except ET.ParseError as e:
-            logging.error(f"An error occured while parsing the XML file: {e}", exc_info=True)
+            logging.error(f"[app.py] An error occured while parsing the XML file: {e}", exc_info=True)
             st.error(f"An error occured while parsing the XML file")
         
         # Update progress bar
@@ -252,19 +252,19 @@ def process_classifier(xml_input, pdf_file):
 
             # Classify the figures and formulas by calling 'openXMLfile' from the classifier module
             images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
-            logging.info(f'The non-textual elements were classified successfully!')
+            logging.info(f'[app.py] The non-textual elements were classified successfully!')
 
         except Exception as e:
-            logging.error(f"An error occured while classifying the non-textual elements: {e}", exc_info=True)
+            logging.error(f"[app.py] An error occured while classifying the non-textual elements: {e}", exc_info=True)
             st.error(f"An error occured while classifying the non-textual elements.")
 
         try:
             # Parse the figures by calling 'processFigures' from the classifier module
             classifier.processFigures(figures, images, frontend=True)
-            logging.info(f'The figures were parsed successfully!')
+            logging.info(f'[app.py] The figures were parsed successfully!')
 
         except Exception as e:
-            logging.error(f"An error occured while parsing the figures: {e}", exc_info=True)
+            logging.error(f"[app.py] An error occured while parsing the figures: {e}", exc_info=True)
             st.error(f"An error occured while parsing the figures.")
 
         # Update progress bar
@@ -273,10 +273,10 @@ def process_classifier(xml_input, pdf_file):
         try:
             # Parse the formulas by calling 'processFormulas' from the classifier module
             classifier.processFormulas(formulas, images, mode="regex", frontend=True)
-            logging.info(f'The formulas were parsed successfully!')
+            logging.info(f'[app.py] The formulas were parsed successfully!')
 
         except Exception as e:
-            logging.error(f"An error occured while parsing the formulas: {e}", exc_info=True)
+            logging.error(f"[app.py] An error occured while parsing the formulas: {e}", exc_info=True)
             st.error(f"An error occured while parsing the formulas.")
 
         try:
@@ -308,10 +308,10 @@ def process_classifier(xml_input, pdf_file):
 
             # Store the cleaned, prettified XML back into session state
             st.session_state.interpreted_xml_text = final_xml_with_encoding
-            logging.info(f'The XML file was prettified successfully!')
+            logging.info(f'[app.py] The XML file was prettified successfully!')
 
         except Exception as e:
-            logging.error(f"An error occured while prettifying the XML file: {e}", exc_info=True)
+            logging.error(f"[app.py] An error occured while prettifying the XML file: {e}", exc_info=True)
             st.error(f"An error occured while pprettifying the XML file.")
 
         # Update the progress bar
@@ -340,20 +340,20 @@ def process_pdf(file, params=None):
     grobid_url = "http://172.28.0.12:8070/api/processFulltextDocument"
 
     try:
-        logging.info(f"Call GROBID API endpoint")
+        logging.info(f"[app.py] Call GROBID API endpoint")
         response = requests.post(grobid_url, files=files, data=params) # Send request to GROBID
         response.raise_for_status()  # Raise exception if status is not 200
-        logging.info(f'Response from GROBID: {response}')
+        logging.info(f'[app.py] Response from GROBID: {response}')
 
         # Check if coordinates are missing in the response
         if 'coords' not in response.text:
-            logging.warning("No coordinates found in PDF file. Please check GROBID settings.")
+            logging.warning("[app.py] No coordinates found in PDF file. Please check GROBID settings.")
             st.warning("No coordinates found in PDF file. Please check GROBID settings.")
 
         return response.text  # Return XML recevied from GROBID
 
     except requests.exceptions.RequestException as e:
-        logging.error(f"An error occured while communicating with GROBID: {e}", exc_info=True)
+        logging.error(f"[app.py] An error occured while communicating with GROBID: {e}", exc_info=True)
         st.error(f"An error occured while communicating with GROBID.")
         return None  # Return None on error
 
@@ -384,7 +384,7 @@ def parse_coords_for_figures(xml_content):
 
         st.session_state.count_figures = len(figures)  # Count figures
         st.session_state.count_formulas = len(formulas)  # Count formulas
-        logging.info(f"Found {st.session_state.count_figures} figures and {st.session_state.count_formulas} formulas in PDF file.")
+        logging.info(f"[app.py] Found {st.session_state.count_figures} figures and {st.session_state.count_formulas} formulas in PDF file.")
 
         # Process each figure
         for figure in figures:
@@ -406,7 +406,7 @@ def parse_coords_for_figures(xml_content):
                             })
 
                     except ValueError as e:
-                        logging.error(f"An error occured while parsing figure group '{group}': {e}")
+                        logging.error(f"[app.py] An error occured while parsing figure group '{group}': {e}")
                         st.error(f"An error occured while parsing a figure group.")
 
         # Process each formula
@@ -429,11 +429,11 @@ def parse_coords_for_figures(xml_content):
                             })
 
                     except ValueError as e:
-                        logging.error(f"An error occured while parsing figure group '{group}': {e}")
+                        logging.error(f"[app.py] An error occured while parsing figure group '{group}': {e}")
                         st.error(f"An error occured while parsing a figure group.")
 
     except ET.ParseError as e:
-        logging.error(f"An error occured while parsing GROBID XML: {e}", exc_info=True)
+        logging.error(f"[app.py] An error occured while parsing GROBID XML: {e}", exc_info=True)
         st.error(f"An error occured while parsing the GROBID XML.")
 
     return annotations
@@ -450,9 +450,9 @@ def update_xml():
     """
     try:
         st.session_state.xml_text = st.session_state.xml_editor  # Update xml_text with the current content in text area
-        logging.info(f"Variable xml_text successfully set to the current content in text area.")
+        logging.info(f"[app.py] Variable xml_text successfully set to the current content in text area.")
     except Exception as e:
-        logging.error(f"An error occurred while setting variable xml_text to the current content in text area: {e}", exc_info=True)
+        logging.error(f"[app.py] An error occurred while setting variable xml_text to the current content in text area: {e}", exc_info=True)
         st.error(f"An error occurred while setting variable xml_text to the current content in text area")
 
 def update_interpreted_xml():
@@ -467,9 +467,9 @@ def update_interpreted_xml():
     """
     try:
         st.session_state.interpreted_xml_text = st.session_state.interpreted_xml_editor  # Update xml_text with the current content in text area
-        logging.info(f"Variable interpreted_xml_text successfully set to the current content in text area.")
+        logging.info(f"[app.py] Variable interpreted_xml_text successfully set to the current content in text area.")
     except Exception as e:
-        logging.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area: {e}", exc_info=True)
+        logging.error(f"[app.py] An error occurred while setting variable interpreted_xml_text to the current content in text area: {e}", exc_info=True)
         st.error(f"An error occurred while setting variable interpreted_xml_text to the current content in text area")
 
 def main():
@@ -493,7 +493,7 @@ def main():
     8. Enables the user to refine and download the final XML file.
     """
     st.set_page_config(layout="wide") # Configure the page layout to be wide
-    logging.info("Streamlit page configuration set successfully.")
+    logging.info("[app.py] Streamlit page configuration set successfully.")
 
     try:
         # Defines the file path to the CSS file
@@ -502,19 +502,19 @@ def main():
         # Opens the CSS file in read mode and store its content
         with open(css_path, "r") as f: 
             css_content = f.read() # Reads the content of the CSS file
-        logging.info(f"CSS file '{css_path}' read successfully.")
+        logging.info(f"[app.py] CSS file '{css_path}' read successfully.")
 
         # Render the CSS content in the Streamlit app using Markdown with HTML support enabled
         # This allows us to display the raw HTML/CSS content within the Streamlit interface
         st.markdown(f"{css_content}", unsafe_allow_html=True)
-        logging.info("CSS applied to the Streamlit app successfully.")
+        logging.info("[app.py] CSS applied to the Streamlit app successfully.")
 
     except FileNotFoundError:
-        logging.error(f"CSS file not found: {css_path}", exc_info=True)
+        logging.error(f"[app.py] CSS file not found: {css_path}", exc_info=True)
         st.error(f"CSS file not found.")
 
     except Exception as e:
-        logging.error(f"An error occurred while applying CSS: {e}", exc_info=True)
+        logging.error(f"[app.py] An error occurred while applying CSS: {e}", exc_info=True)
         st.error(f"An error occurred while applying CSS.")
 
     # Title/logo
@@ -523,7 +523,7 @@ def main():
     # Declare pdf_ref in session state
     if 'pdf_ref' not in st.session_state:
         st.session_state.pdf_ref = None
-        logging.info("pdf_ref was missing in session state and has now been initialized.")
+        logging.info("[app.py] pdf_ref was missing in session state and has now been initialized.")
 
     # Access the uploaded ref via a key
     uploaded_pdf = st.file_uploader("", type=('pdf'), key='pdf', accept_multiple_files=False) # The application only works with one PDF file at a time
@@ -536,7 +536,7 @@ def main():
             """
             # Reset session state variables when a new file is uploaded
             if "pdf_ref" in st.session_state and uploaded_pdf != st.session_state.pdf_ref:
-                logging.info("Uploaded PDF differs from the stored reference. Resetting session state variables")
+                logging.info("[app.py] Uploaded PDF differs from the stored reference. Resetting session state variables")
                 st.session_state.show_interpretation_results = False
                 st.session_state.xml_text = None
                 st.session_state.interpreted_xml_text = None
@@ -549,7 +549,7 @@ def main():
 
             # Reset pdf_ref when no file is uploaded
             if not st.session_state.pdf:
-                logging.warning("No PDF file found in session state. Resetting 'pdf_ref' to None.")
+                logging.warning("[app.py] No PDF file found in session state. Resetting 'pdf_ref' to None.")
                 st.session_state.pdf_ref = None
 
             if st.session_state.pdf_ref:
@@ -584,10 +584,10 @@ def main():
                                 st.session_state.rectangles = []
                                 result = ""
                             status.update(label="The PDF file was processed successfully by GROBID ✅", state="complete", expanded=False)
-                            logging.info("The PDF file was processed by GROBID successfully!")
+                            logging.info("[app.py] The PDF file was processed by GROBID successfully!")
 
                         except Exception as e:
-                            logging.error(f"An error occurred when receiving the GROBID result: {e}", exc_info=True)
+                            logging.error(f"[app.py] An error occurred when receiving the GROBID result: {e}", exc_info=True)
                             st.error(f"An error occurred when receiving the GROBID result.")
 
                 # Initialize the xml_text and show_grobid_results in session_state if not already set
@@ -695,10 +695,10 @@ def main():
                                     try:
                                         # Process the PDF file and XML file by calling the classifier and parsers
                                         process_classifier(st.session_state.xml_text, st.session_state.pdf_ref)  # Use PDF file and updated XML file from session state
-                                        logging.info("The PDF file and XML file were processed by the classifier and parsers successfully!")
+                                        logging.info("[app.py] The PDF file and XML file were processed by the classifier and parsers successfully!")
 
                                     except Exception as e:
-                                        logging.error(f"An error occurred when processing the PDF file and XML file in the classifier: {e}", exc_info=True)
+                                        logging.error(f"[app.py] An error occurred when processing the PDF file and XML file in the classifier: {e}", exc_info=True)
                                         st.error(f"An error occurred when processing the PDF file and XML file in the classifier.")
 
                                 # Empty the results placeholder when all the elements have been parsed

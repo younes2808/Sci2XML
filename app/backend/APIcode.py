@@ -43,16 +43,16 @@ import backend.models.figureparser as figure
 import backend.models.tableparser as tableParser
 
 print("\n\n#---------------------- ## Loading models ## -----------------------#\n")
-logging.info(f"APIcode - Loading models.")
+logging.info(f"[APIcode.py] Loading models.")
 try:
     # Loading the various parsing models by calling the load function in their module.
     ML = classifierML.loadML()
     charter.load_UniChart()
     formula.load_Sumen()
     figureParserModel, figureParserTokenizer = figure.load()
-    logging.info(f"APIcode - Finished loading models.")
+    logging.info(f"[APIcode.py] Finished loading models.")
 except Exception as e:
-    logging.error(f"APIcode - An error occurred while loading the models: {e}", exc_info=True)
+    logging.error(f"[APIcode.py] An error occurred while loading the models: {e}", exc_info=True)
 
 def API(portnr):
   """
@@ -95,9 +95,9 @@ def API(portnr):
       # Process image:
       try:
         processedFormulaLaTex, processedFormulaNL = processFormula(file)
-        logging.info(f"APIcode - Successfully processed formula.")
+        logging.info(f"[APIcode.py] Successfully processed formula.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while processing formula: {e}", exc_info=True)
+        logging.error(f"[APIcode.py] An error occurred while processing formula: {e}", exc_info=True)
 
       # Return parsed content
       return jsonify({'element_type':"formula", 'formula': processedFormulaLaTex, "NL": processedFormulaNL, "preferred": processedFormulaLaTex})
@@ -125,9 +125,9 @@ def API(portnr):
       # Process image:
       try:
         processedChartCSV, processedChartNL = processChart(file)
-        logging.info(f"APIcode - Successfully processed chart.")
+        logging.info(f"[APIcode.py] Successfully processed chart.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while processing chart: {e}", exc_info=True)
+        logging.error(f"[APIcode.py] An error occurred while processing chart: {e}", exc_info=True)
 
       return jsonify({'element_type':"chart", 'NL': processedChartNL, "csv": processedChartCSV, "preferred": processedChartNL})
 
@@ -160,17 +160,16 @@ def API(portnr):
         # Fetch string value from bytestream
         stringio = StringIO(prompt.getvalue().decode("utf-8"), newline=None)
         string_data_prompt = stringio.read()
-        logging.info(f"APIcode - parseFigure - prompt: {string_data_prompt}.")
+        logging.info(f"[APIcode.py] parseFigure - prompt: {string_data_prompt}.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while fetching string value from bytestream: {e}", exc_info=True)
-
+        logging.error(f"[APIcode.py] An error occurred while fetching string value from bytestream: {e}", exc_info=True)
 
       # Process image:
       try:
         processedFigureNL = processFigure(file, string_data_prompt)
-        logging.info(f"APIcode - Successfully processed figure.")
+        logging.info(f"[APIcode.py] Successfully processed figure.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while processing figure: {e}", exc_info=True)
+        logging.error(f"[APIcode.py] An error occurred while processing figure: {e}", exc_info=True)
 
       return jsonify({'element_type':"figure", 'NL': processedFigureNL, "preferred": processedFigureNL})
 
@@ -199,9 +198,9 @@ def API(portnr):
       # Process image:
       try:
         processedTablesXML = processTable(pdf_file, grobid_xml_file)
-        logging.info(f"APIcode - Successfully processed table.")
+        logging.info(f"[APIcode.py] Successfully processed table.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while processing table: {e}", exc_info=True)
+        logging.error(f"[APIcode.py] An error occurred while processing table: {e}", exc_info=True)
 
       #Return the final GROBID XML as a downloadable file (with content type "application/xml")
       return Response(
@@ -231,11 +230,10 @@ def API(portnr):
       # Send to sumen:
       try:
         latex_code = formula.run_sumen_ocr(image)
-        logging.info(f"APIcode - Successfully called sumen.")
+        logging.info(f"[APIcode.py] Successfully called sumen.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while calling sumen: {e}", exc_info=True)
+        logging.error(f"[APIcode.py] An error occurred while calling sumen: {e}", exc_info=True)
       
-
       NLdata = "some NL"
       return latex_code, NLdata
 
@@ -262,9 +260,9 @@ def API(portnr):
         summary = charter.generate_unichart_response(image, "<summarize_chart><s_answer>")
         table_data = charter.generate_unichart_response(image, "<extract_data_table><s_answer>")
         structured_table_data = charter.parse_table_data(table_data)
-        logging.info(f"APIcode - Successfully called unichart.")
+        logging.info(f"[APIcode.py] Successfully called unichart.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while calling unichart: {e}", exc_info=True)
+        logging.error(f"[APIcode.py] An error occurred while calling unichart: {e}", exc_info=True)
       
       return structured_table_data, summary
 
@@ -391,10 +389,9 @@ def API(portnr):
       # Process image:
       try:
         response = classifierML.callML(ML, image)
-        logging.info(f"APIcode - Successfully classified image.")
+        logging.info(f"[APIcode.py] Successfully classified image.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while classifying image: {e}", exc_info=True)
-
+        logging.error(f"[APIcode.py] An error occurred while classifying image: {e}", exc_info=True)
 
       logging.info(f"API - callClassifier - Predicted class: {response}")
 
@@ -443,12 +440,12 @@ def API(portnr):
         response = requests.post(grobid_url, files=files, data=params)  # Use 'data' for form-data
         response.raise_for_status()  # Raise exception if status is not 200
         string_data_XML = response.text
-        logging.info(f"APIcode - Successfully called GROBID server.")
+        logging.info(f"[APIcode.py] Successfully called GROBID server.")
         # Check if coordinates are missing in the response
         if 'coords' not in response.text:
-            logging.warning("APIcode - No coordinates found in PDF file. Please check GROBID settings.")
+            logging.warning("[APIcode.py] No coordinates found in PDF file. Please check GROBID settings.")
       except Exception as e:
-        logging.error(f"APIcode - An error occurred while calling GROBID server: {e}", exc_info=True)
+        logging.error(f"[APIcode.py] An error occurred while calling GROBID server: {e}", exc_info=True)
 
       ## Table Parser ##
       logging.info(f"API - process - Initiating Table parser.")
@@ -460,7 +457,7 @@ def API(portnr):
         # Send to API endpoint for processing of tables
         response = requests.post("http://172.28.0.12:8000/parseTable", files=files)
         string_data_XML = response.text
-        logging.info(f'APIcode - Response from table parser: {response}')
+        logging.info(f'[APIcode.py] Response from table parser: {response}')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while communication with the table parser: {e}", exc_info=True)
 
@@ -469,22 +466,21 @@ def API(portnr):
       try:
         # Open the XML file and extract all figures and formulas, as well as getting each page of the PDF as an image.
         images, figures, formulas = classifier.openXMLfile(string_data_XML, byte_data_PDF, frontend=False)
-        logging.info(f'APIcode - Successfully opened XML file.')
+        logging.info(f'[APIcode.py] Successfully opened XML file.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while opening the XML file: {e}", exc_info=True)
       try:
         # Process each figure. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
         classifier.processFigures(figures, images, frontend=False)
-        logging.info(f'APIcode - Successfully processed the figures.')
+        logging.info(f'[APIcode.py] Successfully processed the figures.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while processeing figures: {e}", exc_info=True)
       try:
         # Process each formula. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
         classifier.processFormulas(formulas, images, mode="regex", frontend=False)
-        logging.info(f'APIcode - Successfully processed the formulas.')
+        logging.info(f'[APIcode.py] Successfully processed the formulas.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while processing formulas: {e}", exc_info=True)
-
 
       return str(classifier.getXML(frontend=False))
 

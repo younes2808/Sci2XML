@@ -7,6 +7,7 @@ from pyngrok import ngrok, conf
 import time
 import logging
 import sys
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -27,24 +28,24 @@ def startLocaltunnel(port):
   Returns:
   tuple: A tuple containing the public URL and password.
   """
-  logging.info(f"frontendmodule - Starting Localtunnel.")
+  logging.info(f"[frontendmodule.py] Starting Localtunnel.")
 
   # Get password (which is also the public facing ip adress): 
   res = requests.get('https://ipv4.icanhazip.com')
   passw = res.content.decode('utf8')
-  logging.info(f"frontendmodule - Password is: {passw}.")
+  logging.info(f"[frontendmodule.py] Password is: {passw}.")
 
   # Running localtunnel command:
   URL = subprocess.Popen(["npx", "localtunnel", "--port", port], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-  logging.info(f"frontendmodule - URL is: {URL}, {URL.stdout.readline}.")
+  logging.info(f"[frontendmodule.py] URL is: {URL}, {URL.stdout.readline}.")
   for line in iter(URL.stdout.readline, ''):
     match = re.search(r"(https://[a-zA-Z0-9-]+\.loca\.lt)", line)
     if match:
         public_url = match.group(1)
-        logging.info(f"frontendmodule - URL Found: {public_url}")
+        logging.info(f"[frontendmodule.py] URL Found: {public_url}")
         break
     else:
-      logging.error(f"frontendmodule - Could not find URL.")
+      logging.error(f"[frontendmodule.py] Could not find URL.")
       public_url = "URL NOT FOUND"
       break
 
@@ -60,7 +61,7 @@ def startNgrok(port):
   Returns:
   tuple: A tuple containing the public URL and password.
   """
-  logging.info(f"frontendmodule - Starting Ngrok.")
+  logging.info(f"[frontendmodule.py] Starting Ngrok.")
 
   # Lets user write their auth token:
   print("Enter your Ngrok Authtoken. Token can be found here: https://dashboard.ngrok.com/get-started/your-authtoken")
@@ -71,9 +72,9 @@ def startNgrok(port):
   try:
       public_url = ngrok.connect(port).public_url
       print(f" * ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:{port}\"")
-      logging.info(f"frontendmodule - Successfullt opened ngrok tunnel.")
+      logging.info(f"[frontendmodule.py] Successfully opened ngrok tunnel.")
   except Exception as e:
-      logging.error(f"frontendmodule - An error occurred while trying to open ngrok tunnel: {e}", exc_info=True)
+      logging.error(f"[frontendmodule.py] An error occurred while trying to open ngrok tunnel: {e}", exc_info=True)
   
   return public_url, "no password needed"
 
@@ -88,7 +89,7 @@ def startStreamlit(tunnel, portnr):
   Returns:
   None
   """
-  logging.info(f"frontendmodule - Starting Streamlit.")
+  logging.info(f"[frontendmodule.py] Starting Streamlit.")
   # Launching streamlit on localhost:
   logfile = open("logs.txt", "w")
   URL = subprocess.Popen(["streamlit", "run", "app/frontend/app.py", "&"], stdout=logfile, stderr=logfile, text=True, cwd="/content/Sci2XML")
@@ -122,7 +123,7 @@ def startAPI(tunnel, portnr):
   Returns:
   None
   """
-  logging.info(f"frontendmodule - Exposing API.")
+  logging.info(f"[frontendmodule.py] Exposing API.")
 
   # Exposing localhost through tunnel, depending on which tunnel is selected at launch:
   if (tunnel == "localtunnel"):
