@@ -17,39 +17,42 @@ logging.basicConfig(
 )
 
 def loadGrobidPythonway():
-  logging.info(f"grobidmodule - Loading Grobid.")
+  logging.info(f"grobidmodule - Loading GROBID.")
 
-  # First, check if a Grobid server is already running:
+  # First, check if a GROBID server is already running:
   serverstatus = "false"
   try:
+    # GET request to the local URL endpoint where the server would be hosted. 
     serverstatus = requests.get('http://172.28.0.12:8070/api/isalive')
     logging.info(f"grobidmodule - Server status. Up: {serverstatus}, {serverstatus.text}")
     serverstatus = serverstatus.text
   except:
-    logging.warning(f"grobidmodule - Server status. Up: {serverstatus}. No grobid server is running.")
+    logging.warning(f"grobidmodule - Server status. Up: {serverstatus}. No GROBID server is running.")
   
-  # Check if Grobid is installed and if the gradle file exists:
-  logging.info(f"grobidmodule - Grobid folder exist: {Path('grobid-0.8.1').is_dir()}")
-  logging.info(f"grobidmodule - Grobid gradlew file exist: {(Path.cwd() / 'grobid-0.8.1' / 'gradlew').exists()}")
+  # Check if GROBID is installed and if the gradle file exists:
+  logging.info(f"grobidmodule - GROBID folder exist: {Path('grobid-0.8.1').is_dir()}")
+  logging.info(f"grobidmodule - GROBID gradlew file exist: {(Path.cwd() / 'grobid-0.8.1' / 'gradlew').exists()}")
 
   if (serverstatus == "true"):
-    # No further actions needed, things are working. 
-    logging.info(f"grobidmodule - Grobid server is already running. No futher actions needed.")
+    # No further actions needed, things are working and the server is up and running.
+    logging.info(f"grobidmodule - GROBID server is already running. No futher actions needed.")
     return
   if (serverstatus == "false"):
+    # Check if GROBID is installed.
     if (Path('grobid-0.8.1').is_dir()) and ((Path.cwd() / 'grobid-0.8.1' / 'gradlew').exists()):
-      # Grobid is installed, but server is not running. We then only need to run the Gradlew run command.
-      logging.info(f"grobidmodule - Grobid server not running but Grobid exists.")
+      # GROBID is installed, but server is not running. We then only need to run the 'Gradlew run' command.
+      logging.info(f"grobidmodule - GROBID server not running but GROBID exists.")
+   
     else:
-      # Download and install Grobid, then Gradlew run to start server
-      logging.info(f"grobidmodule - Grobid server not running and Grobid doesn't exist. Downloading and installing grobid with gradle.")
-      print("---> Downloading Grobid...")
+      # Download and install GROBID, then 'Gradlew run' to start server
+      logging.info(f"grobidmodule - GROBID server not running and GROBID doesn't exist. Downloading and installing GROBID with gradle.")
+      print("---> Downloading GROBID...")
       n = subprocess.run(["wget", "https://github.com/kermitt2/grobid/archive/0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Unzipping Grobid files...")
+      print("---> Unzipping GROBID files...")
       n = subprocess.run(["unzip", "0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Installing Grobid with gradle (Takes some time)...")
+      print("---> Installing GROBID with gradle (Takes some time)...")
       grobidinstalllogfile = open("grobidinstalllog.txt", "a")
       n = subprocess.run(["./gradlew", "clean", "install"], stdout=grobidinstalllogfile, stderr=grobidinstalllogfile, text=True, cwd="/content/grobid-0.8.1/")
 
@@ -58,15 +61,15 @@ def loadGrobidPythonway():
   #  continues loading and thus halts the application.
   logging.info(f"grobidmodule - Executing command 'gradlew run'.")
   grobidrunlogfile = open("grobidrunlog.txt", "w")
-  print("---> Launching Grobid server with gradle:")
+  print("---> Launching GROBID server with gradle:")
   n = subprocess.Popen(["./gradlew", "run"], stdout=grobidrunlogfile, stderr=grobidrunlogfile, text=True, cwd="/content/grobid-0.8.1/")
   # Check grobidrunlog.txt to see when it is ready. Should be > 46 lines when ready.
 
-  print("---> Periodically checking if Grobid server is up yet:")
+  print("---> Periodically checking if GROBID server is up yet:")
   clock = -1
   while True:
     if clock == -1:
-      print("\n\nChecking Grobid server status:")
+      print("\n\nChecking GROBID server status:")
       res = "false"
       try:
         res = requests.get('http://172.28.0.12:8070/api/isalive')
@@ -74,14 +77,14 @@ def loadGrobidPythonway():
         print("Could not reach GROBID server.")
       print("GROBID Server Status: Down")
       if (res == "false"):
-        print("-->grobid server not up yet, trying again in 5 sec...")
+        print("-->GROBID server not up yet, trying again in 5 sec...")
         clock = 5
       elif (res.content.decode('utf8') == "true"):
         print("GROBID Server Status: Up")
         logging.info(f"grobidmodule - GROBID server is up.")
         break
       else:
-        print("-->grobid server not up yet, trying again in 5 sec...")
+        print("-->GROBID server not up yet, trying again in 5 sec...")
         clock = 5
     sys.stdout.write("\r")
     sys.stdout.write("Trying again in {:2d} seconds.".format(clock)) 
@@ -89,5 +92,4 @@ def loadGrobidPythonway():
     time.sleep(1)
     clock -= 1
 
-  #!curl http://172.28.0.12:8070/api/isalive
-  print("\nGrobid Server adress: ", socket.gethostbyname(socket.gethostname()), "/8070")
+  print("\GROBID Server adress: ", socket.gethostbyname(socket.gethostname()), "/8070")
