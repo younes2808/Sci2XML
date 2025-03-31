@@ -290,7 +290,10 @@ def API(portnr):
         return jsonify({"error": f"Invalid image file: {str(e)}"}), 400
 
       try:
-        answer = figureParserModel.query(image, f"Describe this image deeply. Caption it. Here is the figure description for context: {promptContext}")["answer"]
+        if (0 < len(promptContext) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
+          answer = figureParserModel.query(image, f"Describe this image deeply. Caption it. Here is the figure description for context: {promptContext}")["answer"]
+        else: # If extracted prompt-context is of length 0 or very long then simply do not give the model additional context:
+          answer = figureParserModel.query(image, f"Describe this image deeply. Caption it.")["answer"]
       except Exception as e:
         return jsonify({"error": f"Model query failed: {str(e)}"}), 500
 
