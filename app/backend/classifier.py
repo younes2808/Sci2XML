@@ -122,7 +122,7 @@ def addToXMLfile(type, name, newContent, frontend):
                         parentTag.contents[parentTag.contents.index(text)].replace_with(newTag) # Replace text with new tag 
                         textWithoutTag = [] # Make sure it doesnt try to replace the newly inserted tag with another later.
                         break
-            newTag.string = str(newContent["csv"]) # Set content of new tag to be the value of object key.
+            newTag.string = str(newContent["formula"]) # Set content of new tag to be the value of object key.
             logging.info(f"[classifier.py] Successfully added new formula content to parentTag.")
     except Exception as e:
         logging.error(f"[classifier.py] An error occurred while trying to add new formula content to parentTag: {e}", exc_info=True)
