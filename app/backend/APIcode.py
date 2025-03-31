@@ -400,9 +400,10 @@ def API(portnr):
   @app.route('/process', methods=['POST'])
   def initiate_processing():
       """
-      Endpoint for initiating the entire process.
+      Endpoint for initiating the entire process, without the use of frontend.
       First reads the uploaded PDF, then sends it to GROBID server.
-      Then calls the classifier functions to process the figures and formulas.
+      Then calls on tableparser. Then calls the classifier functions, which handles all
+       formulas, charts and figures.
       In the end it calls on getXML() and returns the result.
 
       Paramaters:

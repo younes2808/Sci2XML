@@ -383,22 +383,22 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
             except Exception as e:
                 logging.error(f"[classifier.py] An error occurred while trying create a bytes object of image of element: {e}", exc_info=True)
 
-        # Send image of formula to API endpoint where it should be processed by a formula parser:
-        try:
-            APIresponse = requests.post(apiURL+"parseFormula", files={'image': img_byte_arr})
-            # Check that the response is positive:
-            if (APIresponse.status_code != 200):
-                logging.error(f"[classifier.py] Something went wrong in the API: {APIresponse.content}")
-                return # Error in API, a proper response is not received.
-            APIresponse = APIresponse.json()
-            APIresponse["element_number"] = PDFelementNr
-            APIresponse["page_number"] = pagenr
-            APIresponse["tag"] = "latex"
-            logging.info(f"[classifier.py] Received response from formulaParser in API.")
-        except Exception as e:
-            logging.error(f"[classifier.py] An error occurred while calling API endpoint for formula parser: {e}", exc_info=True)
+            # Send image of formula to API endpoint where it should be processed by a formula parser:
+            try:
+                APIresponse = requests.post(apiURL+"parseFormula", files={'image': img_byte_arr})
+                # Check that the response is positive:
+                if (APIresponse.status_code != 200):
+                    logging.error(f"[classifier.py] Something went wrong in the API: {APIresponse.content}")
+                    return # Error in API, a proper response is not received.
+                APIresponse = APIresponse.json()
+                APIresponse["element_number"] = PDFelementNr
+                APIresponse["page_number"] = pagenr
+                APIresponse["tag"] = "latex"
+                logging.info(f"[classifier.py] Received response from formulaParser in API.")
+            except Exception as e:
+                logging.error(f"[classifier.py] An error occurred while calling API endpoint for formula parser: {e}", exc_info=True)
 
-        logging.info(f"[classifier.py] Response from formulaParser: {APIresponse}")
+            logging.info(f"[classifier.py] Response from formulaParser: {APIresponse}")
 
     ## If subtype is unknown its better to abort and not add anything back into the XML.
     if (subtype == "unknown"):
