@@ -52,7 +52,7 @@ def loadGrobidPythonway():
       print("---> Unzipping GROBID files...")
       n = subprocess.run(["unzip", "0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Installing GROBID with Gradle... (Expected duration: ~5 min)")
+      print("---> Installing GROBID with Gradle... (Expected duration: ~4 min)")
       grobidinstalllogfile = open("grobidinstalllog.txt", "a")
       n = subprocess.run(["./gradlew", "clean", "install"], stdout=grobidinstalllogfile, stderr=grobidinstalllogfile, text=True, cwd="/content/grobid-0.8.1/")
 

@@ -109,7 +109,7 @@ def startStreamlit(tunnel, portnr):
     file.write(passw)
 
   print("\n\n############################################################")
-  print(f"----->Public URL: {url} \n----->Password: {passw}")
+  print(f"----> Public URL: {url} \n----> Password: {passw}")
   print("############################################################\n")
 
 def startAPI(tunnel, portnr):
@@ -140,5 +140,5 @@ def startAPI(tunnel, portnr):
     file.write(passw)
 
   print("\n\n############################################################")
-  print(f"----->Public URL: {url} \n----->Password: {passw}")
+  print(f"----> Public URL: {url} \n----> Password: {passw}")
   print("############################################################\n")

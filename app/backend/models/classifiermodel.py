@@ -94,7 +94,7 @@ def loadML():
   # Load the saved model
   global ML
   ML = densenet
-  print("----->ML classifier model loaded successfully")
+  print("----> ML classifier model loaded successfully")
   return densenet
 
 def callML(model, image):

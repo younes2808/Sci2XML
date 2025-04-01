@@ -46,13 +46,13 @@ def startEverything():
   try:
     # Using subprocess to install the pip, apt-get and npm requirements.
     log = open("reqlog.txt", "a")
-    print("----------> pip installs...")
+    print("----> pip installs...")
     n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
-    print("----------> apt-get installs...")
+    print("----> apt-get installs...")
     n = subprocess.run(["apt", "update"], stdout=log, stderr=log, text=True)
     n = subprocess.run(["apt-get", "install", "poppler-utils"], stdout=log, stderr=log, text=True)
     n = subprocess.run(["apt-get", "install", "-y", "libvips"], stdout=log, stderr=log, text=True)
-    print("----------> npm installs...")
+    print("----> npm installs...")
     n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
     logging.info(f"[launch.py] Finished installing requirements.")
   except Exception as e:
@@ -63,7 +63,7 @@ def startEverything():
   minutes, seconds = divmod(requirements_time - start_time, 60)
   time_array.append({"name": "Installing requirements", "time": requirements_time - start_time})
   logging.info(f"[launch.py] Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
-  print(f"\n-----> Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
+  print(f"\n----> Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Launch API ##
   print("\n\n#----------------- ### Launching API + Models ### ------------------#\n")
@@ -81,7 +81,7 @@ def startEverything():
   minutes, seconds = divmod(api_time - requirements_time, 60)
   time_array.append({"name": "Launching APIs", "time": api_time - requirements_time})
   logging.info(f"[launch.py] Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
-  print(f"\n----->Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
+  print(f"\n----> Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Load GROBID and launch GROBID server ##
   print("\n\n#------------------- ### Load & launch GROBID ### ------------------#\n")

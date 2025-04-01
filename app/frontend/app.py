@@ -111,7 +111,7 @@ def processClassifierResponse(element):
         if element['element_type'] == 'formula':
             st.session_state.formulas_results_array.append(element) # Append element to the array
             st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}") # Display page number and formula number as the header
-            if latex_validity({clean_latex(element.get('formula', 'N/A'))}):
+            if latex_validity(clean_latex(element.get('formula', 'N/A'))):
                 st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
             else:
                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format  
@@ -752,7 +752,7 @@ def main():
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
                                                             st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}") # Display page number and formula number as the header
-                                                            if latex_validity({clean_latex(formula.get('formula', 'N/A'))}):
+                                                            if latex_validity(clean_latex(formula.get('formula', 'N/A'))):
                                                                 st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
                                                             else:
                                                                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format                                                      
