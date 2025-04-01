@@ -20,7 +20,7 @@ import sys
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    format='%(asctime)s - %(levelname)s: %(message)s',
     force=True,
     handlers=[
         logging.FileHandler("app.log"),  # Log to a file named 'app.log'

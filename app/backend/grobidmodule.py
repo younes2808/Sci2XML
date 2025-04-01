@@ -8,7 +8,7 @@ import sys
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    format='%(asctime)s - %(levelname)s: %(message)s',
     force=True,
     handlers=[
         logging.FileHandler("app.log"),  # Log to a file named 'app.log'
@@ -52,7 +52,7 @@ def loadGrobidPythonway():
       print("---> Unzipping GROBID files...")
       n = subprocess.run(["unzip", "0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Installing GROBID with gradle (Takes some time)...")
+      print("---> Installing GROBID with gradle... (Expected duration: ~5 min")
       grobidinstalllogfile = open("grobidinstalllog.txt", "a")
       n = subprocess.run(["./gradlew", "clean", "install"], stdout=grobidinstalllogfile, stderr=grobidinstalllogfile, text=True, cwd="/content/grobid-0.8.1/")
 

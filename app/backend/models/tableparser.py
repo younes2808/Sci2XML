@@ -2,9 +2,17 @@ import xml.etree.ElementTree as ET
 import pdfplumber
 import re
 import logging
+import sys
 
-# Configure logging to display timestamp and message
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
+# Configure logging to store logs in a file
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s: %(message)s', # Format timestamp
+    handlers=[
+        logging.FileHandler("app.log"),  # Log to file 'app.log'
+        logging.StreamHandler(sys.stdout)  # Also log to console
+    ]
+)
 
 def extract_tables_from_pdf(pdf_path, max_margin=50):
     """

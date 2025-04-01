@@ -15,7 +15,7 @@ from annotated_text import annotated_text, annotation # Annotated text library f
 # Configure logging to store logs in a file
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s', # Format timestamp
+    format='%(asctime)s - %(levelname)s: %(message)s', # Format timestamp
     handlers=[
         logging.FileHandler("app.log"),  # Log to file 'app.log'
         logging.StreamHandler(sys.stdout)  # Also log to console
@@ -39,6 +39,10 @@ def latex_validity(latex_str):
         begin_count = latex_str.count(r"\begin")
         end_count = latex_str.count(r"\end")
 
+        logging.info(f"[app.py] Formula received in latex_validity: {latex_str}")
+        logging.info(f"[app.py] \begin count: {begin_count}")
+        logging.info(f"[app.py] \end count: {end_count}")
+
         if begin_count != end_count:
             logging.warning(f"[app.py] Imbalanced \begin and \end in formula {latex_str}")
             return False
@@ -47,10 +51,13 @@ def latex_validity(latex_str):
         left_count = latex_str.count(r"\left")
         right_count = latex_str.count(r"\right")
 
+        logging.info(f"[app.py] \left count: {left_count}")
+        logging.info(f"[app.py] \right count: {right_count}")
+
         if left_count != right_count:
             logging.warning(f"[app.py] Imbalanced \left and \right in formula {latex_str}")
             return False
-        
+    
     except Exception as e:
         logging.error(f"[app.py] An error occurred while validating formula {latex_str}: {e}", exc_info=True)
         st.error(f"An error occurred while validating a formula.")
