@@ -77,7 +77,7 @@ def loadGrobidPythonway():
         print("Could not reach GROBID server.")
       print("GROBID server status: Down")
       if (res == "false"):
-        print("--> GROBID server not up yet, trying again in 5 sec...")
+        print("---> GROBID server not up yet, trying again in 5 sec...")
         clock = 5
       elif (res.content.decode('utf8') == "true"):
         print("GROBID server status: Up")
