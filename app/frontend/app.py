@@ -22,6 +22,48 @@ logging.basicConfig(
     ]
 )
 
+def latex_validity(latex_str):
+    """
+    Checks if the LaTeX string has matching \left and \right commands. 
+    Checks if the LaTeX string has matching \begin and \end commands. 
+
+    Parameters:
+    latex_str (str): The formula in LaTeX format.
+
+    Returns:
+    valid (bool): If the formula is on LaTeX format, it returns True. If not, it returns False.
+    """
+
+    try:
+        # Check for imbalance between \begin and \end
+        begin_count = latex_str.count(r"\begin")
+        end_count = latex_str.count(r"\end")
+
+        logging.info(f"[app.py] Formula received in latex_validity: {latex_str}")
+        logging.info(f"[app.py] \\begin count: {begin_count}")
+        logging.info(f"[app.py] \\end count: {end_count}")
+
+        if begin_count != end_count:
+            logging.warning(f"[app.py] Imbalanced \\begin and \\end in formula {latex_str}")
+            return False
+
+        # Check for imbalance between \left and \right
+        left_count = latex_str.count(r"\left")
+        right_count = latex_str.count(r"\right")
+
+        logging.info(f"[app.py] \\left count: {left_count}")
+        logging.info(f"[app.py] \\right count: {right_count}")
+
+        if left_count != right_count:
+            logging.warning(f"[app.py] Imbalanced \\left and \\right in formula {latex_str}")
+            return False
+
+    except Exception as e:
+        logging.error(f"[app.py] An error occurred while validating formula {latex_str}: {e}", exc_info=True)
+        st.error(f"An error occurred while validating a formula.")
+
+    return True
+
 def clean_latex(latex_str):
     """
     Fixes the incorrect usage of \boldmath
@@ -69,10 +111,10 @@ def processClassifierResponse(element):
         if element['element_type'] == 'formula':
             st.session_state.formulas_results_array.append(element) # Append element to the array
             st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}") # Display page number and formula number as the header
-            try:
+            if latex_validity(element.get('formula', 'N/A')):
                 st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
-            except:
-                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format             
+            else:
+                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format  
         
         elif element['element_type'] == "figure":
             st.session_state.figures_results_array.append(element) # Append element to the array
@@ -617,11 +659,11 @@ def main():
                                     annotated_text(
                                         annotation("Figures", "", background="#CC0000", color="#")
                                     )
-                                logging.info("[app.py] Annotated Text was displayed successfully!")
+                                logging.info("[app.py] Annoted Text was displayed successfully!")
 
                             except Exception as e:
-                                logging.error(f"[app.py] An error occurred when calling Annotated Text: {e}", exc_info=True)
-                                st.error(f"An error occurred when calling Annotated Text.")
+                                logging.error(f"[app.py] An error occurred when calling Annoted Text: {e}", exc_info=True)
+                                st.error(f"An error occurred when calling Annoted Text.")
 
                         # XML View with raw content
                         elif st.session_state.grobid_results_view_option == "XML 📝":
@@ -710,10 +752,10 @@ def main():
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
                                                             st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}") # Display page number and formula number as the header
-                                                            try:
+                                                            if latex_validity(formula.get('formula', 'N/A')):
                                                                 st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
-                                                            except:
-                                                                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format 
+                                                            else:
+                                                                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format                                                      
                                                     else:
                                                         st.warning("No formulas detected in PDF file.")
 
