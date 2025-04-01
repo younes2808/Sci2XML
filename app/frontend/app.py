@@ -67,7 +67,7 @@ def latex_validity(latex_str):
 def clean_latex(latex_str):
     """
     Fixes the incorrect usage of \boldmath
-    Removes everything after (and including) hskip, eqno and tag.
+    Removes hskip, eqno and tag.
 
     Paramaters:
     latex_str (str): The formula on latex format
@@ -80,14 +80,14 @@ def clean_latex(latex_str):
         # Remove \boldmath if it's used outside a valid math block, like an inline formula
         latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
         
-        # Remove everything after (and including) \hskip
-        latex_str = re.sub(r"\\hskip.*", "", latex_str)
+        # Remove \hskip { ... } and everything after it on the same line
+        latex_str = re.sub(r'\\hskip\s*{[^}]*}\s*', '', latex_str)
 
-        # Remove everything after (and including) \tag
-        latex_str = re.sub(r"\\tag.*", "", latex_str)
+        # Remove \tag { ... } and everything after it on the same line
+        latex_str = re.sub(r'\\tag\s*{[^}]*}\s*', '', latex_str)
 
-        # Remove everything after (and including) \eqno
-        latex_str = re.sub(r"\\eqno.*", "", latex_str)
+        # Remove \eqno { ... } and everything after it on the same line
+        latex_str = re.sub(r'\\eqno\s*{[^}]*}\s*', '', latex_str)
 
         logging.info(f"[app.py] Formula {latex_str} was cleaned successfully!")
 
@@ -111,8 +111,9 @@ def processClassifierResponse(element):
         if element['element_type'] == 'formula':
             st.session_state.formulas_results_array.append(element) # Append element to the array
             st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}") # Display page number and formula number as the header
-            if latex_validity(element.get('formula', 'N/A')):
-                st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
+            formula = {clean_latex(element.get('formula', 'N/A'))}
+            if latex_validity(formula):
+                st.markdown(rf"$$ {formula} $$") # Display the formula itself if on valid LaTeX format
             else:
                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format  
         
@@ -752,8 +753,9 @@ def main():
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
                                                             st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}") # Display page number and formula number as the header
-                                                            if latex_validity(formula.get('formula', 'N/A')):
-                                                                st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
+                                                            formula = {clean_latex(formula.get('formula', 'N/A'))}
+                                                            if latex_validity(formula):
+                                                                st.markdown(rf"$$ {formula} $$") # Display the formula itself if on valid LaTeX format
                                                             else:
                                                                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format                                                      
                                                     else:
