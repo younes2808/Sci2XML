@@ -48,8 +48,8 @@ def latex_validity(latex_str):
             return False
 
         # Check for imbalance between \left and \right
-        left_count = latex_str.count(r"\\left")
-        right_count = latex_str.count(r"\\right")
+        left_count = latex_str.count(r"\left")
+        right_count = latex_str.count(r"\right")
 
         logging.info(f"[app.py] \\left count: {left_count}")
         logging.info(f"[app.py] \\right count: {right_count}")
@@ -66,7 +66,7 @@ def latex_validity(latex_str):
 
 def clean_latex(latex_str):
     """
-    Fixes the incorrect usage of \boldmath and \big
+    Fixes the incorrect usage of \boldmath
     Removes everything after (and including) hskip, eqno and tag.
 
     Paramaters:
@@ -76,10 +76,6 @@ def clean_latex(latex_str):
     latex_str.strip (str): The stripped formula
     """
     try:
-        # Fix incorrect norm usage (\big{\|} to \left\| and \|_2^2 to \left\| \cdot \right\|_2^2)
-        latex_str = re.sub(r'\\big{\\|}', r'\\left\\|', latex_str)
-        latex_str = re.sub(r'\\|_2\^2', r'\\left\\| \\cdot \\right\\|_2^2', latex_str)
-
         # Remove \boldmath if it's used incorrectly (outside of a valid math environment)
         # Remove \boldmath if it's used outside a valid math block, like an inline formula
         latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
@@ -634,27 +630,40 @@ def main():
                         # Display PDF view with annotations
                         if st.session_state.grobid_results_view_option == "PDF 📄":
                             # Show the PDF with annotations (rectangles) and rendered text
-                            pdf_viewer(input=st.session_state.pdf_ref.getvalue(), height=775, annotations=st.session_state.rectangles, render_text=True, annotation_outline_size=2)
-                            
-                            # Display annotation text based on the presence of formulas and figures
-                            if st.session_state.count_formulas > 0 and st.session_state.count_figures > 0:
-                                # Annotate both formulas and figures
-                                annotated_text(
-                                    annotation("Formulas", "", background="#0000FF", color="#FFFFFF"), " ",
-                                    annotation("Figures", "", background="#CC0000", color="#FFFFFF")
-                                )
+                            try:
+                                logging.info("[app.py] Calling the PDF Viewer")
+                                pdf_viewer(input=st.session_state.pdf_ref.getvalue(), height=775, annotations=st.session_state.rectangles, render_text=True, annotation_outline_size=2)
+                                logging.info("[app.py] The PDF file was processed by PDF Viewer successfully!")
 
-                            elif st.session_state.count_formulas > 0:
-                                # Annotate only formulas
-                                annotated_text(
-                                    annotation("Formulas", "", background="#0000FF", color="#FFFFFF")
-                                )
+                            except Exception as e:
+                                logging.error(f"[app.py] An error occurred when calling the PDF Viewer: {e}", exc_info=True)
+                                st.error(f"An error occurred when calling the PDF Viewer.")
 
-                            elif st.session_state.count_figures > 0:
-                                # Annotate only figures
-                                annotated_text(
-                                    annotation("Figures", "", background="#CC0000", color="#")
-                                )
+                            try:
+                                # Display annotation text based on the presence of formulas and figures
+                                if st.session_state.count_formulas > 0 and st.session_state.count_figures > 0:
+                                    # Annotate both formulas and figures
+                                    annotated_text(
+                                        annotation("Formulas", "", background="#0000FF", color="#FFFFFF"), " ",
+                                        annotation("Figures", "", background="#CC0000", color="#FFFFFF")
+                                    )
+
+                                elif st.session_state.count_formulas > 0:
+                                    # Annotate only formulas
+                                    annotated_text(
+                                        annotation("Formulas", "", background="#0000FF", color="#FFFFFF")
+                                    )
+
+                                elif st.session_state.count_figures > 0:
+                                    # Annotate only figures
+                                    annotated_text(
+                                        annotation("Figures", "", background="#CC0000", color="#")
+                                    )
+                                logging.info("[app.py] Annoted Text was displayed successfully!")
+
+                            except Exception as e:
+                                logging.error(f"[app.py] An error occurred when calling Annoted Text: {e}", exc_info=True)
+                                st.error(f"An error occurred when calling Annoted Text.")
 
                         # XML View with raw content
                         elif st.session_state.grobid_results_view_option == "XML 📝":
