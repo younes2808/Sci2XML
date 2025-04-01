@@ -322,7 +322,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
 
             # Send image of figure to API endpoint where it should be processed by a chart parser:
             try:
-                APIresponse = requests.post(apiURL+"parseChart", files={'image': img_byte_arr})
+                APIresponse = requests.post(apiURL+"parseChart", files={'image': img_byte_arr, 'prompt': promptContext})
                 # Check that the response is positive:
                 if (APIresponse.status_code != 200):
                     logging.error(f"[classifier.py] Something went wrong in the API: {APIresponse.content}")
