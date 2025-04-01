@@ -66,7 +66,7 @@ def latex_validity(latex_str):
 
 def clean_latex(latex_str):
     """
-    Fixes the incorrect usage of \boldmath
+    Fixes the incorrect usage of \boldmath, \big{\|} and \mbox
     Removes hskip, eqno and tag.
 
     Paramaters:
@@ -79,6 +79,12 @@ def clean_latex(latex_str):
         # Remove \boldmath if it's used incorrectly (outside of a valid math environment)
         # Remove \boldmath if it's used outside a valid math block, like an inline formula
         latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
+        
+        # Replace \big{\|} with \big|
+        latex_str = re.sub(r'\\big\{\\\|\}', r'\\big\|', latex_str)
+
+        # Replace \mbox with \text
+        latex_str = re.sub(r'\\mbox', r'\\text', latex_str)
         
         # Remove \hskip and everything up until and including 'p t'
         latex_str = re.sub(r'\\hskip\s+([^\s]*\s*)*p\s+t', ' ', latex_str)
