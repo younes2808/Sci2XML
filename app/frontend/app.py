@@ -36,8 +36,8 @@ def latex_validity(latex_str):
 
     try:
         # Check for imbalance between \begin and \end
-        begin_count = latex_str.count(r"\begin")
-        end_count = latex_str.count(r"\end")
+        begin_count = latex_str.count(r"\begin{array}")
+        end_count = latex_str.count(r"\end{array}")
 
         logging.info(f"[app.py] Formula received in latex_validity: {latex_str}")
         logging.info(f"[app.py] \\begin count: {begin_count}")
