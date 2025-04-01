@@ -122,9 +122,23 @@ def API(portnr):
 
       file = request.files['image']
 
+      # Make sure a prompt is present:
+      if 'prompt' not in request.files:
+          return jsonify({"error": "No prompt uploaded"}), 400
+
+      prompt = request.files['prompt']
+      try:
+        # Fetch string value from bytestream
+        stringio = StringIO(prompt.getvalue().decode("utf-8"), newline=None)
+        string_data_prompt = stringio.read()
+        logging.info(f"[APIcode.py] parseFigure - prompt: {string_data_prompt}.")
+      except Exception as e:
+        logging.error(f"[APIcode.py] An error occurred while fetching string value from bytestream: {e}", exc_info=True)
+
+
       # Process image:
       try:
-        processedChartCSV, processedChartNL = processChart(file)
+        processedChartCSV, processedChartNL = processChart(file, string_data_prompt)
         logging.info(f"[APIcode.py] Successfully processed chart.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while processing chart: {e}", exc_info=True)
@@ -237,12 +251,13 @@ def API(portnr):
       NLdata = "some NL"
       return latex_code, NLdata
 
-  def processChart(file):
+  def processChart(file, promptContext):
       """
-      Processes the chart. More specifically redirects to the chart model.
+      Processes the chart. More specifically redirects to the chart model for extracting tabledata, and call moondream(figureparser) to generate summary.
 
       Paramaters:
       file: The file/image to be processed.
+      promptContext: A string with the figure description. Can be used to give context to the prompt for the VLM.
 
       Returns:
       summary: The generated summary.
@@ -255,14 +270,28 @@ def API(portnr):
           return jsonify({"error": "No selected file"}), 400
       image = Image.open(BytesIO(file.read())).convert('RGB')
 
-      # Send to unichart:
+      # Send to unichart to get parsed tabledata:
       try:
-        summary = charter.generate_unichart_response(image, "<summarize_chart><s_answer>")
         table_data = charter.generate_unichart_response(image, "<extract_data_table><s_answer>")
         structured_table_data = charter.parse_table_data(table_data)
         logging.info(f"[APIcode.py] Successfully called unichart.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while calling unichart: {e}", exc_info=True)
+
+      # Send to Moondream to get summary of chart:
+      try:
+        query = f"Describe this chart deeply. Caption it."
+        queryWcontext = f"{query} Here is the figure description for context: {promptContext}"
+        if (0 < len(promptContext) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
+          prompt = queryWcontext
+        else: # If extracted prompt-context is of length 0 or very long then simply do not give the model additional context:
+          prompt = query
+
+        logging.info(f"[APIcode.py] Prompt for moonchart used for describing chart: {prompt}.")
+        summary = figureParserModel.query(image, prompt)["answer"]
+        logging.info(f"[APIcode.py] Successfully called moondream.")
+      except Exception as e:
+        return jsonify({"error": f"Model query failed: {str(e)}"}), 500
       
       return structured_table_data, summary
 
