@@ -80,14 +80,15 @@ def clean_latex(latex_str):
         # Remove \boldmath if it's used outside a valid math block, like an inline formula
         latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
         
-        # Remove \hskip { ... } and everything after it on the same line
-        latex_str = re.sub(r'\\hskip\s*{[^}]*}\s*', '', latex_str)
+        # Remove \hskip and everything up until and including 'p t'
+        latex_str = re.sub(r'\\hskip\s+([^\s]*\s*)*p\s+t', ' ', latex_str)
 
         # Remove \tag { ... } and everything after it on the same line
-        latex_str = re.sub(r'\\tag\s*{[^}]*}\s*', '', latex_str)
+        latex_str = re.sub(r'\\tag\s*{[^}]*}\s*', ' ', latex_str)
+        latex_str = re.sub(r'\\tag\s+\*?\s*\{[^}]*\}', ' ', latex_str)
 
-        # Remove \eqno { ... } and everything after it on the same line
-        latex_str = re.sub(r'\\eqno\s*{[^}]*}\s*', '', latex_str)
+        # Remove \eqno and everything after
+        latex_str = re.sub(r'\\eqno.*', ' ', latex_str)
 
         logging.info(f"[app.py] Formula {latex_str} was cleaned successfully!")
 
