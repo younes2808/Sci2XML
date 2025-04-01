@@ -24,14 +24,14 @@ def loadGrobidPythonway():
   try:
     # GET request to the local URL endpoint where the server would be hosted. 
     serverstatus = requests.get('http://172.28.0.12:8070/api/isalive')
-    logging.info(f"[grobidmodule.py] Server status. Up: {serverstatus}, {serverstatus.text}")
+    logging.info(f"[grobidmodule.py] GROBID server status: Up.")
     serverstatus = serverstatus.text
   except:
-    logging.warning(f"[grobidmodule.py] Server status. Up: {serverstatus}. No GROBID server is running.")
+    logging.warning(f"[grobidmodule.py] GROBID server status: Down. No GROBID server is running.")
   
-  # Check if GROBID is installed and if the gradle file exists:
+  # Check if GROBID is installed and if the Gradle file exists:
   logging.info(f"[grobidmodule.py] GROBID folder exist: {Path('grobid-0.8.1').is_dir()}")
-  logging.info(f"[grobidmodule.py] GROBID gradlew file exist: {(Path.cwd() / 'grobid-0.8.1' / 'gradlew').exists()}")
+  logging.info(f"[grobidmodule.py] GROBID Gradlew file exist: {(Path.cwd() / 'grobid-0.8.1' / 'gradlew').exists()}")
 
   if (serverstatus == "true"):
     # No further actions needed, things are working and the server is up and running.
@@ -45,14 +45,14 @@ def loadGrobidPythonway():
    
     else:
       # Download and install GROBID, then 'Gradlew run' to start server
-      logging.info(f"[grobidmodule.py] GROBID server not running and GROBID doesn't exist. Downloading and installing GROBID with gradle.")
+      logging.info(f"[grobidmodule.py] GROBID server not running and GROBID doesn't exist. Downloading and installing GROBID with Gradle.")
       print("---> Downloading GROBID...")
       n = subprocess.run(["wget", "https://github.com/kermitt2/grobid/archive/0.8.1.zip"], stdout=subprocess.PIPE)
       
       print("---> Unzipping GROBID files...")
       n = subprocess.run(["unzip", "0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Installing GROBID with gradle... (Expected duration: ~5 min")
+      print("---> Installing GROBID with Gradle... (Expected duration: ~5 min)")
       grobidinstalllogfile = open("grobidinstalllog.txt", "a")
       n = subprocess.run(["./gradlew", "clean", "install"], stdout=grobidinstalllogfile, stderr=grobidinstalllogfile, text=True, cwd="/content/grobid-0.8.1/")
 
@@ -61,7 +61,7 @@ def loadGrobidPythonway():
   #  continues loading and thus halts the application.
   logging.info(f"[grobidmodule.py] Executing command 'gradlew run'.")
   grobidrunlogfile = open("grobidrunlog.txt", "w")
-  print("---> Launching GROBID server with gradle:")
+  print("---> Launching GROBID server with Gradle:")
   n = subprocess.Popen(["./gradlew", "run"], stdout=grobidrunlogfile, stderr=grobidrunlogfile, text=True, cwd="/content/grobid-0.8.1/")
   # Check grobidrunlog.txt to see when it is ready. Should be > 46 lines when ready.
 
@@ -75,12 +75,12 @@ def loadGrobidPythonway():
         res = requests.get('http://172.28.0.12:8070/api/isalive')
       except:
         print("Could not reach GROBID server.")
-      print("GROBID Server Status: Down")
+      print("GROBID server status: Down")
       if (res == "false"):
         print("-->GROBID server not up yet, trying again in 5 sec...")
         clock = 5
       elif (res.content.decode('utf8') == "true"):
-        print("GROBID Server Status: Up")
+        print("GROBID server status: Up")
         logging.info(f"[grobidmodule.py] GROBID server is up.")
         break
       else:
@@ -92,4 +92,4 @@ def loadGrobidPythonway():
     time.sleep(1)
     clock -= 1
 
-  print("\GROBID Server adress: ", socket.gethostbyname(socket.gethostname()), "/8070")
+  print("\GROBID server adress: ", socket.gethostbyname(socket.gethostname()), "/8070")

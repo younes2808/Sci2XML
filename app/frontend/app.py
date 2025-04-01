@@ -40,24 +40,24 @@ def latex_validity(latex_str):
         end_count = latex_str.count(r"\end")
 
         logging.info(f"[app.py] Formula received in latex_validity: {latex_str}")
-        logging.info(f"[app.py] \begin count: {begin_count}")
-        logging.info(f"[app.py] \end count: {end_count}")
+        logging.info(f"[app.py] \\begin count: {begin_count}")
+        logging.info(f"[app.py] \\end count: {end_count}")
 
         if begin_count != end_count:
-            logging.warning(f"[app.py] Imbalanced \begin and \end in formula {latex_str}")
+            logging.warning(f"[app.py] Imbalanced \\begin and \\end in formula {latex_str}")
             return False
-        
-        # Check for imbalance between \left and \right
-        left_count = latex_str.count(r"\left")
-        right_count = latex_str.count(r"\right")
 
-        logging.info(f"[app.py] \left count: {left_count}")
-        logging.info(f"[app.py] \right count: {right_count}")
+        # Check for imbalance between \left and \right
+        left_count = latex_str.count(r"\\left")
+        right_count = latex_str.count(r"\\right")
+
+        logging.info(f"[app.py] \\left count: {left_count}")
+        logging.info(f"[app.py] \\right count: {right_count}")
 
         if left_count != right_count:
-            logging.warning(f"[app.py] Imbalanced \left and \right in formula {latex_str}")
+            logging.warning(f"[app.py] Imbalanced \\left and \\right in formula {latex_str}")
             return False
-    
+
     except Exception as e:
         logging.error(f"[app.py] An error occurred while validating formula {latex_str}: {e}", exc_info=True)
         st.error(f"An error occurred while validating a formula.")
@@ -66,8 +66,8 @@ def latex_validity(latex_str):
 
 def clean_latex(latex_str):
     """
-    Fixes the incorrect usage of \boldmath
-    Removes everything after (and including) hskip, eqno or tag.
+    Fixes the incorrect usage of \boldmath and \big
+    Removes everything after (and including) hskip, eqno and tag.
 
     Paramaters:
     latex_str (str): The formula on latex format
@@ -76,6 +76,10 @@ def clean_latex(latex_str):
     latex_str.strip (str): The stripped formula
     """
     try:
+        # Fix incorrect norm usage (\big{\|} to \left\| and \|_2^2 to \left\| \cdot \right\|_2^2)
+        latex_str = re.sub(r'\\big{\\|}', r'\\left\\|', latex_str)
+        latex_str = re.sub(r'\\|_2\^2', r'\\left\\| \\cdot \\right\\|_2^2', latex_str)
+
         # Remove \boldmath if it's used incorrectly (outside of a valid math environment)
         # Remove \boldmath if it's used outside a valid math block, like an inline formula
         latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
@@ -533,8 +537,8 @@ def main():
         logging.info("[app.py] pdf_ref was missing in session state and has now been initialized.")
 
     # Access the uploaded ref via a key
-    uploaded_pdf = st.file_uploader("", type=('pdf'), key='pdf', accept_multiple_files=False) # The application only works with one PDF file at a time
-
+    uploaded_pdf = st.file_uploader("Upload PDF", type='pdf', key='pdf', accept_multiple_files=False, label_visibility="hidden")
+    
     if uploaded_pdf:
         @st.fragment
         def pdf_upload():
