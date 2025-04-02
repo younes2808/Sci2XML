@@ -36,8 +36,8 @@ def latex_validity(latex_str):
 
     try:
         # Check for imbalance between \begin and \end
-        begin_count = latex_str.count(r"\begin{array}")
-        end_count = latex_str.count(r"\end{array}")
+        begin_count = latex_str.count(r"\begin")
+        end_count = latex_str.count(r"\end")
 
         logging.info(f"[app.py] Formula received in latex_validity: {latex_str}")
         logging.info(f"[app.py] \\begin count: {begin_count}")
@@ -66,8 +66,8 @@ def latex_validity(latex_str):
 
 def clean_latex(latex_str):
     """
-    Fixes the incorrect usage of \boldmath
-    Removes everything after (and including) hskip, eqno and tag.
+    Fixes the incorrect usage of \boldmath, \big{\|} and \mbox
+    Removes hskip, eqno and tag.
 
     Paramaters:
     latex_str (str): The formula on latex format
@@ -80,14 +80,21 @@ def clean_latex(latex_str):
         # Remove \boldmath if it's used outside a valid math block, like an inline formula
         latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
         
-        # Remove everything after (and including) \hskip
-        latex_str = re.sub(r"\\hskip.*", "", latex_str)
+        # Replace \big{\|} with \big|
+        latex_str = re.sub(r'\\big\{\\\|\}', r'\\big\|', latex_str)
 
-        # Remove everything after (and including) \tag
-        latex_str = re.sub(r"\\tag.*", "", latex_str)
+        # Replace \mbox with \text
+        latex_str = re.sub(r'\\mbox', r'\\text', latex_str)
+        
+        # Remove \hskip and everything up until and including 'p t'
+        latex_str = re.sub(r'\\hskip\s+([^\s]*\s*)*p\s+t', ' ', latex_str)
 
-        # Remove everything after (and including) \eqno
-        latex_str = re.sub(r"\\eqno.*", "", latex_str)
+        # Remove \tag { ... } and everything after it on the same line
+        latex_str = re.sub(r'\\tag\s*{[^}]*}\s*', ' ', latex_str)
+        latex_str = re.sub(r'\\tag\s+\*?\s*\{[^}]*\}', ' ', latex_str)
+
+        # Remove \eqno and everything after
+        latex_str = re.sub(r'\\eqno.*', ' ', latex_str)
 
         logging.info(f"[app.py] Formula {latex_str} was cleaned successfully!")
 
@@ -111,7 +118,7 @@ def processClassifierResponse(element):
         if element['element_type'] == 'formula':
             st.session_state.formulas_results_array.append(element) # Append element to the array
             st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}") # Display page number and formula number as the header
-            if latex_validity(element.get('formula', 'N/A')):
+            if latex_validity(clean_latex(element.get('formula', 'N/A'))):
                 st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
             else:
                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
@@ -754,7 +761,7 @@ def main():
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
                                                             st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}") # Display page number and formula number as the header
-                                                            if latex_validity(formula.get('formula', 'N/A')):
+                                                            if latex_validity(clean_latex(formula.get('formula', 'N/A'))):
                                                                 st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
                                                             else:
                                                                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format                                                      

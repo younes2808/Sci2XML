@@ -53,13 +53,13 @@ def startEverything():
   try:
       # Using subprocess to install the pip, apt-get and npm requirements.
       log = open("reqlog.txt", "a")
-      print("----------> pip installs...")
+      print("---> pip installs...")
       n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
-      print("----------> apt-get installs...")
+      print("---> apt-get installs...")
       n = subprocess.run(["apt", "update"], stdout=log, stderr=log, text=True)
       n = subprocess.run(["apt-get", "install", "poppler-utils"], stdout=log, stderr=log, text=True)
       n = subprocess.run(["apt-get", "install", "-y", "libvips"], stdout=log, stderr=log, text=True)
-      print("----------> npm installs...")
+      print("---> npm installs...")
       n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
       logging.info(f"[launch_onlyAPI.py] Finished installing requirements.")
   except Exception as e:
@@ -70,7 +70,7 @@ def startEverything():
   minutes, seconds = divmod(requirements_time - start_time, 60)
   time_array.append({"name": "Installing requirements", "time": requirements_time - start_time})
   logging.info(f"[launch_onlyAPI.py] Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
-  print(f"\n-----> Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
+  print(f"\n---> Installing requirements time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Launch API ##
   print("\n\n#----------------- ### Launching API + Models ### ------------------#\n")
@@ -88,7 +88,7 @@ def startEverything():
   minutes, seconds = divmod(api_time - requirements_time, 60)
   time_array.append({"name": "Launching APIs", "time": api_time - requirements_time})
   logging.info(f"[launch_onlyAPI.py] Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
-  print(f"\n-----> Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
+  print(f"\n---> Launching APIs time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Load GROBID and launch GROBID server ##
   print("\n\n#------------------- ### Load & launch GROBID ### ------------------#\n")
@@ -106,7 +106,7 @@ def startEverything():
   minutes, seconds = divmod(grobid_time - api_time, 60)
   time_array.append({"name": "Launching GROBID", "time": grobid_time - api_time})
   logging.info(f"[launch_onlyAPI.py] Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
-  print(f"\n-----> Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
+  print(f"\n---> Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Start API using tunnel ##
   print("\n\n#------------ ### Starting API through tunnel ### ------------#\n")
@@ -125,7 +125,7 @@ def startEverything():
   minutes, seconds = divmod(localtunnel_api_time - api_time, 60)
   time_array.append({"name": "Launching Localtunnel API", "time": localtunnel_api_time - api_time})
   time_array.append({"name": "Total startup", "time": time.time() - start_time})
-  print(f"\n-----> Launching Localtunnel API time: {int(minutes)} minutes and {int(seconds)} seconds")
+  print(f"\n---> Launching Localtunnel API time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   print("\n\n")
   for time_object in time_array:

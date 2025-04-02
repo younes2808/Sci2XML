@@ -84,7 +84,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"API - parseFormula - You have reached endpoint for formula.")
+      logging.info(f"[APIcode.py] parseFormula - You have reached endpoint for formula.")
       
       # Make sure an image is present:
       if 'image' not in request.files:
@@ -114,7 +114,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"API - parseChart - You have reached endpoint for chart.")
+      logging.info(f"[APIcode.py] parseChart - You have reached endpoint for chart.")
 
       # Make sure an image is present:
       if 'image' not in request.files:
@@ -157,7 +157,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"API - parseFigure - You have reached endpoint for figure.")
+      logging.info(f"[APIcode.py] parseFigure - You have reached endpoint for figure.")
 
       # Make sure an image is present:
       if 'image' not in request.files:
@@ -199,7 +199,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"API - parseTable - You have reached endpoint for table.")
+      logging.info(f"[APIcode.py] parseTable - You have reached endpoint for table.")
 
       # Check if both required files are provided
       if 'pdf' not in request.files or 'grobid_xml' not in request.files:
@@ -234,7 +234,7 @@ def API(portnr):
       latex_code: The generated LaTeX code.
       NLdata: The generated NL data.
       """
-      logging.info(f"API - processFormula - processing formula...")
+      logging.info(f"[APIcode.py] processFormula - processing formula...")
       
       # Ensure proper file
       if file.filename == '':
@@ -276,7 +276,7 @@ def API(portnr):
       summary: The generated summary.
       table_data: The generated table data.
       """
-      logging.info(f"API - processChart - processing chart...")
+      logging.info(f"[APIcode.py] processChart - processing chart...")
       
       # Ensure proper file
       if file.filename == '':
@@ -319,7 +319,7 @@ def API(portnr):
       Returns:
       NLdata: The generated NL data.
       """
-      logging.info(f"API - processFigure - processing figure...")
+      logging.info(f"[APIcode.py] processFigure - processing figure...")
       
       # Ensure proper file
       if file.filename == '':
@@ -358,7 +358,7 @@ def API(portnr):
         Returns:
             Response: A Flask Response object with the updated GROBID XML, served as an XML file.
         """
-        logging.info(f"API - processTable - processing table...")
+        logging.info(f"[APIcode.py] processTable - processing table...")
         
         # Save the PDF file temporarily
         with NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
@@ -422,7 +422,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"API - callClassifier - You have reached endpoint for classifier ML.")
+      logging.info(f"[APIcode.py] callClassifier - You have reached endpoint for classifier ML.")
 
       # Make sure an image is present:
       if 'image' not in request.files:
@@ -438,7 +438,7 @@ def API(portnr):
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while classifying image: {e}", exc_info=True)
 
-      logging.info(f"API - callClassifier - Predicted class: {response}")
+      logging.info(f"[APIcode.py] callClassifier - Predicted class: {response}")
 
       return jsonify({'ClassifierResponse':response})
   
@@ -458,7 +458,7 @@ def API(portnr):
       The processed XML file.
       """
       print("\n")
-      logging.info(f"API - process - You have reached endpoint for full processing.")
+      logging.info(f"[APIcode.py] process - You have reached endpoint for full processing.")
             
       # Make sure an PDF file is present:
       if 'pdffile' not in request.files:
@@ -469,7 +469,7 @@ def API(portnr):
       byte_data_PDF = file.read()
 
       ## Calling GROBID ##
-      logging.info(f"API - process - Calling GROBID.")
+      logging.info(f"[APIcode.py] process - Calling GROBID.")
       grobid_url="http://172.28.0.12:8070/api/processFulltextDocument"
       files = {'input': byte_data_PDF}
       params = {
@@ -494,7 +494,7 @@ def API(portnr):
         logging.error(f"[APIcode.py] An error occurred while calling GROBID server: {e}", exc_info=True)
 
       ## Table Parser ##
-      logging.info(f"API - process - Initiating Table parser.")
+      logging.info(f"[APIcode.py] process - Initiating Table parser.")
       ## Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
       # Ready the files:
       files = {"grobid_xml": ("xmlfile.xml", string_data_XML, "application/json"), "pdf": ("pdffile.pdf", byte_data_PDF)}
@@ -508,7 +508,7 @@ def API(portnr):
         logging.error(f"An error occurred while communication with the table parser: {e}", exc_info=True)
 
       ##  Starting classifier ##
-      logging.info(f"API - process - Initiating Classifier.")
+      logging.info(f"[APIcode.py] process - Initiating Classifier.")
       try:
         # Open the XML file and extract all figures and formulas, as well as getting each page of the PDF as an image.
         images, figures, formulas = classifier.openXMLfile(string_data_XML, byte_data_PDF, frontend=False)

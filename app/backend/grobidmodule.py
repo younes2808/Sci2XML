@@ -52,7 +52,7 @@ def loadGrobidPythonway():
       print("---> Unzipping GROBID files...")
       n = subprocess.run(["unzip", "0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Installing GROBID with Gradle... (Expected duration: ~5 min)")
+      print("---> Installing GROBID with Gradle... (Expected duration: ~4 min)")
       grobidinstalllogfile = open("grobidinstalllog.txt", "a")
       n = subprocess.run(["./gradlew", "clean", "install"], stdout=grobidinstalllogfile, stderr=grobidinstalllogfile, text=True, cwd="/content/grobid-0.8.1/")
 
@@ -77,7 +77,7 @@ def loadGrobidPythonway():
         print("Could not reach GROBID server.")
       print("GROBID server status: Down")
       if (res == "false"):
-        print("--> GROBID server not up yet, trying again in 5 sec...")
+        print("---> GROBID server not up yet, trying again in 5 sec...")
         clock = 5
       elif (res.content.decode('utf8') == "true"):
         print("GROBID server status: Up")
