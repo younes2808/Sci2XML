@@ -247,8 +247,21 @@ def API(portnr):
         logging.info(f"[APIcode.py] Successfully called sumen.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while calling sumen: {e}", exc_info=True)
-      
-      NLdata = "some NL"
+
+      # Create NL for formula:
+      try:
+        # Check to see if environment variable for NL generation of formula is set and true:
+        if (os.environ.get('NLFORMULA', 'false') == 'true'):
+          logging.info(f"[APIcode.py] Environment variable NLFORMULA is true, will be generating NL content.")
+          prompt = "Summarize the format and structure of this formula concisely."
+          NLdata = figureParserModel.query(image, prompt)["answer"]
+          logging.info(f"[APIcode.py] Successfully called moondream and generated NL.")
+        else:
+          logging.info(f"[APIcode.py] Environment variable NLFORMULA is false, will not be generating NL content.")
+          NLdata = ""
+      except Exception as e:
+        logging.error(f"[APIcode.py] An error occurred while calling moondream and generating NL: {e}", exc_info=True)
+        NLdata = ""
       return latex_code, NLdata
 
   def processChart(file, promptContext):
