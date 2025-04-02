@@ -764,7 +764,9 @@ def main():
                                                             if latex_validity(clean_latex(formula.get('formula', 'N/A'))):
                                                                 st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
                                                             else:
-                                                                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format                                                      
+                                                                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
+                                                            if (os.environ.get('NLFORMULA', 'false') == 'true'): # Check to see if environment variable for NL generation of formula is set and true:                                                            
+                                                                st.text(f"{formula.get('NL', 'No description available.')}") # Display the description of the formula                                                                                                              
                                                     else:
                                                         st.warning("No formulas detected in PDF file.")
 
