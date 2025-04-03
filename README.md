@@ -16,7 +16,7 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
   - [**Unichart**](https://github.com/vis-nlp/UniChart) – Extracts and summarizes chart data.  
   - [**pdfplumber**](https://github.com/jsvine/pdfplumber) – Parses tables accurately.
   - [**Moondream**](https://github.com/vikhyat/moondream) - Captions figures  
-- **Multiple execution modes**: Streamlit UI, terminal, and direct code usage.  
+- **Multiple execution modes**: Streamlit UI and terminal
 
 ## Installation  
 
