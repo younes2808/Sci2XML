@@ -699,7 +699,7 @@ def main():
                     st.session_state.grobid_progress_container.empty()
 
                     @st.fragment
-                    def classify2():
+                    def classify():
                         """
                         Sends the PDF file and XML file to the classifier when "Process file"-button is clicked.
                         """
@@ -825,7 +825,7 @@ def main():
 
                                         interpretation_results_view()
 
-                    classify2()
+                    classify()
     else:
         # Prompt user to upload a PDF file if not PDF file is uploaded
         st.write("Upload a PDF file to analyze it in GROBID")
