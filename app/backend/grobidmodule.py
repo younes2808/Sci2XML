@@ -2,9 +2,9 @@ import subprocess
 import time
 import requests
 import socket
-from pathlib import Path
 import logging
 import sys
+from pathlib import Path
 
 logging.basicConfig(
     level=logging.INFO,

@@ -4,8 +4,8 @@ import os
 import sys
 import threading
 import socket
+import logging
 import albumentations as A
-import numpy as np
 import nest_asyncio
 nest_asyncio.apply()
 from flask import Flask, jsonify, make_response, request, Response
@@ -14,9 +14,6 @@ from tempfile import NamedTemporaryFile
 from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcessor
 from io import BytesIO
 from io import StringIO
-import time
-import logging
-import sys
 
 logging.basicConfig(
     level=logging.INFO,
@@ -35,6 +32,7 @@ spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2
 classifier = importlib.util.module_from_spec(spec)
 sys.modules["classifiermodule"] = classifier
 spec.loader.exec_module(classifier)
+
 # Models:
 import backend.models.classifiermodel as classifierML
 import backend.models.chartparser as charter
@@ -134,7 +132,6 @@ def API(portnr):
         logging.info(f"[APIcode.py] parseFigure - prompt: {string_data_prompt}.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while fetching string value from bytestream: {e}", exc_info=True)
-
 
       # Process image:
       try:
@@ -256,12 +253,15 @@ def API(portnr):
           prompt = "Describe how the variables in this formula interacts with eachother."
           NLdata = figureParserModel.query(image, prompt)["answer"]
           logging.info(f"[APIcode.py] Successfully called moondream and generated NL.")
+        
         else:
           logging.info(f"[APIcode.py] Environment variable NLFORMULA is false, will not be generating NL content.")
           NLdata = ""
+      
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while calling moondream and generating NL: {e}", exc_info=True)
         NLdata = ""
+      
       return latex_code, NLdata
 
   def processChart(file, promptContext):
@@ -295,15 +295,19 @@ def API(portnr):
       try:
         query = f"Describe this chart deeply. Caption it."
         queryWcontext = f"{query} Here is the figure description for context: {promptContext}"
+        
         if (0 < len(promptContext) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
           prompt = queryWcontext
+        
         else: # If extracted prompt-context is of length 0 or very long then simply do not give the model additional context:
           prompt = query
 
         logging.info(f"[APIcode.py] Prompt for moonchart used for describing chart: {prompt}.")
         summary = figureParserModel.query(image, prompt)["answer"]
         logging.info(f"[APIcode.py] Successfully called moondream.")
+      
       except Exception as e:
+        
         return jsonify({"error": f"Model query failed: {str(e)}"}), 500
       
       return structured_table_data, summary
@@ -328,15 +332,20 @@ def API(portnr):
       try:
         # Ensure the image is loaded as a proper PIL Image
         image = Image.open(BytesIO(file.read())).convert('RGB')
+      
       except Exception as e:
+        
         return jsonify({"error": f"Invalid image file: {str(e)}"}), 400
 
       try:
         if (0 < len(promptContext) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
           answer = figureParserModel.query(image, f"Describe this image deeply. Caption it. Here is the figure description for context: {promptContext}")["answer"]
+        
         else: # If extracted prompt-context is of length 0 or very long then simply do not give the model additional context:
           answer = figureParserModel.query(image, f"Describe this image deeply. Caption it.")["answer"]
+      
       except Exception as e:
+        
         return jsonify({"error": f"Model query failed: {str(e)}"}), 500
 
       NLdata = answer
@@ -407,7 +416,6 @@ def API(portnr):
     print("\n- Calling VLM -")
     image = load_image(image)
     response = pipe((query, image))
-    #print(response.text)
     return response.text
   
   @app.route('/callClassifier', methods=['POST'])
