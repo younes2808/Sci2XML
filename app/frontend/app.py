@@ -114,42 +114,34 @@ def processClassifierResponse(element):
     Returns:
     None
     """
-    try:
-        element_type = element['element_type']
-        element_page_number = element.get('page_number', 'N/A')
-        element_number = element.get('element_number', 'N/A')
-        formula_latex = clean_latex(element.get('formula', 'N/A'))
-        description = element.get('NL', 'No description available.')
-        table_data = st.session_state.tables_results_array[-1].get("table_data", []) 
-        table_context = element.get('table_context', 'No description available.')
-
-        if element_type == 'formula':
+    try:    
+        if element['element_type'] == 'formula':
             st.session_state.formulas_results_array.append(element) # Append element to the array
-            st.subheader(f"Page {element_page_number}: Formula #{element_number}") # Display page number and formula number as the header
-            
-            if latex_validity(formula_latex):
-                st.markdown(rf"$$ {formula_latex} $$") # Display the formula itself if on valid LaTeX format
+            st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}") # Display page number and formula number as the header
+            if latex_validity(clean_latex(element.get('formula', 'N/A'))):
+                st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
             
             else:
                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
             
             if (os.environ.get('NLFORMULA', 'false') == 'true'): # Check to see if environment variable for NL generation of formula is set and true:
-                st.text(f"{description}") # Display the description of the formula
-        
-        elif element_type == "figure":
+                st.text(f"{element.get('NL', 'No description available.')}") # Display the description of the formula
+
+        elif element['element_type'] == "figure":
             st.session_state.figures_results_array.append(element) # Append element to the array
-            st.subheader(f"Page {element_page_number}: Figure #{element_number}") # Display page number and figure number as the header
-            st.text(f"{description}") # Display the description of the figure
+            st.subheader(f"Page {element.get('page_number', 'N/A')}: Figure #{element.get('element_number', 'N/A')}") # Display page number and figure number as the header
+            st.text(f"{element.get('NL', 'No description available.')}") # Display the description of the figure
 
-        elif element_type == "chart":
+        elif element['element_type'] == "chart":
             st.session_state.charts_results_array.append(element) # Append element to the array
-            st.subheader(f"Page {element_page_number}: Chart #{element_number}") # Display page number and chart number as the header
-            st.text(f"{description}") # Display the description of the chart
+            st.subheader(f"Page {element.get('page_number', 'N/A')}: Chart #{element.get('element_number', 'N/A')}") # Display page number and chart number as the header
+            st.text(f"{element.get('NL', 'No description available.')}") # Display the description of the chart
 
-        elif element_type == "table":
+        elif element['element_type'] == "table":
             st.session_state.tables_results_array.append(element) # Append element to the array
-            st.subheader(f"Page {element_page_number}: Table #{element_number}") # Display page number and table number as the header
-            st.text(f"{table_context}") # Display the context of the table
+            table_data = st.session_state.tables_results_array[-1].get("table_data", []) 
+            st.subheader(f"Page {element.get('page_number', 'N/A')}: Table #{element.get('table_number', 'N/A')}") # Display page number and table number as the header
+            st.text(f"{element.get('table_context', 'No description available.')}") # Display the context of the table
             
             if table_data:
                 df = pd.DataFrame(table_data) # Convert table data to DataFrame
@@ -157,8 +149,8 @@ def processClassifierResponse(element):
             
             else:
                 # Inform the user if no table data is found for the current page
-                st.write(f"No data found in table on page {element_page_number}.")
-
+                st.write(f"No data found in table on page {element.get('page_number', 'N/A')}.")
+                        
         logging.info(f"[app.py] Element was processed successfully!")
 
     except Exception as e:
