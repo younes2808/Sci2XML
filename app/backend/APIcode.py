@@ -253,7 +253,7 @@ def API(portnr):
         # Check to see if environment variable for NL generation of formula is set and true:
         if (os.environ.get('NLFORMULA', 'false') == 'true'):
           logging.info(f"[APIcode.py] Environment variable NLFORMULA is true, will be generating NL content.")
-          prompt = "Summarize the format and structure of this formula concisely."
+          prompt = "Describe how the variables in this formula interacts with eachother."
           NLdata = figureParserModel.query(image, prompt)["answer"]
           logging.info(f"[APIcode.py] Successfully called moondream and generated NL.")
         else:
