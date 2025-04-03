@@ -36,7 +36,7 @@ def startEverything():
   # Parsing arguments from terminal:
   parser = argparse.ArgumentParser()
   parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
-  parser.add_argument('--port', dest='port', type=str, help='Set port number', default ="8000")
+  parser.add_argument('--port', dest='port', type=str, help='Set port number', choices=range(8000, 8070), metavar="[8000-8069]", default ="8000")
   parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['true', 'false', None], default ="false")
   args = parser.parse_args()
   logging.info("[launch_onlyAPI.py] Arguments parsed.")
@@ -45,6 +45,8 @@ def startEverything():
       os.environ["NLFORMULA"] = "true"
   else:
       os.environ["NLFORMULA"] = "false"
+  args.port = str(args.port)
+  os.environ["SELECTEDPORT"] = args.port
 
   ## Setup ##
   print("#-------------------------- ### Setup ### --------------------------#\n")

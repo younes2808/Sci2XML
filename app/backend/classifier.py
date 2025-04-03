@@ -2,6 +2,7 @@
 import requests
 import io
 import re
+import os
 import streamlit as st
 import logging
 import sys
@@ -26,7 +27,14 @@ logging.basicConfig(
     ]
 )
 
-apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
+try:
+    port = os.environ.get('SELECTEDPORT', '8000') # Either what the user selected at launch, or default 8000
+    apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
+    logging.info(f"[classifier.py] Set URL for api to: {apiURL}")
+except Exception as e:
+    apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
+    logging.error(f"[classifier.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
+
 
 def openXMLfile(XMLfile, PDFfile, frontend):
     """
