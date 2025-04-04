@@ -77,8 +77,6 @@ def clean_latex(latex_str):
     latex_str.strip (str): The stripped formula
     """
     try:
-        logging.info(f"[app.py] clean_latex received formula {latex_str}")
-
         # Remove \boldmath if it's used incorrectly (outside of a valid math environment)
         # Remove \boldmath if it's used outside a valid math block, like an inline formula
         latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)
@@ -130,7 +128,7 @@ def processClassifierResponse(element):
             else:
                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
             
-            if (st.session_state.nl_formula): # Check to see if environment variable for NL generation of formula is set and true:
+            if (os.environ.get('NLFORMULA', 'false') == 'true'): # Check to see if environment variable for NL generation of formula is set and true:
                 st.write(f"{element.get('NL', 'No description available.')}") # Display the description of the formula
 
         elif element['element_type'] == "figure":
@@ -575,7 +573,6 @@ def main():
                 st.session_state.results_placeholder = None
                 st.session_state.grobid_progress_container = None
                 st.session_state.progress_bar = None
-                st.session_state.nl_formula = None
 
             # Backup uploaded file
             st.session_state.pdf_ref = uploaded_pdf
@@ -713,20 +710,17 @@ def main():
                         """
                         Sends the PDF file and XML file to the classifier when "Process file"-button is clicked.
                         """
-                        # Checkbox to set environment variable nl_formula 
+                        # Checkbox to set environment variable NLFORMULA 
                         # If true, a NL description for formulas will be included
                         checkbox = st.checkbox("Include description for formulas")
 
-                        if "nl_formula" not in st.session_state:
-                            st.session_state.nl_formula = None
-
                         if checkbox:
-                            st.session_state.nl_formula = True # If checkbox is checked, set nl_formula to true
-                            logging.info("[app.py] nl_formula sat to true.")
+                            os.environ["NLFORMULA"] = "true"
+                            logging.info("[app.py] NLFORMULA sat to true.")
 
                         elif not checkbox:
-                            st.session_state.nl_formula = False # If checkbox is checked, set nl_formula to False
-                            logging.info("[app.py] nl_formula sat to false.")
+                            os.environ["NLFORMULA"] = "false"
+                            logging.info("[app.py] NLFORMULA sat to false.")
 
                         if st.button("Process file"):
                             # Display Interpretated results in col3
@@ -800,7 +794,7 @@ def main():
                                                             else:
                                                                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
                                                             
-                                                            if (st.session_state.nl_formula): # Check to see if environment variable for NL generation of formula is set and true:                                                            
+                                                            if (os.environ.get('NLFORMULA', 'false') == 'true'): # Check to see if environment variable for NL generation of formula is set and true:                                                            
                                                                 st.write(f"{formula.get('NL', 'No description available.')}") # Display the description of the formula                                                                                                              
                                                     
                                                     else:
