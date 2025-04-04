@@ -63,7 +63,7 @@ def startEverything():
       n = subprocess.run(["apt-get", "install", "-y", "libvips"], stdout=log, stderr=log, text=True)
       print("---> npm installs...")
       n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
-      logging.info(f"[launch_onlyAPI.py] Finished installing requirements.")
+      logging.info(f"\n[launch_onlyAPI.py] Finished installing requirements.")
   except Exception as e:
       logging.error(f"[launch_onlyAPI.py] An error occurred while trying to install requirements: {e}", exc_info=True)
   

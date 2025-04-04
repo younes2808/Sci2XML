@@ -46,7 +46,7 @@ def loadGrobidPythonway():
     else:
       # Download and install GROBID, then 'Gradlew run' to start server
       logging.info(f"[grobidmodule.py] GROBID server not running and GROBID doesn't exist. Downloading and installing GROBID with Gradle.")
-      print("---> \n\nDownloading GROBID...\n")
+      print("\n---> Downloading GROBID...\n")
       n = subprocess.run(["wget", "https://github.com/kermitt2/grobid/archive/0.8.1.zip"], stdout=subprocess.PIPE)
       
       print("---> Unzipping GROBID files...")
@@ -61,7 +61,7 @@ def loadGrobidPythonway():
   #  continues loading and thus halts the application.
   logging.info(f"[grobidmodule.py] Executing command 'gradlew run'.")
   grobidrunlogfile = open("grobidrunlog.txt", "w")
-  print("---> Launching GROBID server with Gradle:")
+  print("\n---> Launching GROBID server with Gradle:")
   n = subprocess.Popen(["./gradlew", "run"], stdout=grobidrunlogfile, stderr=grobidrunlogfile, text=True, cwd="/content/grobid-0.8.1/")
   # Check grobidrunlog.txt to see when it is ready. Should be > 46 lines when ready.
 

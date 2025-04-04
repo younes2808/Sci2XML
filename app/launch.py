@@ -55,7 +55,7 @@ def startEverything():
   try:
     # Using subprocess to install the pip, apt-get and npm requirements.
     log = open("reqlog.txt", "a")
-    print("----> pip installs...")
+    print("\n----> pip installs...")
     n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
     print("----> apt-get installs...")
     n = subprocess.run(["apt", "update"], stdout=log, stderr=log, text=True)
@@ -63,7 +63,7 @@ def startEverything():
     n = subprocess.run(["apt-get", "install", "-y", "libvips"], stdout=log, stderr=log, text=True)
     print("----> npm installs...")
     n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
-    logging.info(f"[launch.py] Finished installing requirements.")
+    logging.info(f"\n[launch.py] Finished installing requirements.")
   except Exception as e:
       logging.error(f"[launch.py] An error occurred while trying to install requirements: {e}", exc_info=True)
   

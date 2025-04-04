@@ -106,7 +106,7 @@ def clean_latex(latex_str):
         latex_str = re.sub(r'\\eqno.*', ' ', latex_str)
 
         # Remove , and . at the end of the LaTeX string
-        latex_str = re.sub(r'[,.]$', '', latex_str)
+        # latex_str = re.sub(r'[,.]$', '', latex_str)
 
         logging.info(f"[app.py] Formula {latex_str} was cleaned successfully!")
 
@@ -137,23 +137,23 @@ def processClassifierResponse(element):
                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
             
             if (os.environ.get('NLFORMULA', 'false') == 'true'): # Check to see if environment variable for NL generation of formula is set and true:
-                st.text(f"{element.get('NL', 'No description available.')}") # Display the description of the formula
+                st.write(f"{element.get('NL', 'No description available.')}") # Display the description of the formula
 
         elif element['element_type'] == "figure":
             st.session_state.figures_results_array.append(element) # Append element to the array
             st.subheader(f"Page {element.get('page_number', 'N/A')}: Figure #{element.get('element_number', 'N/A')}") # Display page number and figure number as the header
-            st.text(f"{element.get('NL', 'No description available.')}") # Display the description of the figure
+            st.write(f"{element.get('NL', 'No description available.')}") # Display the description of the figure
 
         elif element['element_type'] == "chart":
             st.session_state.charts_results_array.append(element) # Append element to the array
             st.subheader(f"Page {element.get('page_number', 'N/A')}: Chart #{element.get('element_number', 'N/A')}") # Display page number and chart number as the header
-            st.text(f"{element.get('NL', 'No description available.')}") # Display the description of the chart
+            st.write(f"{element.get('NL', 'No description available.')}") # Display the description of the chart
 
         elif element['element_type'] == "table":
             st.session_state.tables_results_array.append(element) # Append element to the array
             table_data = st.session_state.tables_results_array[-1].get("table_data", []) 
             st.subheader(f"Page {element.get('page_number', 'N/A')}: Table #{element.get('table_number', 'N/A')}") # Display page number and table number as the header
-            st.text(f"{element.get('table_context', 'No description available.')}") # Display the context of the table
+            st.write(f"{element.get('table_context', 'No description available.')}") # Display the context of the table
             
             if table_data:
                 df = pd.DataFrame(table_data) # Convert table data to DataFrame
@@ -803,7 +803,7 @@ def main():
                                                                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
                                                             
                                                             if (os.environ.get('NLFORMULA', 'false') == 'true'): # Check to see if environment variable for NL generation of formula is set and true:                                                            
-                                                                st.text(f"{formula.get('NL', 'No description available.')}") # Display the description of the formula                                                                                                              
+                                                                st.write(f"{formula.get('NL', 'No description available.')}") # Display the description of the formula                                                                                                              
                                                     
                                                     else:
                                                         st.warning("No formulas detected in PDF file.")
@@ -814,7 +814,7 @@ def main():
                                                     if len(st.session_state.figures_results_array) > 0:
                                                         for figure in st.session_state.figures_results_array:  # Use session state variable
                                                             st.subheader(f"Page {figure.get('page_number', 'N/A')}: Figure #{figure.get('element_number', 'N/A')}") # Display page number and figure number as the header
-                                                            st.text(f"{figure.get('NL', 'No description available.')}") # Display the description of the figure
+                                                            st.write(f"{figure.get('NL', 'No description available.')}") # Display the description of the figure
                                                     
                                                     else:
                                                         st.warning("No figures detected in PDF file.")
@@ -825,7 +825,7 @@ def main():
                                                     if len(st.session_state.charts_results_array) > 0:
                                                         for chart in st.session_state.charts_results_array:  # Use session state variable
                                                             st.subheader(f"Page {chart.get('page_number', 'N/A')}: Chart #{chart.get('element_number', 'N/A')}") # Display page number and chart number as the header
-                                                            st.text(f"{chart.get('NL', 'No description available.')}") # Display the description of the chart
+                                                            st.write(f"{chart.get('NL', 'No description available.')}") # Display the description of the chart
                                                     
                                                     else:
                                                         st.warning("No charts detected in PDF file.")
@@ -837,7 +837,7 @@ def main():
                                                         for table in st.session_state.tables_results_array:
                                                             table_data = table.get("table_data", [])
                                                             st.subheader(f"Page {table.get('page_number', 'N/A')}: Table #{table.get('table_number', 'N/A')}") # Display page number and table number as the header
-                                                            st.text(f"{table.get('table_context', 'No description available.')}") # Display the context of the table
+                                                            st.write(f"{table.get('table_context', 'No description available.')}") # Display the context of the table
                                                             
                                                             if table_data:
                                                                 # Convert table data to DataFrame
