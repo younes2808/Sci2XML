@@ -67,7 +67,8 @@ def latex_validity(latex_str):
 def clean_latex(latex_str):
     """
     Fixes the incorrect usage of \boldmath, \big{\|} and \mbox
-    Removes hskip, eqno and tag.
+    Removes hskip, eqno and tag
+    Removes , and . at the end of the LaTeX string
 
     Paramaters:
     latex_str (str): The formula on latex format
@@ -87,14 +88,21 @@ def clean_latex(latex_str):
         latex_str = re.sub(r'\\mbox', r'\\text', latex_str)
         
         # Remove \hskip and everything up until and including 'p t'
+        latex_str = re.sub(r', \\hskip\s+([^\s]*\s*)*p\s+t', ' ', latex_str)
         latex_str = re.sub(r'\\hskip\s+([^\s]*\s*)*p\s+t', ' ', latex_str)
 
         # Remove \tag { ... } and everything after it on the same line
+        latex_str = re.sub(r', \\tag\s*{[^}]*}\s*', ' ', latex_str)
         latex_str = re.sub(r'\\tag\s*{[^}]*}\s*', ' ', latex_str)
+        latex_str = re.sub(r', \\tag\s+\*?\s*\{[^}]*\}', ' ', latex_str)
         latex_str = re.sub(r'\\tag\s+\*?\s*\{[^}]*\}', ' ', latex_str)
 
         # Remove \eqno and everything after
+        latex_str = re.sub(r', \\eqno.*', ' ', latex_str)
         latex_str = re.sub(r'\\eqno.*', ' ', latex_str)
+
+        # Remove , and . at the end of the LaTeX string
+        latex_str = re.sub(r'[,.]$', '', latex_str)
 
         logging.info(f"[app.py] Formula {latex_str} was cleaned successfully!")
 
