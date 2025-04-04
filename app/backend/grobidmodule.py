@@ -46,13 +46,13 @@ def loadGrobidPythonway():
     else:
       # Download and install GROBID, then 'Gradlew run' to start server
       logging.info(f"[grobidmodule.py] GROBID server not running and GROBID doesn't exist. Downloading and installing GROBID with Gradle.")
-      print("\n---> Downloading GROBID...\n")
+      print("\n----> Downloading GROBID...\n")
       n = subprocess.run(["wget", "https://github.com/kermitt2/grobid/archive/0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Unzipping GROBID files...")
+      print("----> Unzipping GROBID files...")
       n = subprocess.run(["unzip", "0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Installing GROBID with Gradle... (Expected duration: ~4 min)\n")
+      print("----> Installing GROBID with Gradle... (Expected duration: ~4 min)\n")
       grobidinstalllogfile = open("grobidinstalllog.txt", "a")
       n = subprocess.run(["./gradlew", "clean", "install"], stdout=grobidinstalllogfile, stderr=grobidinstalllogfile, text=True, cwd="/content/grobid-0.8.1/")
 
@@ -61,11 +61,11 @@ def loadGrobidPythonway():
   #  continues loading and thus halts the application.
   logging.info(f"[grobidmodule.py] Executing command 'gradlew run'.")
   grobidrunlogfile = open("grobidrunlog.txt", "w")
-  print("\n---> Launching GROBID server with Gradle:")
+  print("\n----> Launching GROBID server with Gradle:")
   n = subprocess.Popen(["./gradlew", "run"], stdout=grobidrunlogfile, stderr=grobidrunlogfile, text=True, cwd="/content/grobid-0.8.1/")
   # Check grobidrunlog.txt to see when it is ready. Should be > 46 lines when ready.
 
-  print("---> Periodically checking if GROBID server is up yet:")
+  print("----> Periodically checking if GROBID server is up yet:")
   clock = -1
   while True:
     if clock == -1:
@@ -77,14 +77,14 @@ def loadGrobidPythonway():
         print("Could not reach GROBID server.")
       print("GROBID server status: Down")
       if (res == "false"):
-        print("---> GROBID server not up yet, trying again in 5 sec...")
+        print("----> GROBID server not up yet, trying again in 5 sec...")
         clock = 5
       elif (res.content.decode('utf8') == "true"):
         print("GROBID server status: Up")
         logging.info(f"[grobidmodule.py] GROBID server is up.")
         break
       else:
-        print("---> GROBID server not up yet, trying again in 5 sec...")
+        print("----> GROBID server not up yet, trying again in 5 sec...")
         clock = 5
     sys.stdout.write("\r")
     sys.stdout.write("Trying again in {:2d} seconds.".format(clock)) 
@@ -92,4 +92,4 @@ def loadGrobidPythonway():
     time.sleep(1)
     clock -= 1
 
-  print("\GROBID server adress: ", socket.gethostbyname(socket.gethostname()), "/8070")
+  print("----> GROBID server address: ", socket.gethostbyname(socket.gethostname()), "/8070")

@@ -109,7 +109,7 @@ def startEverything():
   time_array.append({"name": "Launching GROBID", "time": grobid_time - api_time})
   time_array.append({"name": "Total startup", "time": time.time() - start_time})
   logging.info(f"[launch.py] Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
-  print(f"\n----->Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
+  print(f"\n----> Launching GROBID time: {int(minutes)} minutes and {int(seconds)} seconds")
 
   ## Start Streamlit and host using Localtunnel ##
   print("\n#------------ ### Starting Streamlit through tunnel ### ------------#\n")
