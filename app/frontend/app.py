@@ -176,7 +176,7 @@ def processClassifierResponse(element):
             
             else:
                 # Inform the user if no table data is found for the current page
-                st.write(f"No data found in table on page {element.get('page_number', 'N/A')}.")
+                st.write(f"No data found in table #{element.get('table_number', 'N/A')} on page {element.get('page_number', 'N/A')}.")
                         
         logging.info(f"[app.py] Element was processed successfully!")
 
@@ -710,11 +710,11 @@ def main():
                                     annotated_text(
                                         annotation("Figures", "", background="#CC0000", color="#")
                                     )
-                                logging.info("[app.py] Annoted Text was displayed successfully!")
+                                logging.info("[app.py] Annotated Text was displayed successfully!")
 
                             except Exception as e:
-                                logging.error(f"[app.py] An error occurred when calling Annoted Text: {e}", exc_info=True)
-                                st.error(f"An error occurred when calling Annoted Text.")
+                                logging.error(f"[app.py] An error occurred when calling Annotated Text: {e}", exc_info=True)
+                                st.error(f"An error occurred when calling Annotated Text.")
 
                         # XML View with raw content
                         elif st.session_state.grobid_results_view_option == "XML 📝":
@@ -881,7 +881,7 @@ def main():
                                                                 st.dataframe(df) # Display the table itself
                                                             
                                                             else:
-                                                                st.write(f"No data found in table on page {table.get('page_number', 'N/A')}.")
+                                                                st.write(f"No data found in table #{table.get('table_number', 'N/A')} on page {table.get('page_number', 'N/A')}.")
                                                     
                                                     else:
                                                         st.warning("No tables detected in PDF file.")
