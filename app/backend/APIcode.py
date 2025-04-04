@@ -3,9 +3,9 @@ import requests
 import os
 import sys
 import threading
-import socket
 import logging
 import albumentations as A
+import streamlit as st
 import nest_asyncio
 nest_asyncio.apply()
 from flask import Flask, jsonify, make_response, request, Response
@@ -246,14 +246,17 @@ def API(portnr):
       # Create NL for formula:
       try:
         # Check to see if environment variable for NL generation of formula is set and true:
-        if (os.environ.get('NLFORMULA', 'false') == 'true'):
-          logging.info(f"[APIcode.py] Environment variable NLFORMULA is true, will be generating NL content.")
+        if "nl_formula" not in st.session_state:
+           st.session_state.nl_formula = False
+
+        if (st.session_state.nl_formula or os.environ.get('NLFORMULA', 'false') == 'true'):
+          logging.info(f"[APIcode.py] Environment variable nl_formula is true, will be generating NL content.")
           prompt = "Describe how the variables in this formula interacts with eachother."
           NLdata = figureParserModel.query(image, prompt)["answer"]
           logging.info(f"[APIcode.py] Successfully called moondream and generated NL.")
         
         else:
-          logging.info(f"[APIcode.py] Environment variable NLFORMULA is false, will not be generating NL content.")
+          logging.info(f"[APIcode.py] Environment variable nl_formula is false, will not be generating NL content.")
           NLdata = ""
       
       except Exception as e:
