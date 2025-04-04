@@ -46,7 +46,7 @@ def loadGrobidPythonway():
     else:
       # Download and install GROBID, then 'Gradlew run' to start server
       logging.info(f"[grobidmodule.py] GROBID server not running and GROBID doesn't exist. Downloading and installing GROBID with Gradle.")
-      print("---> Downloading GROBID...")
+      print("---> \n\nDownloading GROBID...\n")
       n = subprocess.run(["wget", "https://github.com/kermitt2/grobid/archive/0.8.1.zip"], stdout=subprocess.PIPE)
       
       print("---> Unzipping GROBID files...")

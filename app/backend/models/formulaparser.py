@@ -27,7 +27,7 @@ def load_Sumen():
     sumen_processor = AutoProcessor.from_pretrained("hoang-quoc-trung/sumen-base")
 
     # Confirm successful model and processor loading
-    print("----> Sumen model loaded successfully!")
+    print("\n----> Sumen model loaded successfully!")
 
     return sumen_model, sumen_processor  # Return the loaded model and processor
 

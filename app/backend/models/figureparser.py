@@ -32,6 +32,6 @@ def load():
   tokenizer = AutoTokenizer.from_pretrained("vikhyatk/moondream2", trust_remote_code=True)
 
   # Confirm successful loading
-  print("----> Moondream2 model loaded successfully!")
+  print("----> \n\nMoondream2 model loaded successfully!\n")
 
   return model, tokenizer  # Return both the model and tokenizer for use in inference

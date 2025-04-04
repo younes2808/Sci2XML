@@ -28,7 +28,7 @@ def load_UniChart():
     # Load the corresponding processor for image and text handling
     unichart_processor = DonutProcessor.from_pretrained("ahmed-masry/unichart-base-960")
     # Confirm successful model and processor loading
-    print("----> UniChart model loaded successfully!")
+    print("\n----> UniChart model loaded successfully!")
 
     return unichart_model, unichart_processor  # Return the loaded model and processor
 
