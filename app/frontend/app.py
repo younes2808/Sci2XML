@@ -35,6 +35,11 @@ def get_envdict():
 
     return envdict
 
+def write_envdict(envdict):
+  with open("/content/.env", "w") as f:
+      for key, value in envdict.items():
+          f.write(f"{key}={value}\n")
+
 def latex_validity(latex_str):
     """
     Checks if the LaTeX string has matching \left and \right commands. 
@@ -744,6 +749,7 @@ def main():
                                     f.write("nl_formula=False\n")
                             envdict = get_envdict()
                             envdict["nl_formula"] = "True"
+                            write_envdict(envdict)
                             logging.info("[app.py] NLFORMULA sat to true.")
 
                         elif not checkbox:
@@ -753,6 +759,7 @@ def main():
                                     f.write("nl_formula=False\n")
                             envdict = get_envdict()
                             envdict["nl_formula"] = "False"
+                            write_envdict(envdict)
                             logging.info("[app.py] NLFORMULA sat to false.")
 
                         if st.button("Process file"):

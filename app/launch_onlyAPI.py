@@ -37,7 +37,7 @@ def startEverything():
   parser = argparse.ArgumentParser()
   parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
   parser.add_argument('--port', dest='port', type=int, help='Set port number', choices=range(8000, 8070), metavar="[8000-8069]", default =8000)
-  parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['true', 'false', None], default ="false")
+  parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['True', 'False', None], default ="False")
   args = parser.parse_args()
   logging.info("[launch_onlyAPI.py] Arguments parsed.")
   # Set environment variable based on what the user selected on launch. 
