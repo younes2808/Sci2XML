@@ -45,7 +45,7 @@ def startEverything():
   with open("/content/.env", "w") as f:
     f.write(f"port={args.port}\n")
     f.write(f"tunnel={args.tunnel}\n")
-    f.write(f"nl_formula=False\n")
+    f.write(f"nl_formula={args.nlformula}\n")
 
 
   ## Setup ##
