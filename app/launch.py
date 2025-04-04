@@ -49,7 +49,7 @@ def startEverything():
   os.environ["SELECTEDPORT"] = args.port
 
   ## Setup ##
-  print("#-------------------------- ### Setup ### --------------------------#\n")
+  print("\n#-------------------------- ### Setup ### --------------------------#\n")
   print("#-------------------- # Installing requirements # ------------------#\n")
   logging.info("[launch.py] Installing requirements.")
   try:
@@ -124,7 +124,6 @@ def startEverything():
     logging.error(f"[launch.py] An error occurred while trying to start Streamlit through tunnel: {e}", exc_info=True)
   
   # Time logging:
-  print("\n\n")
   for time_object in time_array:
     minutes, seconds = divmod(time_object["time"], 60)
     logging.info(f"[launch.py] {time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")

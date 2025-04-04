@@ -49,13 +49,13 @@ def startEverything():
   os.environ["SELECTEDPORT"] = args.port
 
   ## Setup ##
-  print("#-------------------------- ### Setup ### --------------------------#\n")
+  print("\n#-------------------------- ### Setup ### --------------------------#\n")
   print("#-------------------- # Installing requirements # ------------------#\n")
   logging.info("[launch_onlyAPI.py] Installing requirements.")
   try:
       # Using subprocess to install the pip, apt-get and npm requirements.
       log = open("reqlog.txt", "a")
-      print("---> pip installs...")
+      print("\n---> pip installs...")
       n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
       print("---> apt-get installs...")
       n = subprocess.run(["apt", "update"], stdout=log, stderr=log, text=True)
@@ -129,7 +129,6 @@ def startEverything():
   time_array.append({"name": "Total startup", "time": time.time() - start_time})
   print(f"\n---> Launching Localtunnel API time: {int(minutes)} minutes and {int(seconds)} seconds")
 
-  print("\n\n")
   for time_object in time_array:
     minutes, seconds = divmod(time_object["time"], 60)
     logging.info(f"[launch_onlyAPI.py] {time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")

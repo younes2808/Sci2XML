@@ -718,6 +718,18 @@ def main():
                         """
                         Sends the PDF file and XML file to the classifier when "Process file"-button is clicked.
                         """
+                        # Checkbox to set environment variable NLFORMULA 
+                        # If true, a NL description for formulas will be included
+                        checkbox = st.checkbox("Include description for formulas")
+
+                        if checkbox:
+                            os.environ["NLFORMULA"] = "true"
+                            logging.info("[app.py] NLFORMULA sat to true.")
+
+                        elif not checkbox:
+                            os.environ["NLFORMULA"] = "false"
+                            logging.info("[app.py] NLFORMULA sat to false.")
+
                         if st.button("Process file"):
                             # Display Interpretated results in col3
                             with col3:
