@@ -27,8 +27,26 @@ logging.basicConfig(
     ]
 )
 
+def get_envdict():
+    with open("/content/.env", "r") as f:
+        env = f.read()
+
+    envlist = env.split("\n")
+    envdict = {}
+    for env in envlist:
+        if (env == ""):
+            continue
+        envdict[env.split("=")[0]] = env.split("=")[1]
+
+    return envdict
+
 try:
-    port = os.environ.get('SELECTEDPORT', '8000') # Either what the user selected at launch, or default 8000
+    envdict = get_envdict()
+    if ("port" not in envdict):
+        with open("/content/.env", "a") as f:
+            f.write("port=8000\n")
+    envdict = get_envdict()
+    port = envdict["port"] # Either what the user selected at launch, or default 8000
     apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
     logging.info(f"[classifier.py] Set URL for api to: {apiURL}")
 except Exception as e:
