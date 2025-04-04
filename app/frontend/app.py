@@ -77,6 +77,7 @@ def clean_latex(latex_str):
     latex_str.strip (str): The stripped formula
     """
     try:
+        logging.info(f"[app.py] clean_latex received formula {latex_str}")
         # Remove \boldmath if it's used incorrectly (outside of a valid math environment)
         # Remove \boldmath if it's used outside a valid math block, like an inline formula
         latex_str = re.sub(r'\\boldmath(?!.*\\end\{(?:equation|align|displaymath|[a-z]+)\})', '', latex_str)

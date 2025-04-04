@@ -3,7 +3,6 @@ import requests
 import os
 import sys
 import threading
-import socket
 import logging
 import albumentations as A
 import nest_asyncio

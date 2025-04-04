@@ -37,14 +37,9 @@ def startEverything():
   parser = argparse.ArgumentParser()
   parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
   parser.add_argument('--port', dest='port', type=int, help='Set port number', choices=range(8000, 8070), metavar="[8000-8069]", default =8000)
-  parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['true', 'false', None], default ="false")
   args = parser.parse_args()
   logging.info("[launch.py] Arguments parsed.")
-  # Set environment variable based on what the user selected on launch. 
-  if (args.nlformula == "true"):
-      os.environ["NLFORMULA"] = "true"
-  else:
-      os.environ["NLFORMULA"] = "false"
+  # Set environment variable based on what the user selected on launch
   args.port = str(args.port)
   os.environ["SELECTEDPORT"] = args.port
 
@@ -53,7 +48,7 @@ def startEverything():
   print("#-------------------- # Installing requirements # ------------------#\n")
   logging.info("[launch.py] Installing requirements.")
   try:
-    # Using subprocess to install the pip, apt-get and npm requirements.
+    # Using subprocess to install the pip, apt-get and npm requirements
     log = open("reqlog.txt", "a")
     print("\n----> pip installs...")
     n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
