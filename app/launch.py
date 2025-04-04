@@ -41,7 +41,12 @@ def startEverything():
   logging.info("[launch.py] Arguments parsed.")
   # Set environment variable based on what the user selected on launch
   args.port = str(args.port)
-  os.environ["SELECTEDPORT"] = args.port
+
+  with open("/content/.env", "w") as f:
+    f.write(f"port={args.port}\n")
+    f.write(f"tunnel={args.tunnel}\n")
+    f.write(f"nl_formula=False\n")
+
 
   ## Setup ##
   print("\n#-------------------------- ### Setup ### --------------------------#\n")

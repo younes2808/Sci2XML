@@ -22,6 +22,19 @@ logging.basicConfig(
     ]
 )
 
+def get_envdict():
+    with open("/content/.env", "r") as f:
+        env = f.read()
+
+    envlist = env.split("\n")
+    envdict = {}
+    for env in envlist:
+        if (env == ""):
+            continue
+        envdict[env.split("=")[0]] = env.split("=")[1]
+
+    return envdict
+
 def latex_validity(latex_str):
     """
     Checks if the LaTeX string has matching \left and \right commands. 
@@ -128,8 +141,12 @@ def processClassifierResponse(element):
             
             else:
                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
-            
-            if (os.environ.get('NLFORMULA', 'false') == 'true'): # Check to see if environment variable for NL generation of formula is set and true:
+            envdict = get_envdict()
+            if ("nl_formula" not in envdict):
+                with open("/content/.env", "a") as f:
+                    f.write("nl_formula=False\n")
+            envdict = get_envdict()
+            if (envdict["nl_formula"] == "True"): # Check to see if environment variable for NL generation of formula is set and true:
                 st.write(f"{element.get('NL', 'No description available.')}") # Display the description of the formula
 
         elif element['element_type'] == "figure":
@@ -205,7 +222,12 @@ def process_classifier(xml_input, pdf_file):
             logging.info(f"[app.py] Call the table parser API endpoint")
             # Send to API endpoint for processing of tables
             try:
-                port = os.environ.get('SELECTEDPORT', '8000') # Either what the user selected at launch, or default 8000
+                envdict = get_envdict()
+                if ("port" not in envdict):
+                    with open("/content/.env", "a") as f:
+                        f.write("port=8000\n")
+                envdict = get_envdict()
+                port = envdict["port"] # Either what the user selected at launch, or default 8000
                 apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
                 logging.info(f"[app.py] Set URL for api to: {apiURL}")
             except Exception as e:
@@ -716,11 +738,21 @@ def main():
                         checkbox = st.checkbox("Include description for formulas")
 
                         if checkbox:
-                            os.environ["NLFORMULA"] = "true"
+                            envdict = get_envdict()
+                            if ("nl_formula" not in envdict):
+                                with open("/content/.env", "a") as f:
+                                    f.write("nl_formula=False\n")
+                            envdict = get_envdict()
+                            envdict["nl_formula"] = "True"
                             logging.info("[app.py] NLFORMULA sat to true.")
 
                         elif not checkbox:
-                            os.environ["NLFORMULA"] = "false"
+                            envdict = get_envdict()
+                            if ("nl_formula" not in envdict):
+                                with open("/content/.env", "a") as f:
+                                    f.write("nl_formula=False\n")
+                            envdict = get_envdict()
+                            envdict["nl_formula"] = "False"
                             logging.info("[app.py] NLFORMULA sat to false.")
 
                         if st.button("Process file"):
@@ -794,8 +826,12 @@ def main():
                                                             
                                                             else:
                                                                 st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
-                                                            
-                                                            if (os.environ.get('NLFORMULA', 'false') == 'true'): # Check to see if environment variable for NL generation of formula is set and true:                                                            
+                                                            envdict = get_envdict()
+                                                            if ("nl_formula" not in envdict):
+                                                                with open("/content/.env", "a") as f:
+                                                                    f.write("nl_formula=False\n")
+                                                            envdict = get_envdict()
+                                                            if (envdict["nl_formula"] == "True"): # Check to see if environment variable for NL generation of formula is set and true:
                                                                 st.write(f"{formula.get('NL', 'No description available.')}") # Display the description of the formula                                                                                                              
                                                     
                                                     else:
