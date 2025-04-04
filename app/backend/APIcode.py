@@ -40,7 +40,7 @@ import backend.models.formulaparser as formula
 import backend.models.figureparser as figure
 import backend.models.tableparser as tableParser
 
-print("\n\n#---------------------- ## Loading models ## -----------------------#\n")
+print("\n#---------------------- ## Loading models ## -----------------------#\n")
 logging.info(f"[APIcode.py] Loading models.")
 try:
     # Loading the various parsing models by calling the load function in their module.
@@ -62,8 +62,6 @@ def API(portnr):
   Returns:
   None
   """
-  print(socket.gethostbyname(socket.gethostname()))
-
   app = Flask(__name__)
 
   @app.route("/")

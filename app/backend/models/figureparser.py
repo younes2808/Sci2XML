@@ -18,7 +18,7 @@ def load():
   """
 
   # Inform the user that the model is being loaded
-  print("\n\n#-------------------- # Loading Moondream2 model # -----------------#\n")
+  print("\n#-------------------- # Loading Moondream2 model # -----------------#\n")
 
   # Load the Moondream2 model from the Hugging Face repository
   model = AutoModelForCausalLM.from_pretrained(
@@ -32,6 +32,6 @@ def load():
   tokenizer = AutoTokenizer.from_pretrained("vikhyatk/moondream2", trust_remote_code=True)
 
   # Confirm successful loading
-  print("\n\n----> Moondream2 model loaded successfully!\n")
+  print("\n----> Moondream2 model loaded successfully!\n")
 
   return model, tokenizer  # Return both the model and tokenizer for use in inference

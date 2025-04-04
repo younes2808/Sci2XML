@@ -17,7 +17,7 @@ def load_Sumen():
     """
 
     # Inform the user that the model is being loaded
-    print("\n\n#-------------------- # Loading Sumen OCR model # ------------------#\n")
+    print("\n#-------------------- # Loading Sumen OCR model # ------------------#\n")
 
     # Load the Sumen model from the Hugging Face repository and move it to the appropriate device
     global sumen_model, sumen_processor  # Declare global variables for model persistence

@@ -52,7 +52,7 @@ def loadGrobidPythonway():
       print("---> Unzipping GROBID files...")
       n = subprocess.run(["unzip", "0.8.1.zip"], stdout=subprocess.PIPE)
       
-      print("---> Installing GROBID with Gradle... (Expected duration: ~4 min)")
+      print("---> Installing GROBID with Gradle... (Expected duration: ~4 min)\n")
       grobidinstalllogfile = open("grobidinstalllog.txt", "a")
       n = subprocess.run(["./gradlew", "clean", "install"], stdout=grobidinstalllogfile, stderr=grobidinstalllogfile, text=True, cwd="/content/grobid-0.8.1/")
 
@@ -69,7 +69,7 @@ def loadGrobidPythonway():
   clock = -1
   while True:
     if clock == -1:
-      print("\n\nChecking GROBID server status:")
+      print("\nChecking GROBID server status:")
       res = "false"
       try:
         res = requests.get('http://172.28.0.12:8070/api/isalive')

@@ -23,7 +23,7 @@ def loadML():
   Returns:
   densenet: The ML model.
   """
-  print("\n\n#-------------------- # Loading ML Classifier # --------------------#\n")
+  print("\n#-------------------- # Loading ML Classifier # --------------------#\n")
 
   n_classes = 9
   batch_size = 128

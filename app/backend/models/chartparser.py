@@ -19,7 +19,7 @@ def load_UniChart():
     """
 
     # Inform the user that the model is being loaded
-    print("\n\n#-------------------- # Loading UniChart model # -------------------#\n")
+    print("\n#-------------------- # Loading UniChart model # -------------------#\n")
     
     # Load the pre-trained UniChart model and assign it to the appropriate device
     global unichart_model, unichart_processor  # Declare global variables for model persistence
