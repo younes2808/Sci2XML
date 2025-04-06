@@ -740,7 +740,7 @@ def main():
                         """
                         # Checkbox to set environment variable NLFORMULA 
                         # If true, a NL description for formulas will be included
-                        checkbox = st.checkbox("Include description for formulas")
+                        checkbox = st.checkbox("Include description of formulas", help="Including descriptions will delay processing and may result in inaccuracies.")
 
                         if checkbox:
                             envdict = get_envdict()
