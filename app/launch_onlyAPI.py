@@ -35,7 +35,6 @@ def startEverything():
   logging.info("[launch_onlyAPI.py] Starting function startEverything()")
   # Parsing arguments from terminal:
   parser = argparse.ArgumentParser()
-  parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
   parser.add_argument('--authtoken', dest='authtoken', type=str, help='Set authtoken for Ngrok.', default ="None")
   parser.add_argument('--port', dest='port', type=int, help='Set port number', choices=range(8000, 8070), metavar="[8000-8069]", default =8000)
   parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['True', 'False', None], default ="False")
@@ -43,10 +42,11 @@ def startEverything():
   logging.info("[launch_onlyAPI.py] Arguments parsed.")
   # Set environment variable based on what the user selected on launch. 
   args.port = str(args.port)
+  tunnel = "ngrok"
   # Create .env file with the various environment variables:
   with open("/content/.env", "w") as f:
     f.write(f"port={args.port}\n")
-    f.write(f"tunnel={args.tunnel}\n")
+    f.write(f"tunnel={tunnel}\n")
     f.write(f"nl_formula={args.nlformula}\n")
     f.write(f"authtoken={args.authtoken}\n")
 
@@ -115,12 +115,12 @@ def startEverything():
 
   ## Start API using tunnel ##
   print("\n#------------ ### Starting API through tunnel ### ------------#\n")
-  logging.info(f"[launch_onlyAPI.py] Starting API through tunnel: {args.tunnel}.")
+  logging.info(f"[launch_onlyAPI.py] Starting API through tunnel: {tunnel}.")
   try:
       # Import frontendmodule, which will be used to expose localhost to internet.
       import frontend.frontendmodule as front
       # Host frontend through streamlit
-      front.startAPI(args.tunnel, args.port)
+      front.startAPI(tunnel, args.port)
       logging.info(f"[launch_onlyAPI.py] Finished starting API through tunnel.")
   except Exception as e:
     logging.error(f"[launch_onlyAPI.py] An error occurred while trying to start API through tunnel: {e}", exc_info=True)

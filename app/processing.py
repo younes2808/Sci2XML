@@ -50,7 +50,7 @@ def main():
     write_envdict(envdict) # Write new value to file
 
     # If args good:
-    startProcessing(pdfPath)
+    startProcessing(pdfPath, pathToSave)
 
 
 def startProcessing(pdfPath, pathToSave):
