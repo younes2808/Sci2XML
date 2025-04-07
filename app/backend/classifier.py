@@ -258,6 +258,24 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
     """
     logging.info("[classifier.py] Starting function Classifier()")
 
+    # Get runmode (frontend, code or api)
+    envdict = get_envdict()
+    if ("runmode" not in envdict): # If key doesnt exist, create it with default value 'api':
+        with open("/content/.env", "a") as f:
+            f.write("runmode=api\n")
+    envdict = get_envdict()
+    runmode = envdict["runmode"] # Either what the user selected at launch, or default 8000
+    if runmode == "code":
+        # Code-Launch-processing code:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("processingmodule", "/content/Sci2XML/app/processing.py")
+        processing_launch_code = importlib.util.module_from_spec(spec)
+        sys.modules["processingmodule"] = processing_launch_code
+        spec.loader.exec_module(processing_launch_code)
+        processing_launch_code.print_update(f"Processing {XMLtype} {elementNr}")
+
+        logging.info(f"[classifier.py] Set URL for api to: {apiURL}")
+
     subtype = "unknown" # The type of element. Will be updated after classification.
 
     ## API request header:

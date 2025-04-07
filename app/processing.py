@@ -1,0 +1,216 @@
+import argparse
+import requests
+import sys
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s: %(message)s',
+    force=True,
+    handlers=[
+        logging.FileHandler("app.log"),  # Log to a file named 'app.log'
+        logging.StreamHandler(sys.stdout)  # Also log to console
+    ]
+)
+
+def main():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--pdf', dest='pdf', type=str, help='Set path to PDF file.', default ="", required=True)
+    parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['true', 'false', None], default ="false")
+
+    args = parser.parse_args()
+
+    # Handle nl_formula option:
+    if (args.nlformula == "true"):
+        print("NL for formler ja")
+        # Get variable from .env file:
+        envdict = get_envdict()
+        if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
+            with open("/content/.env", "a") as f:
+                f.write("nl_formula=False\n")
+        envdict = get_envdict()
+        envdict["nl_formula"] = "True" # Set new value
+        write_envdict(envdict) # Write new value to file
+    else:
+        print("NL for formler nei")
+    # Handle PDF: 
+    pdfPath = args.pdf
+    print(pdfPath)
+
+    # Get variable from .env file:
+    envdict = get_envdict()
+    if ("runmode" not in envdict): # If key doesnt exist, create it with default value 'False':
+        with open("/content/.env", "a") as f:
+            f.write("runmode=frontend\n")
+    envdict = get_envdict()
+    envdict["runmode"] = "code" # Set new value
+    write_envdict(envdict) # Write new value to file
+
+    # If args good:
+    startProcessing(pdfPath)
+
+
+def startProcessing(pdfPath):
+      print("Starting processing")
+      """
+      Function for initiating the entire process, without the use of frontend.
+      First reads the uploaded PDF, then sends it to GROBID server.
+      Then calls on tableparser. Then calls the classifier functions, which handles all
+       formulas, charts and figures.
+      In the end it calls on getXML() and returns the result.
+
+      Paramaters:
+      pdfPath: Path to the PDF.
+
+      Returns:
+      The processed XML file.
+      """
+      print("\n")
+      logging.info(f"[processing.py] process - You have reached function for full processing.")
+
+      with open(pdfPath, "rb") as f:
+        byte_data_PDF = f.read()
+
+      ## Calling GROBID ##
+      print_update("Calling GROBID")
+      logging.info(f"[processing.py] process - Calling GROBID.")
+      grobid_url="http://172.28.0.12:8070/api/processFulltextDocument"
+      files = {'input': byte_data_PDF}
+      params = {
+                    "consolidateHeader": 1,
+                    "consolidateCitations": 1,
+                    "consolidateFunders": 1,
+                    "includeRawAffiliations": 1,
+                    "includeRawCitations": 1,
+                    "segmentSentences": 1,
+                    "teiCoordinates": ["ref", "s", "biblStruct", "persName", "figure", "formula", "head", "note", "title", "affiliation"]
+                }
+      # Call GROBID server:
+      try:
+        response = requests.post(grobid_url, files=files, data=params)  # Use 'data' for form-data
+        response.raise_for_status()  # Raise exception if status is not 200
+        string_data_XML = response.text
+        logging.info(f"[processing.py] Successfully called GROBID server.")
+        # Check if coordinates are missing in the response
+        if 'coords' not in response.text:
+            logging.warning("[processing.py] No coordinates found in PDF file. Please check GROBID settings.")
+      except Exception as e:
+        logging.error(f"[processing.py] An error occurred while calling GROBID server: {e}", exc_info=True)
+
+      ## Table Parser ##
+      print_update("Received response from GROBID, will not initiate Table parser.")
+      logging.info(f"[processing.py] process - Initiating Table parser.")
+      ## Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
+      # Ready the files:
+      files = {"grobid_xml": ("xmlfile.xml", string_data_XML, "application/json"), "pdf": ("pdffile.pdf", byte_data_PDF)}
+
+      try:
+        # Send to API endpoint for processing of tables
+        try:
+            envdict = get_envdict()
+            if ("port" not in envdict): # If key doesnt exist, create it with default value '8000':
+                with open("/content/.env", "a") as f:
+                    f.write("port=8000\n")
+            envdict = get_envdict()
+            port = envdict["port"] # Either what the user selected at launch, or default 8000
+            apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
+            logging.info(f"[processing.py] Set URL for api to: {apiURL}")
+        except Exception as e:
+            apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
+            logging.error(f"[processing.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
+        
+        response = requests.post(f"{apiURL}parseTable", files=files)
+        string_data_XML = response.text
+        logging.info(f'[processing.py] Response from table parser: {response}')
+      except requests.exceptions.RequestException as e:
+        logging.error(f"An error occurred while communication with the table parser: {e}", exc_info=True)
+
+      ##  Starting classifier ##
+      print_update("Received response from Table parser, will not initiate classification and further processing.")
+      logging.info(f"[processing.py] process - Initiating Classifier.")
+      # Classifier code:
+      ## Our own modules ##
+      import importlib.util
+      spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/backend/classifier.py")
+      classifier = importlib.util.module_from_spec(spec)
+      sys.modules["classifiermodule"] = classifier
+      spec.loader.exec_module(classifier)
+      try:
+        # Open the XML file and extract all figures and formulas, as well as getting each page of the PDF as an image.
+        print_update("Opening XML file and extracting figures and formulas.")
+        images, figures, formulas = classifier.openXMLfile(string_data_XML, byte_data_PDF, frontend=False)
+        logging.info(f'[processing.py] Successfully opened XML file.')
+      except requests.exceptions.RequestException as e:
+        logging.error(f"An error occurred while opening the XML file: {e}", exc_info=True)
+      try:
+        # Process each figure. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
+        print_update("Processing figures:")
+        classifier.processFigures(figures, images, frontend=False)
+        logging.info(f'[processing.py] Successfully processed the figures.')
+      except requests.exceptions.RequestException as e:
+        logging.error(f"An error occurred while processeing figures: {e}", exc_info=True)
+      try:
+        # Process each formula. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
+        print_update("Processing formulas:")
+        classifier.processFormulas(formulas, images, mode="regex", frontend=False)
+        logging.info(f'[processing.py] Successfully processed the formulas.')
+      except requests.exceptions.RequestException as e:
+        logging.error(f"An error occurred while processing formulas: {e}", exc_info=True)
+      print_update("Processing is finished.")
+      return str(classifier.getXML(frontend=False))
+
+def print_update(update):
+  print("System Process Update: ", update)
+  logging.info(f"[processing.py] System Process Update: {update}.")
+
+def get_envdict():
+    """
+    Gets the content of the .env file and creates a dictionary of its elements.
+
+    Parameters:
+    None
+
+    Returns:
+    envdict (dict): A dictionary with the contents of the .env file.
+    """
+    # Open and read .env file:
+    try:
+        with open("/content/.env", "r") as f:
+            env = f.read()
+        logging.info(f"[app.py] Successfully opened .env file.")
+    except Exception as e:
+        logging.error(f"[app.py] An error occurred while opening .env file: {e}", exc_info=True)
+
+    # Add each entry of file to dictionary:
+    envlist = env.split("\n")
+    envdict = {}
+    for env in envlist:
+        if (env == ""):
+            continue
+        # Map correct value to key:
+        envdict[env.split("=")[0]] = env.split("=")[1]
+
+    return envdict
+
+def write_envdict(envdict):
+  """
+  Writes the altered environmentvalues dictionary to .env file.
+
+  Parameters:
+  envdict (dict): A dictionary with environment variables.
+
+  Returns:
+  None
+  """
+  try:
+    with open("/content/.env", "w") as f:
+        # Add each key-value pair in dict to file:
+        for key, value in envdict.items():
+            f.write(f"{key}={value}\n")
+    logging.info(f"[app.py] Successfully saved new content to .env file.")
+  except Exception as e:
+    logging.error(f"[app.py] An error occurred while writing new content to .env file: {e}", exc_info=True)
+
+
+if __name__ == '__main__':
+  main()
