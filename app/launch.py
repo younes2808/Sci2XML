@@ -36,6 +36,7 @@ def startEverything():
   # Parsing arguments from terminal:
   parser = argparse.ArgumentParser()
   parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
+  parser.add_argument('--authtoken', dest='authtoken', type=str, help='Set authtoken for Ngrok.', default ="None")
   parser.add_argument('--port', dest='port', type=int, help='Set port number', choices=range(8000, 8070), metavar="[8000-8069]", default =8000)
   args = parser.parse_args()
   logging.info("[launch.py] Arguments parsed.")
@@ -47,6 +48,7 @@ def startEverything():
     f.write(f"port={args.port}\n")
     f.write(f"tunnel={args.tunnel}\n")
     f.write(f"nl_formula=False\n")
+    f.write(f"authtoken={args.authtoken}\n")
 
 
   ## Setup ##

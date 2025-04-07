@@ -63,10 +63,18 @@ def startNgrok(port):
   """
   logging.info(f"[frontendmodule.py] Starting Ngrok.")
 
-  # Lets user write their auth token:
-  print("Enter your Ngrok Authtoken. Token can be found here: https://dashboard.ngrok.com/get-started/your-authtoken")
-  print("Please note: You may need to enter the token and press Enter twice before Ngrok responds.")
-  conf.get_default().auth_token = getpass.getpass()
+  envdict = get_envdict()
+  if ("authtoken" not in envdict): # If key doesnt exist, create it with default value 'None':
+      with open("/content/.env", "a") as f:
+          f.write("authtoken=None\n")
+  envdict = get_envdict()
+  if (envdict["authtoken"] != "None"): # Check to see if authtoken is set
+    conf.get_default().auth_token = envdict["authtoken"]
+  else:
+    # Lets user write their auth token:
+    print("Enter your Ngrok Authtoken. Token can be found here: https://dashboard.ngrok.com/get-started/your-authtoken")
+    print("Please note: You may need to enter the token and press Enter twice before Ngrok responds.")
+    conf.get_default().auth_token = getpass.getpass()
 
   # Open a ngrok tunnel to the localhost:
   try:
@@ -142,3 +150,34 @@ def startAPI(tunnel, portnr):
   print("\n############################################################")
   print(f"----> Public URL: {url} \n----> Password: {passw}")
   print("############################################################\n")
+
+
+
+def get_envdict():
+    """
+    Gets the content of the .env file and creates a dictionary of its elements.
+
+    Parameters:
+    None
+
+    Returns:
+    envdict (dict): A dictionary with the contents of the .env file.
+    """
+    # Open and read .env file:
+    try:
+        with open("/content/.env", "r") as f:
+            env = f.read()
+        logging.info(f"[frontendmodule.py] Successfully opened .env file.")
+    except Exception as e:
+        logging.error(f"[frontendmodule.py] An error occurred while opening .env file: {e}", exc_info=True)
+
+    # Add each entry of file to dictionary:
+    envlist = env.split("\n")
+    envdict = {}
+    for env in envlist:
+        if (env == ""):
+            continue
+        # Map correct value to key:
+        envdict[env.split("=")[0]] = env.split("=")[1]
+
+    return envdict

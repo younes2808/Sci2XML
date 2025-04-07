@@ -23,7 +23,6 @@ def main():
 
     # Handle nl_formula option:
     if (args.nlformula == "true"):
-        print("NL for formler ja")
         # Get variable from .env file:
         envdict = get_envdict()
         if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
@@ -32,8 +31,7 @@ def main():
         envdict = get_envdict()
         envdict["nl_formula"] = "True" # Set new value
         write_envdict(envdict) # Write new value to file
-    else:
-        print("NL for formler nei")
+
     # Handle PDF: 
     pdfPath = args.pdf
     print(pdfPath)
@@ -171,7 +169,6 @@ def startProcessing(pdfPath, pathToSave):
 
 def print_update(update):
   print("System Process Update: ", update)
-  logging.info(f"[processing.py] System Process Update: {update}.")
 
 def get_envdict():
     """
