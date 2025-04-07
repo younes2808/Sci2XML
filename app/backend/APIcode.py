@@ -246,7 +246,7 @@ def API(portnr):
       try:
         # Check to see if environment variable for NL generation of formula is set and true:
         envdict = get_envdict()
-        if ("nl_formula" not in envdict):
+        if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
            with open("/content/.env", "a") as f:
               f.write("nl_formula=False\n")
         envdict = get_envdict()
@@ -513,7 +513,7 @@ def API(portnr):
         # Send to API endpoint for processing of tables
         try:
             envdict = get_envdict()
-            if ("port" not in envdict):
+            if ("port" not in envdict): # If key doesnt exist, create it with default value '8000':
                 with open("/content/.env", "a") as f:
                     f.write("port=8000\n")
             envdict = get_envdict()
@@ -554,14 +554,30 @@ def API(portnr):
       return str(classifier.getXML(frontend=False))
   
   def get_envdict():
-    with open("/content/.env", "r") as f:
-        env = f.read()
+    """
+    Gets the content of the .env file and creates a dictionary of its elements.
 
+    Parameters:
+    None
+
+    Returns:
+    envdict (dict): A dictionary with the contents of the .env file.
+    """
+    # Open and read .env file:
+    try:
+        with open("/content/.env", "r") as f:
+            env = f.read()
+        logging.info(f"[app.py] Successfully opened .env file.")
+    except Exception as e:
+        logging.error(f"[app.py] An error occurred while opening .env file: {e}", exc_info=True)
+
+    # Add each entry of file to dictionary:
     envlist = env.split("\n")
     envdict = {}
     for env in envlist:
         if (env == ""):
             continue
+        # Map correct value to key:
         envdict[env.split("=")[0]] = env.split("=")[1]
 
     return envdict
