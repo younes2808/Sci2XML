@@ -41,9 +41,9 @@ def get_envdict():
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
-        logging.info(f"[app.py] Successfully opened .env file.")
+        logging.info(f"[classifier.py] Successfully opened .env file.")
     except Exception as e:
-        logging.error(f"[app.py] An error occurred while opening .env file: {e}", exc_info=True)
+        logging.error(f"[classifier.py] An error occurred while opening .env file: {e}", exc_info=True)
 
     # Add each entry of file to dictionary:
     envlist = env.split("\n")
@@ -268,6 +268,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
     if runmode == "code":
         # Code-Launch-processing code:
         import importlib.util
+        import sys
         spec = importlib.util.spec_from_file_location("processingmodule", "/content/Sci2XML/app/processing.py")
         processing_launch_code = importlib.util.module_from_spec(spec)
         sys.modules["processingmodule"] = processing_launch_code

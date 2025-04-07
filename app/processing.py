@@ -16,7 +16,8 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--pdf', dest='pdf', type=str, help='Set path to PDF file.', default ="", required=True)
-    parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['true', 'false', None], default ="false")
+    parser.add_argument('--output', dest='pathToSave', type=str, help='Set path to save processed XML file.', default ="", required=True)
+    parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['True', 'False', None], default ="False")
 
     args = parser.parse_args()
 
@@ -37,6 +38,10 @@ def main():
     pdfPath = args.pdf
     print(pdfPath)
 
+    # Handle XML: 
+    pathToSave = args.pathToSave
+    print(pathToSave)
+
     # Get variable from .env file:
     envdict = get_envdict()
     if ("runmode" not in envdict): # If key doesnt exist, create it with default value 'False':
@@ -50,7 +55,7 @@ def main():
     startProcessing(pdfPath)
 
 
-def startProcessing(pdfPath):
+def startProcessing(pdfPath, pathToSave):
       print("Starting processing")
       """
       Function for initiating the entire process, without the use of frontend.
@@ -157,7 +162,12 @@ def startProcessing(pdfPath):
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while processing formulas: {e}", exc_info=True)
       print_update("Processing is finished.")
-      return str(classifier.getXML(frontend=False))
+
+      altered_xml = str(classifier.getXML(frontend=False))
+
+      with open(pathToSave, "w") as f:
+        f.write(altered_xml)
+      return altered_xml
 
 def print_update(update):
   print("System Process Update: ", update)
@@ -177,9 +187,9 @@ def get_envdict():
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
-        logging.info(f"[app.py] Successfully opened .env file.")
+        logging.info(f"[processing.py] Successfully opened .env file.")
     except Exception as e:
-        logging.error(f"[app.py] An error occurred while opening .env file: {e}", exc_info=True)
+        logging.error(f"[processing.py] An error occurred while opening .env file: {e}", exc_info=True)
 
     # Add each entry of file to dictionary:
     envlist = env.split("\n")
@@ -207,9 +217,9 @@ def write_envdict(envdict):
         # Add each key-value pair in dict to file:
         for key, value in envdict.items():
             f.write(f"{key}={value}\n")
-    logging.info(f"[app.py] Successfully saved new content to .env file.")
+    logging.info(f"[processing.py] Successfully saved new content to .env file.")
   except Exception as e:
-    logging.error(f"[app.py] An error occurred while writing new content to .env file: {e}", exc_info=True)
+    logging.error(f"[processing.py] An error occurred while writing new content to .env file: {e}", exc_info=True)
 
 
 if __name__ == '__main__':

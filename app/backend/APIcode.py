@@ -567,9 +567,9 @@ def API(portnr):
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
-        logging.info(f"[app.py] Successfully opened .env file.")
+        logging.info(f"[APIcode.py] Successfully opened .env file.")
     except Exception as e:
-        logging.error(f"[app.py] An error occurred while opening .env file: {e}", exc_info=True)
+        logging.error(f"[APIcode.py] An error occurred while opening .env file: {e}", exc_info=True)
 
     # Add each entry of file to dictionary:
     envlist = env.split("\n")
