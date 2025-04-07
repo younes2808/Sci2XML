@@ -341,7 +341,7 @@ def API(portnr):
 
       try:
         if (0 < len(promptContext) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
-          answer = figureParserModel.query(image, f"Describe this image deeply. Caption it. Here is the figure description for context: {promptContext}")["answer"]
+          answer = figureParserModel.query(image, f"Describe and explain this figure with you own words. Here is the figure description for context: '{promptContext}'")["answer"]
         
         else: # If extracted prompt-context is of length 0 or very long then simply do not give the model additional context:
           answer = figureParserModel.query(image, f"Describe this image deeply. Caption it.")["answer"]
