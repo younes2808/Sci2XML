@@ -2,6 +2,9 @@ import argparse
 import requests
 import sys
 import logging
+import os
+from glob import glob ##Used to find *.pdf files in folder
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s: %(message)s',
@@ -13,44 +16,81 @@ logging.basicConfig(
 )
 
 def main():
+    """
+    Function for initiating the entire process, without the use of frontend.
+    First, it reads the uploaded PDF and then sends it to the GROBID server.
+    Then, it calls the table parser and classifier functions, which handle all
+    formulas, charts, and figures.
+    In the end, it calls getXML() and returns the result.
+
+    Parameters:
+    --pdf: Path to a single PDF file.
+    --folder: Path to a folder containing multiple PDFs (mutually exclusive with --output).
+    --output: Path to save the processed XML file (only used with --pdf).
+    --nl_formula: Whether to enable natural language generation for formulas ('True' or 'False').
+
+    Returns:
+    The processed XML file(s).
+    """
+
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--pdf', dest='pdf', type=str, help='Set path to PDF file.', default ="", required=True)
-    parser.add_argument('--output', dest='pathToSave', type=str, help='Set path to save processed XML file.', default ="", required=True)
-    parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['True', 'False', None], default ="False")
+    # Arguments
+    parser.add_argument('--pdf', dest='pdf', type=str, help='Set path to PDF file.', default="")
+    parser.add_argument('--output', dest='pathToSave', type=str, help='Set path to save processed XML file.', default="")
+    parser.add_argument('--folder', dest='folder', type=str, help='Set path to a folder containing PDFs.', default="")
+    parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['True', 'False', None], default="False")
 
     args = parser.parse_args()
 
-    # Handle nl_formula option:
-    if (args.nlformula == "true"):
-        # Get variable from .env file:
+    # Ensure the user doesn't provide both --folder and --output; they are mutually exclusive
+    if args.folder and args.pathToSave:
+        parser.error("You cannot use --folder and --output together.")
+
+    # Ensure the user provides at least one input source: a single PDF or a folder
+    if not args.pdf and not args.folder:
+        parser.error("You must provide either --pdf or --folder.")
+
+    # Handle the --nl_formula flag
+    if args.nlformula.lower() == "true":
         envdict = get_envdict()
-        if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
+
+        # If "nl_formula" is missing in the .env, create it with a default value
+        if "nl_formula" not in envdict:
             with open("/content/.env", "a") as f:
                 f.write("nl_formula=False\n")
+
+        # Update the value to True and write back to the file
         envdict = get_envdict()
-        envdict["nl_formula"] = "True" # Set new value
-        write_envdict(envdict) # Write new value to file
+        envdict["nl_formula"] = "True"
+        write_envdict(envdict)
 
-    # Handle PDF: 
-    pdfPath = args.pdf
-    print(pdfPath)
-
-    # Handle XML: 
-    pathToSave = args.pathToSave
-    print(pathToSave)
-
-    # Get variable from .env file:
+    # Ensure runmode is set to "code" in the .env
     envdict = get_envdict()
-    if ("runmode" not in envdict): # If key doesnt exist, create it with default value 'False':
+    if "runmode" not in envdict:
         with open("/content/.env", "a") as f:
             f.write("runmode=frontend\n")
-    envdict = get_envdict()
-    envdict["runmode"] = "code" # Set new value
-    write_envdict(envdict) # Write new value to file
 
-    # If args good:
-    startProcessing(pdfPath, pathToSave)
+    envdict = get_envdict()
+    envdict["runmode"] = "code"
+    write_envdict(envdict)
+
+    # Folder mode: Process all PDFs in the given directory and name output files as 1.xml, 2.xml, etc.
+    if args.folder:
+        pdf_files = sorted(glob(os.path.join(args.folder, "*.pdf")))
+        for idx, pdf_file in enumerate(pdf_files, start=1):
+            output_path = f"{idx}.xml"
+            print(f"\nProcessing {pdf_file} -> {output_path}")
+            startProcessing(pdf_file, output_path)
+
+    # Single PDF mode
+    else:
+        pdfPath = args.pdf
+        pathToSave = args.pathToSave
+        print(f"\nProcessing single file:")
+        print(f"PDF path: {pdfPath}")
+        print(f"Output path: {pathToSave}")
+        startProcessing(pdfPath, pathToSave)
 
 
 def startProcessing(pdfPath, pathToSave):
