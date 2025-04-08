@@ -33,8 +33,6 @@ if args.pdf and not args.output:
 # Step 1: Run the first script (launch_onlyAPI.py)
 api_process = subprocess.Popen([
     "python", "Sci2XML/app/launch_onlyAPI.py", 
-    "--tunnel", "ngrok", 
-    "--port", "8001",
     "--nl_formula", args.nl_formula, 
     "--authtoken", args.authtoken
 ])
