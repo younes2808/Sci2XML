@@ -1,6 +1,8 @@
 import subprocess
 import argparse
 import sys
+import time
+import logging
 
 # Set up argument parsing
 parser = argparse.ArgumentParser(description="Automate Sci2XML processing")
@@ -28,19 +30,40 @@ if args.pdf and not args.output:
     print("Error: --output must be provided when --pdf is used.")
     sys.exit(1)
 
-# Set nl_formula to False if not given (already done by default='False' in argument parser)
-
 # Step 1: Run the first script (launch_onlyAPI.py)
-api_process = subprocess.Popen([
+print("Starting the API with launch_onlyAPI.py...")
+
+api_process = subprocess.Popen([  # Use subprocess.Popen to run asynchronously
     "python", "Sci2XML/app/launch_onlyAPI.py", 
     "--nl_formula", args.nl_formula, 
     "--authtoken", args.authtoken
-])
+], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-# Wait for the first process to finish
-api_process.wait()
+# Check the output of the process for the message indicating completion
+setup_complete = False
+
+# Read the output of the process as it runs
+while True:
+    output = api_process.stdout.readline()
+    if output == b"" and api_process.poll() is not None:
+        break
+    if output:
+        # Look for the specific message that indicates launch_onlyAPI.py is ready
+        print(output.strip().decode())
+        if "#--------------------- ### User Interaction ### --------------------#" in output.decode():  # When ready
+            setup_complete = True
+            break
+
+# Wait for the process to finish the setup and start the server
+if not setup_complete:
+    print("Error: Failed to detect the completion of API setup.")
+    sys.exit(1)
+
+print("launch_onlyAPI.py setup is complete! Moving on to processing.py...")
 
 # Step 2: Run the second script (processing.py)
+print("Starting the processing script...")
+
 if args.pdf:
     # If a PDF file is provided, use the PDF-based command
     subprocess.run([
@@ -48,14 +71,13 @@ if args.pdf:
         "--nl_formula", args.nl_formula, 
         "--pdf", args.pdf, 
         "--output", args.output
-    ])
+    ], check=True)
 elif args.folder:
     # If no PDF is provided, use the folder-based command
     subprocess.run([
         "python", "Sci2XML/app/processing.py", 
         "--nl_formula", args.nl_formula, 
         "--folder", args.folder
-    ])
+    ], check=True)
 
 print("Processing complete!")
-
