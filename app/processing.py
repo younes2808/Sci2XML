@@ -2,6 +2,7 @@ import argparse
 import requests
 import sys
 import logging
+import os
 from glob import glob ##Used to find *.pdf files in folder
 
 logging.basicConfig(
