@@ -1,6 +1,8 @@
 import subprocess
 import argparse
 import os
+import sys
+
 
 def wait_for_launchoutput(process, ready_signal):
     """Wait until the LaunchOnlyAPI prints the ready message."""
@@ -88,6 +90,7 @@ def main():
         launch_proc.terminate()
         launch_proc.wait()
         print("API terminated. Goodbye!")
+        sys.exit(0)
 
 if __name__ == "__main__":
     main()
