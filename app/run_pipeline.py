@@ -1,10 +1,10 @@
 import subprocess
 import argparse
 import os
+import sys
 
 def wait_for_launchoutput(process, ready_signal):
     """Wait until the LaunchOnlyAPI prints the ready message."""
-    print("Waiting for LaunchOnlyAPI to be ready...")
     while True:
         line = process.stdout.readline()
         if not line:
@@ -53,35 +53,43 @@ def main():
         text=True
     )
 
-    # 2. Wait until API is ready
-    wait_for_launchoutput(launch_proc, "### User Interaction ###")
+    try:
+        # 2. Wait until API is ready
+        wait_for_launchoutput(launch_proc, "### User Interaction ###")
 
-    # 3. Start CLI loop (no initial processing)
-    while True:
-        print("\nEnter a command to process a new PDF or folder, or type 'exit' to quit.")
-        user_input = input("Command (folder/pdf/exit): ").strip().lower()
+        # 3. Start CLI loop
+        while True:
+            print("\nEnter a command to process a new PDF or folder, or type 'exit' to quit.")
+            user_input = input("Command (folder/pdf/exit): ").strip().lower()
 
-        if user_input == "exit":
-            print("Exiting CLI. API will keep running.")
-            break
+            if user_input == "exit":
+                print("Exiting CLI. Shutting down API...")
+                break
 
-        elif user_input == "folder":
-            folder_path = input("Enter the folder path: ").strip()
-            if os.path.isdir(folder_path):
-                process_pdf(args, folder=folder_path)
+            elif user_input == "folder":
+                folder_path = input("Enter the folder path: ").strip()
+                if os.path.isdir(folder_path):
+                    process_pdf(args, folder=folder_path)
+                else:
+                    print("Invalid folder path.")
+
+            elif user_input == "pdf":
+                pdf_file = input("Enter the PDF file path: ").strip()
+                if os.path.isfile(pdf_file):
+                    output_name = input("Enter the output XML filename: ").strip()
+                    process_pdf(args, pdf=pdf_file, output=output_name)
+                else:
+                    print("Invalid PDF file.")
+
             else:
-                print("Invalid folder path.")
+                print("Unknown command. Please enter 'folder', 'pdf', or 'exit'.")
 
-        elif user_input == "pdf":
-            pdf_file = input("Enter the PDF file path: ").strip()
-            if os.path.isfile(pdf_file):
-                output_name = input("Enter the output XML filename: ").strip()
-                process_pdf(args, pdf=pdf_file, output=output_name)
-            else:
-                print("Invalid PDF file.")
-
-        else:
-            print("Unknown command. Please enter 'folder', 'pdf', or 'exit'.")
+    finally:
+        print("Terminating LaunchOnlyAPI...")
+        launch_proc.terminate()
+        launch_proc.wait()
+        print("API terminated. Goodbye!")
+        sys.exit(0)
 
 if __name__ == "__main__":
     main()
