@@ -86,8 +86,9 @@ def main():
 
     finally:
         print("Terminating LaunchOnlyAPI...")
-        launch_proc.terminate()
-        launch_proc.wait()
+        if launch_proc.poll() is None:
+            launch_proc.kill()  # force kill
+            launch_proc.wait()
         print("API terminated. Goodbye!")
         sys.exit(0)
 
