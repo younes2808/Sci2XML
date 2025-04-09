@@ -4,7 +4,6 @@ import os
 
 def wait_for_launchoutput(process, ready_signal):
     """Wait until the LaunchOnlyAPI prints the ready message."""
-    print("Waiting for LaunchOnlyAPI to be ready...")
     while True:
         line = process.stdout.readline()
         if not line:
