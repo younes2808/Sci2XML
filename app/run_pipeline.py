@@ -1,5 +1,4 @@
 import subprocess
-import time
 import argparse
 
 def wait_for_launchoutput(process, ready_signal):
@@ -9,8 +8,8 @@ def wait_for_launchoutput(process, ready_signal):
         line = process.stdout.readline()
         if not line:
             continue
-        print(line.decode().strip())
-        if ready_signal in line.decode():
+        print(line.strip())
+        if ready_signal in line:
             print("API is ready! Proceeding to processing.")
             break
 
@@ -36,7 +35,8 @@ def main():
         launch_cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        bufsize=1
+        bufsize=1,
+        text=True  # Text mode enabled to avoid RuntimeWarning
     )
 
     # 2. Wait for the API to be ready (look for the specific printed message)
@@ -45,10 +45,7 @@ def main():
     # 3. Run processing.py with the correct arguments
     processing_cmd = ["python", "Sci2XML/app/processing.py"]
 
-    if args.nl_formula:
-        processing_cmd += ["--nl_formula", "True"]
-    else:
-        processing_cmd += ["--nl_formula", "False"]
+    processing_cmd += ["--nl_formula", str(args.nl_formula)]
 
     if args.folder:
         processing_cmd += ["--folder", args.folder]
