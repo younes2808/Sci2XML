@@ -3,7 +3,6 @@ import argparse
 import os
 import sys
 
-
 def wait_for_launchoutput(process, ready_signal):
     """Wait until the LaunchOnlyAPI prints the ready message."""
     while True:
