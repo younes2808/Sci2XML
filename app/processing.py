@@ -78,19 +78,37 @@ def main():
     # Folder mode: Process all PDFs in the given directory and name output files as 1.xml, 2.xml, etc.
     if args.folder:
         pdf_files = sorted(glob(os.path.join(args.folder, "*.pdf")))
-        for idx, pdf_file in enumerate(pdf_files, start=1):
-            output_path = f"{idx}.xml"
+    
+        # Get all existing .xml files and extract numeric indices like 1, 2, etc.
+        existing_xmls = glob(os.path.join(args.folder, "*.xml"))
+        used_indices = [int(os.path.splitext(os.path.basename(f))[0]) for f in existing_xmls if os.path.splitext(os.path.basename(f))[0].isdigit()]
+    
+        # Start from the next available index
+        next_index = max(used_indices, default=0) + 1
+    
+        for idx, pdf_file in enumerate(pdf_files, start=next_index):
+            output_path = os.path.join(args.folder, f"{idx}.xml")
             print(f"\nProcessing {pdf_file} -> {output_path}")
             startProcessing(pdf_file, output_path)
-
+    
     # Single PDF mode
     else:
         pdfPath = args.pdf
         pathToSave = args.pathToSave
+        base, ext = os.path.splitext(pathToSave)
+        count = 1
+        final_path = pathToSave
+    
+        # If the output file already exists, keep adding (1), (2), etc. until it's unique
+        while os.path.exists(final_path):
+            final_path = f"{base}({count}){ext}"
+            count += 1
+    
         print(f"\nProcessing single file:")
         print(f"PDF path: {pdfPath}")
-        print(f"Output path: {pathToSave}")
-        startProcessing(pdfPath, pathToSave)
+        print(f"Output path: {final_path}")
+        startProcessing(pdfPath, final_path)
+
 
 
 def startProcessing(pdfPath, pathToSave):
