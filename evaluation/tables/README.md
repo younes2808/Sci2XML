@@ -40,3 +40,7 @@ Both tools were executed locally on the same machine under similar conditions to
 ```bash
 pip install pdfplumber requests
 ```
+
+## Results
+
+![Table Results](https://github.com/user-attachments/assets/5c447372-fb3a-471a-8a74-fabc2a960dde)
