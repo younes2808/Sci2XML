@@ -1,0 +1,168 @@
+Processing folder: 001
+PDF 001.pdf:
+Extracted tables: 45
+Total tables: 30
+Similarity = 66.67%
+Processing time: 2.9781 seconds
+
+--------------------------------------------------
+Processing folder: 002
+PDF 002.pdf:
+Extracted tables: 19
+Total tables: 18
+Similarity = 94.74%
+Processing time: 1.1178 seconds
+
+--------------------------------------------------
+Processing folder: 003
+PDF 003.pdf:
+Extracted tables: 1
+Total tables: 2
+Similarity = 50.00%
+Processing time: 0.1114 seconds
+
+--------------------------------------------------
+Processing folder: 004
+PDF 004.pdf:
+Extracted tables: 19
+Total tables: 2
+Similarity = 10.53%
+Processing time: 0.9188 seconds
+
+--------------------------------------------------
+Processing folder: 005
+PDF 005.pdf:
+Extracted tables: 5
+Total tables: 1
+Similarity = 20.00%
+Processing time: 1.1654 seconds
+
+--------------------------------------------------
+Processing folder: 006
+PDF 006.pdf:
+Extracted tables: 7
+Total tables: 1
+Similarity = 14.29%
+Processing time: 17.8630 seconds
+
+--------------------------------------------------
+Processing folder: 007
+PDF 007.pdf:
+Extracted tables: 5
+Total tables: 5
+Similarity = 100.00%
+Processing time: 0.6627 seconds
+
+--------------------------------------------------
+Processing folder: 008
+PDF 008.pdf:
+Extracted tables: 29
+Total tables: 29
+Similarity = 100.00%
+Processing time: 0.8322 seconds
+
+--------------------------------------------------
+Processing folder: 009
+PDF 009.pdf:
+Extracted tables: 3
+Total tables: 3
+Similarity = 100.00%
+Processing time: 0.1356 seconds
+
+--------------------------------------------------
+Processing folder: 010
+PDF 010.pdf:
+Extracted tables: 5
+Total tables: 4
+Similarity = 80.00%
+Processing time: 0.6220 seconds
+
+--------------------------------------------------
+Processing folder: 011
+PDF 011.pdf:
+Extracted tables: 15
+Total tables: 13
+Similarity = 86.67%
+Processing time: 1.2767 seconds
+
+--------------------------------------------------
+Processing folder: 012
+PDF 012.pdf:
+Extracted tables: 1
+Total tables: 11
+Similarity = 9.09%
+Processing time: 1.0404 seconds
+
+--------------------------------------------------
+Processing folder: 013
+PDF 013.pdf:
+Extracted tables: 12
+Total tables: 9
+Similarity = 75.00%
+Processing time: 1.9389 seconds
+
+--------------------------------------------------
+Processing folder: 014
+PDF 014.pdf:
+Extracted tables: 0
+Total tables: 32
+Similarity = 0.00%
+Processing time: 0.3846 seconds
+
+--------------------------------------------------
+Processing folder: 015
+PDF 015.pdf:
+Extracted tables: 31
+Total tables: 2
+Similarity = 6.45%
+Processing time: 0.7853 seconds
+
+--------------------------------------------------
+Processing folder: 016
+PDF 016.pdf:
+Extracted tables: 5
+Total tables: 4
+Similarity = 80.00%
+Processing time: 0.6313 seconds
+
+--------------------------------------------------
+Processing folder: 017
+PDF 017.pdf:
+Extracted tables: 6
+Total tables: 4
+Similarity = 66.67%
+Processing time: 0.3644 seconds
+
+--------------------------------------------------
+Processing folder: 018
+PDF 018.pdf:
+Extracted tables: 1
+Total tables: 1
+Similarity = 100.00%
+Processing time: 0.2051 seconds
+
+--------------------------------------------------
+Processing folder: 019
+PDF 019.pdf:
+Extracted tables: 1
+Total tables: 1
+Similarity = 100.00%
+Processing time: 0.3769 seconds
+
+--------------------------------------------------
+Processing folder: 020
+PDF 020.pdf:
+Extracted tables: 1
+Total tables: 1
+Similarity = 100.00%
+Processing time: 0.2242 seconds
+
+--------------------------------------------------
+
+Summary:
+Total comparisons: 20
+Total tables in all PDFs: 173
+Total tables found by PDFplumber: 211
+Overall accuracy: 81.99%
+Average similarity score: 63.00%
+Average processing time: 1.6817 seconds
