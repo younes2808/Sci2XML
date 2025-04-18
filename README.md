@@ -52,7 +52,7 @@ python Sci2XML/app/run_pipeline.py --authtoken YOUR_AUTHTOKEN --nl_formula True/
 ```
 Wait 5 to 15 minutes for setup
 
-Once ready, an interactive CLI will appear.
+**Once ready**, an interactive CLI will appear.
 
 Available commands:
 
