@@ -1,5 +1,11 @@
 ![Skjermbilde 2025-02-18 142502](https://github.com/user-attachments/assets/b2e499ca-9391-4b74-b18a-2029ea8e5284)
 ---
+<p float="left">
+  <img src="![Skjermbilde 2025-04-18 131323](https://github.com/user-attachments/assets/3dc1dde1-276f-4956-bf03-6c4e57f0136a)" width="45%" />
+  <img src="![Skjermbilde 2025-04-18 131659](https://github.com/user-attachments/assets/a4266e3f-cb0a-4376-a425-3a7c86f33ce9)" width="45%" />
+</p>
+---
+
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Streamlit](https://img.shields.io/badge/Framework-Streamlit-red)](https://streamlit.io/)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
