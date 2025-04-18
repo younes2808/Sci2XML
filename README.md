@@ -35,7 +35,6 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
 
 ```bash
 git clone https://github.com/younes2808/Sci2XML.git
-cd Sci2XML
 ```
 ### Launch the Web Interface (Streamlit)
 
