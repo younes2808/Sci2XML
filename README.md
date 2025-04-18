@@ -19,7 +19,6 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
 - **Multiple execution modes**: Streamlit UI and terminal
 
 ## Installation  
----
 
 ### Prerequisites
 
