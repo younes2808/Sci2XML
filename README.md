@@ -64,9 +64,6 @@ exit: Quit the CLI
 
 **Note for Google Colab users**: Press Enter once when the prompt appears to activate the input line before typing a command.
 
-
----
-
 ## Contributors
 
 - [Morten Nilsen](https://github.com/SameNilsen)  
