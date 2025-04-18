@@ -65,7 +65,7 @@ folder: Process all PDFs in a directory
 exit: Quit the CLI
 ```
 
-> **Note for Google Colab users**: Press **Enter** when the prompt asks for input to create a newline. This is the only way for input to be recognised in Colab.
+> **Note for Google Colab users**: Press **Enter** when the **CLI** asks for input to create a newline. This is the only way for input to be recognised in Colab.
 
 ---
 
