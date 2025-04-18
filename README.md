@@ -27,8 +27,6 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
 - Ngrok Authtoken  
   Get yours from: https://dashboard.ngrok.com/get-started/your-authtoken
 
----
-
 ### Clone the Repository
 
 ```bash
