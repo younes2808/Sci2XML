@@ -1,8 +1,8 @@
 ![Skjermbilde 2025-02-18 142502](https://github.com/user-attachments/assets/b2e499ca-9391-4b74-b18a-2029ea8e5284)
 ---
 <p float="left">
-  <img src="app/images/LeftPic.png" width="45%" />
-  <img src="app/images/RightPic.png" width="45%" />
+  <img src="app/images/LeftPic.png" width="50%" />
+  <img src="app/images/RightPic.png" width="50%" />
 </p>
 ---
 
