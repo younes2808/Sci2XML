@@ -4,7 +4,6 @@
   <img src="app/images/LeftPic.png" width="100%" height="80%" />
   <img src="app/images/RightPic.png" width="100%" height="80%" />
 </div>
----
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Streamlit](https://img.shields.io/badge/Framework-Streamlit-red)](https://streamlit.io/)
