@@ -45,7 +45,7 @@ Wait 5 to 15 minutes for the models and dependencies (like GROBID) to load.
 
 After launch, you will receive a public Ngrok URL. You can open it to access the interface.
 
-**Note**: If you see an error about model loading, wait 10 minutes and try again. This can happen due to Hugging Face connection issues.
+> **Note**: If you see an error about model loading, wait 10 minutes and try again. This can happen due to Hugging Face connection issues.
 
 ### Run the Terminal CLI
 ```bash
