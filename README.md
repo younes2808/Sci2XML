@@ -8,6 +8,8 @@ This repository provides a pipeline for converting research PDFs into structured
 
 Developed as part of our **bachelor’s project in collaboration with SINTEF** for the [**enRichMyData**](https://www.sintef.no/en/projects/2022/enrichmydata/) initiative.  
 
+---
+
 ## Features  
 - **Preprocessing with GROBID** to extract metadata and structure.  
 - **Custom classification model** to validate extracted sections.  
@@ -17,6 +19,8 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
   - [**pdfplumber**](https://github.com/jsvine/pdfplumber) – Parses tables accurately.
   - [**Moondream**](https://github.com/vikhyat/moondream) - Captions figures  
 - **Multiple execution modes**: Streamlit UI and terminal
+
+---
 
 ## Installation  
 
@@ -63,6 +67,8 @@ exit: Quit the CLI
 ```
 
 **Note for Google Colab users**: Press Enter once when the prompt appears to activate the input line before typing a command.
+
+---
 
 ## Contributors
 
