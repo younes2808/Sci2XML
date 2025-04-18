@@ -2,167 +2,191 @@ Processing folder: 001
 Folder 001, PDF 001.pdf:
 GROBID tables: 1
 Total tables: 30
-Similarity = 0.0333
-Time taken for processing: 30.5584 seconds
+Accuracy = 3.33%
+Time taken for processing: 15.2162 seconds
+Time per table: 15.2162 seconds
 
 --------------------------------------------------
 Processing folder: 002
 Folder 002, PDF 002.pdf:
 GROBID tables: 14
 Total tables: 18
-Similarity = 0.7778
-Time taken for processing: 19.2088 seconds
+Accuracy = 77.78%
+Time taken for processing: 12.8696 seconds
+Time per table: 0.9193 seconds
 
 --------------------------------------------------
 Processing folder: 003
 Folder 003, PDF 003.pdf:
 GROBID tables: 2
 Total tables: 2
-Similarity = 1.0000
-Time taken for processing: 5.7268 seconds
+Accuracy = 100.00%
+Time taken for processing: 2.3299 seconds
+Time per table: 1.1650 seconds
 
 --------------------------------------------------
 Processing folder: 004
 Folder 004, PDF 004.pdf:
 GROBID tables: 1
 Total tables: 2
-Similarity = 0.5000
-Time taken for processing: 1.1864 seconds
+Accuracy = 50.00%
+Time taken for processing: 1.3084 seconds
+Time per table: 1.3084 seconds
 
 --------------------------------------------------
 Processing folder: 005
 Folder 005, PDF 005.pdf:
 GROBID tables: 1
 Total tables: 1
-Similarity = 1.0000
-Time taken for processing: 1.2122 seconds
+Accuracy = 100.00%
+Time taken for processing: 1.3500 seconds
+Time per table: 1.3500 seconds
 
 --------------------------------------------------
 Processing folder: 006
 Folder 006, PDF 006.pdf:
-GROBID tables: 0
-Total tables: 1
-Similarity = 0.0000
-Time taken for processing: 2.2519 seconds
+GROBID tables: 13
+Total tables: 7
+Accuracy = 53.85%
+Time taken for processing: 13.8570 seconds
+Time per table: 1.0659 seconds
 
 --------------------------------------------------
 Processing folder: 007
 Folder 007, PDF 007.pdf:
 GROBID tables: 2
 Total tables: 5
-Similarity = 0.4000
-Time taken for processing: 1.2897 seconds
+Accuracy = 40.00%
+Time taken for processing: 1.3584 seconds
+Time per table: 0.6792 seconds
 
 --------------------------------------------------
 Processing folder: 008
 Folder 008, PDF 008.pdf:
 GROBID tables: 23
 Total tables: 29
-Similarity = 0.7931
-Time taken for processing: 1.2376 seconds
+Accuracy = 79.31%
+Time taken for processing: 1.2518 seconds
+Time per table: 0.0544 seconds
 
 --------------------------------------------------
 Processing folder: 009
 Folder 009, PDF 009.pdf:
 GROBID tables: 2
 Total tables: 3
-Similarity = 0.6667
-Time taken for processing: 1.2989 seconds
+Accuracy = 66.67%
+Time taken for processing: 1.3065 seconds
+Time per table: 0.6533 seconds
 
 --------------------------------------------------
 Processing folder: 010
 Folder 010, PDF 010.pdf:
 GROBID tables: 5
 Total tables: 4
-Similarity = 0.8000
-Time taken for processing: 17.9351 seconds
+Accuracy = 80.00%
+Time taken for processing: 13.5438 seconds
+Time per table: 2.7088 seconds
 
 --------------------------------------------------
 Processing folder: 011
 Folder 011, PDF 011.pdf:
 GROBID tables: 12
 Total tables: 13
-Similarity = 0.9231
-Time taken for processing: 16.6127 seconds
+Accuracy = 92.31%
+Time taken for processing: 14.3393 seconds
+Time per table: 1.1949 seconds
 
 --------------------------------------------------
 Processing folder: 012
 Folder 012, PDF 012.pdf:
 GROBID tables: 8
 Total tables: 11
-Similarity = 0.7273
-Time taken for processing: 14.1716 seconds
+Accuracy = 72.73%
+Time taken for processing: 13.9694 seconds
+Time per table: 1.7462 seconds
 
 --------------------------------------------------
 Processing folder: 013
 Folder 013, PDF 013.pdf:
 GROBID tables: 11
 Total tables: 9
-Similarity = 0.8182
-Time taken for processing: 28.3193 seconds
+Accuracy = 81.82%
+Time taken for processing: 26.1965 seconds
+Time per table: 2.3815 seconds
 
 --------------------------------------------------
 Processing folder: 014
 Folder 014, PDF 014.pdf:
 GROBID tables: 31
 Total tables: 32
-Similarity = 0.9688
-Time taken for processing: 1.6212 seconds
+Accuracy = 96.88%
+Time taken for processing: 1.6168 seconds
+Time per table: 0.0522 seconds
 
 --------------------------------------------------
 Processing folder: 015
 Folder 015, PDF 015.pdf:
 GROBID tables: 0
 Total tables: 2
-Similarity = 0.0000
-Time taken for processing: 1.1781 seconds
+Accuracy = 0.00%
+Time taken for processing: 1.1526 seconds
+Time per table: 0.0000 seconds
 
 --------------------------------------------------
 Processing folder: 016
 Folder 016, PDF 016.pdf:
 GROBID tables: 3
 Total tables: 4
-Similarity = 0.7500
-Time taken for processing: 12.8472 seconds
+Accuracy = 75.00%
+Time taken for processing: 12.6155 seconds
+Time per table: 4.2052 seconds
 
 --------------------------------------------------
 Processing folder: 017
 Folder 017, PDF 017.pdf:
 GROBID tables: 1
 Total tables: 4
-Similarity = 0.2500
-Time taken for processing: 2.7924 seconds
+Accuracy = 25.00%
+Time taken for processing: 1.7812 seconds
+Time per table: 1.7812 seconds
 
 --------------------------------------------------
 Processing folder: 018
 Folder 018, PDF 018.pdf:
 GROBID tables: 0
 Total tables: 1
-Similarity = 0.0000
-Time taken for processing: 1.2561 seconds
+Accuracy = 0.00%
+Time taken for processing: 1.2286 seconds
+Time per table: 0.0000 seconds
 
 --------------------------------------------------
 Processing folder: 019
 Folder 019, PDF 019.pdf:
 GROBID tables: 0
 Total tables: 1
-Similarity = 0.0000
-Time taken for processing: 14.3531 seconds
+Accuracy = 0.00%
+Time taken for processing: 12.1867 seconds
+Time per table: 0.0000 seconds
 
 --------------------------------------------------
 Processing folder: 020
 Folder 020, PDF 020.pdf:
 GROBID tables: 0
 Total tables: 1
-Similarity = 0.0000
-Time taken for processing: 1.4173 seconds
+Accuracy = 0.00%
+Time taken for processing: 1.3392 seconds
+Time per table: 0.0000 seconds
 
 --------------------------------------------------
 
 Summary:
 Total number of comparisons: 20
-Total tables in all PDFs: 173
-Total tables found by GROBID: 117
-Overall accuracy: 67.63%
-Average similarity score: 52.04%
-Average processing time: 8.8237 seconds
+Total tables in all PDFs: 179
+Total tables found by GROBID: 130
+Overall accuracy: 72.63%
+Average accuracy per document: 54.73%
+Average processing time: 7.5409 seconds
+
+# Accuracy explanation:
+# Overall accuracy: Measures accuracy by comparing the total number of found tables with the total number of true tables across the entire dataset as one combined metric.
+# Average accuracy per document: The average of the individual accuracy percentages calculated for each PDF, where each file is weighted equally.

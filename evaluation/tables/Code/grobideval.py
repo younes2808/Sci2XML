@@ -67,12 +67,12 @@ def main(dataset_path):
     
     total_comparisons = 0
     passed_comparisons = 0
-    total_similarity = 0
     total_processing_time = 0
 
-    # Legg til summeringsvariabler
+    # Summeringsvariabler for accuracy og tabeller
     total_tables_sum = 0
     grobid_tables_sum = 0
+    total_accuracy_percent_sum = 0
     
     with open(log_file, "w", encoding="utf-8") as log:
         for i in range(1, 21):
@@ -100,30 +100,34 @@ def main(dataset_path):
                 total_tables_sum += total_tables if total_tables is not None else 0
                 grobid_tables_sum += grobid_tables
                 
+                # Beregn nøyaktighet (%) per dokument
                 accuracy = calculate_accuracy(grobid_tables, total_tables) * 100
-                similarity = accuracy / 100
+                total_accuracy_percent_sum += accuracy
+                
+                # Beregn tid per tabell
+                time_per_table = processing_time / grobid_tables if grobid_tables > 0 else 0
                 
                 total_comparisons += 1
-                if similarity > 0.9:
+                if accuracy > 90:
                     passed_comparisons += 1
-                total_similarity += similarity
                 
+                # Log resultat per dokument
                 log.write(f"Processing folder: {folder_name}\n")
                 log.write(f"Folder {folder_name}, PDF {folder_name}.pdf:\n")
                 log.write(f"GROBID tables: {grobid_tables}\n")
                 log.write(f"Total tables: {total_tables}\n")
-                log.write(f"Similarity = {similarity:.4f}\n")
+                log.write(f"Accuracy = {accuracy:.2f}%\n")
                 log.write(f"Time taken for processing: {processing_time:.4f} seconds\n")
+                log.write(f"Time per table: {time_per_table:.4f} seconds\n")
                 log.write("\n" + "-" * 50 + "\n")
-                
+              
                 print(f"Processed {folder_name}: Accuracy {accuracy:.2f}%")
             else:
                 print(f"PDF not found in {folder_name}")
 
-        average_similarity = total_similarity / total_comparisons if total_comparisons > 0 else 0
+        # Oppsummering
+        average_accuracy_percent = total_accuracy_percent_sum / total_comparisons if total_comparisons > 0 else 0
         average_processing_time = total_processing_time / total_comparisons if total_comparisons > 0 else 0
-        
-        # Beregn overordnet nøyaktighet
         overall_accuracy = calculate_accuracy(grobid_tables_sum, total_tables_sum) * 100
         
         log.write("\nSummary:\n")
@@ -131,8 +135,11 @@ def main(dataset_path):
         log.write(f"Total tables in all PDFs: {total_tables_sum}\n")
         log.write(f"Total tables found by GROBID: {grobid_tables_sum}\n")
         log.write(f"Overall accuracy: {overall_accuracy:.2f}%\n")
-        log.write(f"Average similarity score: {average_similarity * 100:.2f}%\n")
+        log.write(f"Average accuracy per document: {average_accuracy_percent:.2f}%\n")
         log.write(f"Average processing time: {average_processing_time:.4f} seconds\n")
+        log.write("\n# Accuracy explanation:\n")
+        log.write("# Overall accuracy: Measures accuracy by comparing the total number of found tables with the total number of true tables across the entire dataset as one combined metric.\n")
+        log.write("# Average accuracy per document: The average of the individual accuracy percentages calculated for each PDF, where each file is weighted equally.\n")
 
 if __name__ == "__main__":
     dataset_dir = "Dataset"

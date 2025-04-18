@@ -27,7 +27,7 @@ The evaluation is done using two Python scripts found in the `Code` folder:
 
 Both scripts loop through the dataset and compare extracted tables against manually annotated counts.
 
-Evaluation results, including extracted table counts, similarity scores, and processing times, can be found in the `Results` folder.
+Detailed evaluation results, including the number of extracted tables, accuracy metrics, and processing times, are available in the Results folder.
 
 Both tools were executed locally on the same machine under similar conditions to ensure a fair comparison.
 
