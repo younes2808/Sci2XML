@@ -1,9 +1,9 @@
 ![Skjermbilde 2025-02-18 142502](https://github.com/user-attachments/assets/b2e499ca-9391-4b74-b18a-2029ea8e5284)
 ---
-<p float="left">
-  <img src="app/images/LeftPic.png" width="49%" />
-  <img src="app/images/RightPic.png" width="49%" />
-</p>
+<div style="display: flex; flex-direction: column; align-items: center;">
+  <img src="app/images/LeftPic.png" width="100%" height="80%" />
+  <img src="app/images/RightPic.png" width="100%" height="80%" />
+</div>
 ---
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
