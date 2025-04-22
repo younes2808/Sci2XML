@@ -23,6 +23,7 @@ def process_pdf(file_path, grobid_url="http://localhost:8070/api/processFulltext
             response = requests.post(grobid_url, files=files, data=params)
             response.raise_for_status()
             return response.text
+        # File is automatically closed after exiting the 'with' block
     except requests.exceptions.RequestException as e:
         return f"Feil ved behandling av PDF: {e}"
     except FileNotFoundError:
@@ -38,6 +39,7 @@ def read_total_tables(file_path):
             match = re.search(r'Number of tables in PDF file: (\d+)', content)
             if match:
                 return int(match.group(1))
+        # File is automatically closed after exiting the 'with' block
     except FileNotFoundError:
         return None
     return None
@@ -92,6 +94,7 @@ def main(dataset_path):
                 
                 with open(output_xml_file, "w", encoding="utf-8") as output_file:
                     output_file.write(xml_content)
+                # File is automatically closed after exiting the 'with' block
                 
                 grobid_tables = count_tables_in_xml(xml_content)
                 total_tables = read_total_tables(total_tables_file)
@@ -140,6 +143,7 @@ def main(dataset_path):
         log.write("\n# Accuracy explanation:\n")
         log.write("# Overall accuracy: Measures accuracy by comparing the total number of found tables with the total number of true tables across the entire dataset as one combined metric.\n")
         log.write("# Average accuracy per document: The average of the individual accuracy percentages calculated for each PDF, where each file is weighted equally.\n")
+    # File is automatically closed after exiting the 'with' block
 
 if __name__ == "__main__":
     dataset_dir = "Dataset"

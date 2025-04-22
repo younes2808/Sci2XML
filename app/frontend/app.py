@@ -36,6 +36,7 @@ def get_envdict():
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[app.py] Successfully opened .env file.")
     except Exception as e:
         logging.error(f"[app.py] An error occurred while opening .env file: {e}", exc_info=True)
@@ -66,6 +67,7 @@ def write_envdict(envdict):
         # Add each key-value pair in dict to file:
         for key, value in envdict.items():
             f.write(f"{key}={value}\n")
+    # File is automatically closed after exiting the 'with' block
     logging.info(f"[app.py] Successfully saved new content to .env file.")
   except Exception as e:
     logging.error(f"[app.py] An error occurred while writing new content to .env file: {e}", exc_info=True)
@@ -188,6 +190,7 @@ def processClassifierResponse(element):
             if ("nl_formula" not in envdict):
                 with open("/content/.env", "a") as f:
                     f.write("nl_formula=False\n")
+                # File is automatically closed after exiting the 'with' block
 
             envdict = get_envdict()
              # Check to see if environment variable for NL generation of formula is set and true:
@@ -287,6 +290,7 @@ def process_classifier(xml_input, pdf_file):
                 if ("port" not in envdict): # If key doesnt exist, create it with default value '8000':
                     with open("/content/.env", "a") as f:
                         f.write("port=8000\n")
+                    # File is automatically closed after exiting the 'with' block
                 envdict = get_envdict()
                 port = envdict["port"] # Either what the user selected at launch, or default 8000
                 apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
@@ -626,6 +630,7 @@ def main():
         # Opens the CSS file in read mode and store its content
         with open(css_path, "r") as f: 
             css_content = f.read() # Reads the content of the CSS file
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[app.py] CSS file '{css_path}' read successfully.")
 
         # Render the CSS content in the Streamlit app using Markdown with HTML support enabled
@@ -830,6 +835,7 @@ def main():
                             if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
                                 with open("/content/.env", "a") as f:
                                     f.write("nl_formula=False\n")
+                            # File is automatically closed after exiting the 'with' block
                             envdict = get_envdict()
                             envdict["nl_formula"] = "True" # Set new value
                             write_envdict(envdict) # Write new value to file
@@ -841,6 +847,7 @@ def main():
                             if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
                                 with open("/content/.env", "a") as f:
                                     f.write("nl_formula=False\n")
+                                # File is automatically closed after exiting the 'with' block
                             envdict = get_envdict()
                             envdict["nl_formula"] = "False" # Set new value
                             write_envdict(envdict) # Write new value to file
@@ -931,7 +938,8 @@ def main():
                                                             if ("nl_formula" not in envdict):
                                                                 with open("/content/.env", "a") as f:
                                                                     f.write("nl_formula=False\n")
-
+                                                                # File is automatically closed after exiting the 'with' block
+                                                            
                                                             envdict = get_envdict()
                                                             # Check to see if environment variable for NL generation of formula is set and true:
                                                             if (envdict["nl_formula"] == "True"):

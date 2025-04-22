@@ -122,6 +122,7 @@ def remove_tables_from_grobid_xml(grobid_file):
     """
     with open(grobid_file, 'r', encoding='utf-8') as file:
         grobid_content = file.read()
+    # File is automatically closed after exiting the 'with' block
     
     # Find all table figure elements in the GROBID XML
     matches = list(re.finditer(r'<figure[^>]*\s+type="table"[^>]*>.*?</figure>', grobid_content, flags=re.DOTALL))

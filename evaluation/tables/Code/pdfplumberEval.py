@@ -68,6 +68,7 @@ def extract_tables_from_pdf(pdf_path, output_dir, max_margin=50):
 
             with open(output_file, "w", encoding="utf-8") as xml_file:
                 xml_file.write(xml_str)
+            # File is automatically closed after exiting the 'with' block
         return table_count
     except Exception as e:
         return f"Error processing {pdf_path}: {e}"
@@ -77,6 +78,7 @@ def read_total_tables(file_path):
         with open(file_path, "r", encoding="utf-8") as file:
             match = re.search(r'Number of tables in PDF file: (\d+)', file.read())
             return int(match.group(1)) if match else None
+        # File is automatically closed after exiting the 'with' block
     except FileNotFoundError:
         return None
 
@@ -154,7 +156,7 @@ def main(dataset_path):
         log.write("\n# Accuracy explanation:\n")
         log.write("# Overall accuracy: Measures accuracy by comparing the total number of found tables with the total number of true tables across the entire dataset as one combined metric.\n")
         log.write("# Average accuracy per document: The average of the individual accuracy percentages calculated for each PDF, where each file is weighted equally.\n")
-
+    # File is automatically closed after exiting the 'with' block
 
 if __name__ == "__main__":
     main("Dataset")

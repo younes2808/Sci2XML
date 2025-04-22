@@ -59,7 +59,8 @@ def main():
         if "nl_formula" not in envdict:
             with open("/content/.env", "a") as f:
                 f.write("nl_formula=False\n")
-
+            # File is automatically closed after exiting the 'with' block
+                
         # Update the value to True and write back to the file
         envdict = get_envdict()
         envdict["nl_formula"] = "True"
@@ -70,7 +71,8 @@ def main():
     if "runmode" not in envdict:
         with open("/content/.env", "a") as f:
             f.write("runmode=frontend\n")
-
+        # File is automatically closed after exiting the 'with' block
+            
     envdict = get_envdict()
     envdict["runmode"] = "code"
     write_envdict(envdict)
@@ -131,6 +133,7 @@ def startProcessing(pdfPath, pathToSave):
 
       with open(pdfPath, "rb") as f:
         byte_data_PDF = f.read()
+      # File is automatically closed after exiting the 'with' block
 
       ## Calling GROBID ##
       print_update("Calling GROBID")
@@ -172,6 +175,7 @@ def startProcessing(pdfPath, pathToSave):
             if ("port" not in envdict): # If key doesnt exist, create it with default value '8000':
                 with open("/content/.env", "a") as f:
                     f.write("port=8000\n")
+                # File is automatically closed after exiting the 'with' block
             envdict = get_envdict()
             port = envdict["port"] # Either what the user selected at launch, or default 8000
             apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
@@ -223,6 +227,7 @@ def startProcessing(pdfPath, pathToSave):
 
       with open(pathToSave, "w") as f:
         f.write(altered_xml)
+      # File is automatically closed after exiting the 'with' block
       return altered_xml
 
 def print_update(update):
@@ -242,6 +247,7 @@ def get_envdict():
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[processing.py] Successfully opened .env file.")
     except Exception as e:
         logging.error(f"[processing.py] An error occurred while opening .env file: {e}", exc_info=True)
@@ -272,6 +278,7 @@ def write_envdict(envdict):
         # Add each key-value pair in dict to file:
         for key, value in envdict.items():
             f.write(f"{key}={value}\n")
+    # File is automatically closed after exiting the 'with' block
     logging.info(f"[processing.py] Successfully saved new content to .env file.")
   except Exception as e:
     logging.error(f"[processing.py] An error occurred while writing new content to .env file: {e}", exc_info=True)

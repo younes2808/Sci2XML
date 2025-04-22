@@ -4,7 +4,6 @@ import re
 import getpass
 from flask import Flask, jsonify, make_response, request
 from pyngrok import ngrok, conf
-import time
 import logging
 import sys
 
@@ -67,6 +66,7 @@ def startNgrok(port):
   if ("authtoken" not in envdict): # If key doesnt exist, create it with default value 'None':
       with open("/content/.env", "a") as f:
           f.write("authtoken=None\n")
+      # File is automatically closed after exiting the 'with' block
   envdict = get_envdict()
   if (envdict["authtoken"] != "None"): # Check to see if authtoken is set
     conf.get_default().auth_token = envdict["authtoken"]
@@ -115,6 +115,7 @@ def startStreamlit(tunnel, portnr):
     file.write(url)
     file.write("\n")
     file.write(passw)
+  # File is automatically closed after exiting the 'with' block
 
   print("\n############################################################")
   print(f"----> Public URL: {url} \n----> Password: {passw}")
@@ -146,12 +147,11 @@ def startAPI(tunnel, portnr):
     file.write(url)
     file.write("\n")
     file.write(passw)
+  # File is automatically closed after exiting the 'with' block
 
   print("\n############################################################")
   print(f"----> Public URL: {url} \n----> Password: {passw}")
   print("############################################################\n")
-
-
 
 def get_envdict():
     """
@@ -167,6 +167,7 @@ def get_envdict():
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[frontendmodule.py] Successfully opened .env file.")
     except Exception as e:
         logging.error(f"[frontendmodule.py] An error occurred while opening .env file: {e}", exc_info=True)

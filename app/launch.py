@@ -49,7 +49,7 @@ def startEverything():
     f.write(f"tunnel={args.tunnel}\n")
     f.write(f"nl_formula=False\n")
     f.write(f"authtoken={args.authtoken}\n")
-
+  # File is automatically closed after exiting the 'with' block
 
   ## Setup ##
   print("\n#-------------------------- ### Setup ### --------------------------#\n")

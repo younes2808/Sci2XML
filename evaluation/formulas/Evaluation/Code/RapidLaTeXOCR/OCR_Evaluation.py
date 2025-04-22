@@ -4,7 +4,6 @@ from PIL import Image
 from rapid_latex_ocr import LaTeXOCR  # Import from rapid_latex_ocr
 import time
 
-
 def normalize_latex(latex_string):
     """
     Normalize the LaTeX string by removing unnecessary spaces and ensuring consistent formatting.
@@ -12,7 +11,6 @@ def normalize_latex(latex_string):
     latex_string = latex_string.replace(" ", "").replace("\\,", "").replace("\\ ", "")
     latex_string = latex_string.replace("...", "\\dots")  # Normalize ellipsis
     return latex_string
-
 
 def compare_latex(correct_latex, ocr_latex):
     """
@@ -28,7 +26,6 @@ def compare_latex(correct_latex, ocr_latex):
 
     return similarity
 
-
 def run_ocr_and_compare(img_path, txt_path, ocr_model):
     """
     Run OCR on the image and compare the result with the corresponding LaTeX in the text file.
@@ -39,6 +36,7 @@ def run_ocr_and_compare(img_path, txt_path, ocr_model):
     # Read the image file as binary data
     with open(img_path, "rb") as f:
         image_data = f.read()
+    # File is automatically closed after exiting the 'with' block
 
     # Run OCR to get LaTeX output
     ocr_latex, elapsed_time = ocr_model(image_data)
@@ -49,12 +47,12 @@ def run_ocr_and_compare(img_path, txt_path, ocr_model):
     # Read the correct LaTeX from the corresponding .txt file
     with open(txt_path, "r") as file:
         correct_latex = file.read().strip()
+    # File is automatically closed after exiting the 'with' block
 
     # Compare the LaTeX strings
     similarity_score = compare_latex(correct_latex, ocr_latex)
 
     return similarity_score, ocr_latex, correct_latex, elapsed_time
-
 
 def process_dataset(dataset_dir, ocr_model, output_file):
     """
@@ -127,7 +125,7 @@ def process_dataset(dataset_dir, ocr_model, output_file):
         f.write(f"Percentage of passed comparisons: {passed_count/total_comparisons:.2%}\n")
         f.write(f"Average similarity score: {avg_sim_score:.4f}\n")
         f.write(f"Average OCR response time: {avg_time:.4f} seconds\n")
-
+    # File is automatically closed after exiting the 'with' block
 
 # Initialize the OCR model from rapid_latex_ocr
 model = LaTeXOCR()

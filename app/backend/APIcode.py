@@ -249,6 +249,7 @@ def API(portnr):
         if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
            with open("/content/.env", "a") as f:
               f.write("nl_formula=False\n")
+            # File is automatically closed after exiting the 'with' block
         envdict = get_envdict()
         if (envdict["nl_formula"] == "True"):
           logging.info(f"[APIcode.py] Environment variable NLFORMULA is true, will be generating NL content.")
@@ -384,6 +385,7 @@ def API(portnr):
         # Read the content of the GROBID XML file
         with open(grobid_path, "r", encoding="utf-8") as file:
             grobid_content = file.read()
+        # File is automatically closed after exiting the 'with' block
         
         # Remove existing table figures from the GROBID XML and get the insert position
         grobid_updated, insert_position = tableParser.remove_tables_from_grobid_xml(grobid_path)
@@ -516,6 +518,7 @@ def API(portnr):
             if ("port" not in envdict): # If key doesnt exist, create it with default value '8000':
                 with open("/content/.env", "a") as f:
                     f.write("port=8000\n")
+                # File is automatically closed after exiting the 'with' block
             envdict = get_envdict()
             port = envdict["port"] # Either what the user selected at launch, or default 8000
             apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
@@ -567,6 +570,7 @@ def API(portnr):
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[APIcode.py] Successfully opened .env file.")
     except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while opening .env file: {e}", exc_info=True)

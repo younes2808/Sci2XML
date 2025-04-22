@@ -102,6 +102,7 @@ def process_dataset(dataset_dir, model, processor, device, output_file):
                         # Read the ground truth LaTeX
                         with open(txt_path, "r") as file:
                             correct_latex = file.read().strip()
+                        # File is automatically closed after exiting the 'with' block
 
                         # Start timer
                         start_time = time.time()
@@ -153,6 +154,7 @@ def process_dataset(dataset_dir, model, processor, device, output_file):
         f.write(f"Percentage passed: {100 * passed_count / total_comparisons:.2f}%\n")
         f.write(f"Average similarity score: {avg_similarity:.4f}\n")
         f.write(f"Average OCR time: {avg_time:.4f} seconds\n")
+    # File is automatically closed after exiting the 'with' block
 
 # Main execution
 if __name__ == "__main__":
