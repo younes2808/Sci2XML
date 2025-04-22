@@ -616,9 +616,10 @@ def main():
     3. Sends the PDF to GROBID for metadata extraction and parsing.
     4. Displays the GROBID output both as a rendered PDF and an editable XML text.
     5. Allows the user to modify the XML, if necessary.
-    6. Processes the XML by invoking the process_classifier, which classifies and interprets the document's structure.
-    7. Displays the interpreted results in views for each element type as well an editable XML text.
-    8. Enables the user to refine and download the final XML file.
+    6. Allows the user to include description of formulas, if desirable.
+    7. Processes the XML by invoking the process_classifier, which classifies and interprets the document's structure.
+    8. Displays the interpreted results in views for each element type as well an editable XML text.
+    9. Enables the user to refine and download the final XML file.
     """
     st.set_page_config(layout="wide") # Configure the page layout to be wide
     logging.info("[app.py] Streamlit page configuration set successfully.")
