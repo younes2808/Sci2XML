@@ -19,4 +19,6 @@ The evaluation is done on Google Colab with T4 GPU enabled. Follow the instructi
 
 ## Results
 
-![Table Results](https://github.com/user-attachments/assets/3da0a462-15a6-4a32-9de2-34dfdd12a649)
+![Bar chart](image.png)
+
+![Radar chart](image-1.png)
