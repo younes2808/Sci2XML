@@ -72,7 +72,6 @@ def write_envdict(envdict):
   except Exception as e:
     logging.error(f"[app.py] An error occurred while writing new content to .env file: {e}", exc_info=True)
 
-
 def latex_validity(latex_str):
     """
     Checks if the LaTeX string has matching \left and \right commands. 
@@ -84,7 +83,6 @@ def latex_validity(latex_str):
     Returns:
     valid (bool): If the formula is on LaTeX format, it returns True. If not, it returns False.
     """
-
     try:
         # Check for imbalance between \begin and \end
         begin_count = latex_str.count(r"\begin")
