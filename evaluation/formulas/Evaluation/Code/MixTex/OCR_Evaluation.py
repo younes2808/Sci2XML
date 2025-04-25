@@ -66,6 +66,7 @@ def run_ocr_and_compare(img_path, txt_path):
     # Read the correct LaTeX from the corresponding .txt file
     with open(txt_path, "r") as file:
         correct_latex = file.read().strip()
+    # File is automatically closed after exiting the 'with' block
 
     # Compare the LaTeX strings
     similarity_score = compare_latex(correct_latex, ocr_latex)
@@ -141,6 +142,7 @@ def process_dataset(dataset_dir, output_file):
         f.write(f"Percentage of passed comparisons: {passed_count / total_comparisons * 100:.2f}%\n")
         f.write(f"Average similarity score: {avg_sim_score:.4f}\n")
         f.write(f"Average OCR response time: {avg_time:.4f} seconds\n")
+    # File is automatically closed after exiting the 'with' block
 
 # Define the root directory where your dataset is stored
 dataset_dir = "/content/SmallImage2LatexOCR/Dataset"  # Change this path as needed

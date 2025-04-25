@@ -41,6 +41,7 @@ def get_envdict():
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[classifier.py] Successfully opened .env file.")
     except Exception as e:
         logging.error(f"[classifier.py] An error occurred while opening .env file: {e}", exc_info=True)
@@ -61,6 +62,7 @@ try:
     if ("port" not in envdict): # If key doesnt exist, create it with default value '8000':
         with open("/content/.env", "a") as f:
             f.write("port=8000\n")
+        # File is automatically closed after exiting the 'with' block
     envdict = get_envdict()
     port = envdict["port"] # Either what the user selected at launch, or default 8000
     apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
@@ -70,7 +72,7 @@ except Exception as e:
     logging.error(f"[classifier.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
 
 
-def openXMLfile(XMLfile, PDFfile, frontend):
+def open_XML_file(XMLfile, PDFfile, frontend):
     """
     Opens the XML file and converts it to a python dict, and extracts all formulas and figures. Also turns each page of the PDF into an image.
 
@@ -85,7 +87,7 @@ def openXMLfile(XMLfile, PDFfile, frontend):
     formulas: The formulas from the XML file.
     """
 
-    logging.info("[classifier.py] Starting function openXMLfile()")
+    logging.info("[classifier.py] Starting function open_XML_file()")
 
     # Opening XML file and storing it in variable.
     try:
@@ -231,6 +233,7 @@ def saveXMLfile(pathToXML):
     try:
         with open(pathToXML, "w", encoding="utf-8") as file:
             file.write(str(Bs_data))
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[classifier.py] Successfully saved XML to file.")
         return Bs_data
     except Exception as e:
@@ -263,6 +266,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
     if ("runmode" not in envdict): # If key doesnt exist, create it with default value 'api':
         with open("/content/.env", "a") as f:
             f.write("runmode=api\n")
+        # File is automatically closed after exiting the 'with' block
     envdict = get_envdict()
     runmode = envdict["runmode"] # Either what the user selected at launch, or default 8000
     if runmode == "code":
@@ -489,12 +493,12 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
             sys.modules["appmodule"] = app
             spec.loader.exec_module(app)
             ## Calls frontend:
-            app.processClassifierResponse(APIresponse)
-            logging.info(f"[classifier.py] Successfully called frontend function processClassifierResponse().")
+            app.process_classifier_response(APIresponse)
+            logging.info(f"[classifier.py] Successfully called frontend function process_classifier_response().")
     except Exception as e:
-        logging.error(f"[classifier.py] An error occurred while calling frontend function processClassifierResponse(): {e}", exc_info=True)
+        logging.error(f"[classifier.py] An error occurred while calling frontend function process_classifier_response(): {e}", exc_info=True)
 
-def processFigures(figures, images, frontend):
+def process_figures(figures, images, frontend):
     """
     Crops the figures from the PDF file into images, finds correct element number, gets figure description and coordinates and sends them to the classifier (ML model) for classification.
 
@@ -506,7 +510,7 @@ def processFigures(figures, images, frontend):
     Returns:
     None
     """
-    logging.info("[classifier.py] Starting function processFigures()")
+    logging.info("[classifier.py] Starting function process_figures()")
 
     figurnr = 0 # The number which GROBID gave this figure. Will be used when putting processed content back into the figure tag.
     ## Iterate through all figures:
@@ -595,7 +599,7 @@ def processFigures(figures, images, frontend):
 
         figurnr+=1
 
-def processFormulas(formulas, images, mode, frontend):
+def process_formulas(formulas, images, mode, frontend):
     """
     Crops the formulas from the PDF file into images, finds correct element number, gets coordinates and sends them to the classifier (ML model) for classification.
 
@@ -608,7 +612,7 @@ def processFormulas(formulas, images, mode, frontend):
     Returns:
     None
     """
-    logging.info("[classifier.py] Starting function processFormulas()")
+    logging.info("[classifier.py] Starting function process_formulas()")
 
     formulanr = 0 # The number which GROBID gave this formula. Will be used when putting processed content back into the formula tag.
     for formula in formulas:

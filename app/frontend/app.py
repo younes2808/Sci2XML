@@ -36,6 +36,7 @@ def get_envdict():
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[app.py] Successfully opened .env file.")
     except Exception as e:
         logging.error(f"[app.py] An error occurred while opening .env file: {e}", exc_info=True)
@@ -66,10 +67,10 @@ def write_envdict(envdict):
         # Add each key-value pair in dict to file:
         for key, value in envdict.items():
             f.write(f"{key}={value}\n")
+    # File is automatically closed after exiting the 'with' block
     logging.info(f"[app.py] Successfully saved new content to .env file.")
   except Exception as e:
     logging.error(f"[app.py] An error occurred while writing new content to .env file: {e}", exc_info=True)
-
 
 def latex_validity(latex_str):
     """
@@ -82,7 +83,6 @@ def latex_validity(latex_str):
     Returns:
     valid (bool): If the formula is on LaTeX format, it returns True. If not, it returns False.
     """
-
     try:
         # Check for imbalance between \begin and \end
         begin_count = latex_str.count(r"\begin")
@@ -158,7 +158,7 @@ def clean_latex(latex_str):
 
     return latex_str.strip()  # Trim any extra spaces
 
-def processClassifierResponse(element):
+def process_classifier_response(element):
     """
     Processes the response from the classifier and adds it to the correct array.
 
@@ -170,41 +170,66 @@ def processClassifierResponse(element):
     """
     try:    
         if element['element_type'] == 'formula':
-            st.session_state.formulas_results_array.append(element) # Append element to the array
-            st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}") # Display page number and formula number as the header
-            if latex_validity(clean_latex(element.get('formula', 'N/A'))):
-                st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
+            # Append element to the array
+            st.session_state.formulas_results_array.append(element)
+
+            # Display page number and formula number as the header
+            st.subheader(f"Page {element.get('page_number', 'N/A')}: Formula #{element.get('element_number', 'N/A')}")
             
+            if latex_validity(clean_latex(element.get('formula', 'N/A'))):
+                # Display the formula itself if on valid LaTeX format
+                st.markdown(rf"$$ {clean_latex(element.get('formula', 'N/A'))} $$")
             else:
-                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
+                # Display 'Invalid LaTeX format' if not on valid LaTeX format
+                st.write('Invalid LaTeX format')
+
             envdict = get_envdict()
-            if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
+            # If key doesnt exist, create it with default value 'False':
+            if ("nl_formula" not in envdict):
                 with open("/content/.env", "a") as f:
                     f.write("nl_formula=False\n")
+                # File is automatically closed after exiting the 'with' block
+
             envdict = get_envdict()
-            if (envdict["nl_formula"] == "True"): # Check to see if environment variable for NL generation of formula is set and true:
-                st.write(f"{element.get('NL', 'No description available.')}") # Display the description of the formula
+             # Check to see if environment variable for NL generation of formula is set and true:
+            if (envdict["nl_formula"] == "True"):
+                # Display the description of the formula
+                st.write(f"{element.get('NL', 'No description available.')}")
 
         elif element['element_type'] == "figure":
-            st.session_state.figures_results_array.append(element) # Append element to the array
-            st.subheader(f"Page {element.get('page_number', 'N/A')}: Figure #{element.get('element_number', 'N/A')}") # Display page number and figure number as the header
-            st.write(f"{element.get('NL', 'No description available.')}") # Display the description of the figure
+            # Append element to the array
+            st.session_state.figures_results_array.append(element)
+
+            # Display page number and figure number as the header
+            st.subheader(f"Page {element.get('page_number', 'N/A')}: Figure #{element.get('element_number', 'N/A')}")
+            
+            # Display the description of the figure
+            st.write(f"{element.get('NL', 'No description available.')}")
 
         elif element['element_type'] == "chart":
-            st.session_state.charts_results_array.append(element) # Append element to the array
-            st.subheader(f"Page {element.get('page_number', 'N/A')}: Chart #{element.get('element_number', 'N/A')}") # Display page number and chart number as the header
-            st.write(f"{element.get('NL', 'No description available.')}") # Display the description of the chart
+            # Append element to the array
+            st.session_state.charts_results_array.append(element)
+
+            # Display page number and chart number as the header
+            st.subheader(f"Page {element.get('page_number', 'N/A')}: Chart #{element.get('element_number', 'N/A')}")
+            
+            # Display the description of the chart
+            st.write(f"{element.get('NL', 'No description available.')}")
 
         elif element['element_type'] == "table":
-            st.session_state.tables_results_array.append(element) # Append element to the array
+            # Append element to the array
+            st.session_state.tables_results_array.append(element) 
             table_data = st.session_state.tables_results_array[-1].get("table_data", []) 
-            st.subheader(f"Page {element.get('page_number', 'N/A')}: Table #{element.get('table_number', 'N/A')}") # Display page number and table number as the header
-            st.write(f"{element.get('table_context', 'No description available.')}") # Display the context of the table
+
+            # Display page number and table number as the header
+            st.subheader(f"Page {element.get('page_number', 'N/A')}: Table #{element.get('table_number', 'N/A')}")
+
+            # Display the context of the table
+            st.write(f"{element.get('table_context', 'No description available.')}")
             
             if table_data:
                 df = pd.DataFrame(table_data) # Convert table data to DataFrame
                 st.dataframe(df) # Display the table itself
-            
             else:
                 # Inform the user if no table data is found for the current page
                 st.write(f"No data found in table #{element.get('table_number', 'N/A')} on page {element.get('page_number', 'N/A')}.")
@@ -253,7 +278,8 @@ def process_classifier(xml_input, pdf_file):
     for percent_complete in range(1):
         try:
             # Prepare the files dict to be sent in the request.
-            files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), "pdf": ("pdffile.pdf", pdf_file.getvalue())}
+            files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), 
+                     "pdf": ("pdffile.pdf", pdf_file.getvalue())}
 
             logging.info(f"[app.py] Call the table parser API endpoint")
             # Send to API endpoint for processing of tables
@@ -262,13 +288,16 @@ def process_classifier(xml_input, pdf_file):
                 if ("port" not in envdict): # If key doesnt exist, create it with default value '8000':
                     with open("/content/.env", "a") as f:
                         f.write("port=8000\n")
+                    # File is automatically closed after exiting the 'with' block
                 envdict = get_envdict()
                 port = envdict["port"] # Either what the user selected at launch, or default 8000
                 apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
                 logging.info(f"[app.py] Set URL for api to: {apiURL}")
+            
             except Exception as e:
                 apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
                 logging.error(f"[app.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
+            
             response = requests.post(f"{apiURL}parseTable", files=files)
             response.raise_for_status()  # Raise exception if status is not 200
             logging.info(f'Response from table parser: {response}')
@@ -289,11 +318,17 @@ def process_classifier(xml_input, pdf_file):
             tables = root.findall(".//tei:table", namespace)
 
             for table in tables:
-                page_number = int(table.get("page")) # Retrieve the page number for each table
-                table_number = int(table.get("table_number")) # Retrieve the table number for each table
+                # Retrieve the page number for each table
+                page_number = int(table.get("page"))
 
-                table_context_element = table.find("tei:context", namespace) # Retrieve the context for each table
-                table_context = table_context_element.text.strip() if table_context_element is not None else "Untitled Table" # Strip the context for each table
+                # Retrieve the table number for each table
+                table_number = int(table.get("table_number")) 
+
+                # Retrieve the context for each table
+                table_context_element = table.find("tei:context", namespace)
+                
+                # Strip the context for each table
+                table_context = table_context_element.text.strip() if table_context_element is not None else "Untitled Table" 
 
                 # Extract rows inside "this specific table"
                 table_rows = table.findall("tei:row", namespace) 
@@ -316,7 +351,7 @@ def process_classifier(xml_input, pdf_file):
                             table_data.append(row_data)  # Append the row data to the table
 
                         # The parsed data will be stored in a results array and displayed to the user
-                        processClassifierResponse({
+                        process_classifier_response({
                             "element_type": 'table',
                             "page_number": page_number,
                             "table_number": table_number,
@@ -330,7 +365,8 @@ def process_classifier(xml_input, pdf_file):
             st.error(f"An error occured while parsing the XML file")
         
         # Update progress bar
-        st.session_state.progress_bar.progress(percent_complete + 33, text="Classifying elements, and parsing figures & charts... 🔄")
+        st.session_state.progress_bar.progress(percent_complete + 33, 
+                                               text="Classifying elements, and parsing figures & charts... 🔄")
 
         try:
             # Load classifier module dynamically from specified file location
@@ -339,8 +375,8 @@ def process_classifier(xml_input, pdf_file):
             sys.modules["classifiermodule"] = classifier  # Register the module in sys.modules
             spec.loader.exec_module(classifier)  # Execute the module
 
-            # Classify the figures and formulas by calling 'openXMLfile' from the classifier module
-            images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
+            # Classify the figures and formulas by calling 'open_XML_file' from the classifier module
+            images, figures, formulas = classifier.open_XML_file(xml_input, pdf_file, frontend=True)
             logging.info(f'[app.py] The non-textual elements were classified successfully!')
 
         except Exception as e:
@@ -348,8 +384,8 @@ def process_classifier(xml_input, pdf_file):
             st.error(f"An error occured while classifying the non-textual elements.")
 
         try:
-            # Parse the figures by calling 'processFigures' from the classifier module
-            classifier.processFigures(figures, images, frontend=True)
+            # Parse the figures by calling 'process_figures' from the classifier module
+            classifier.process_figures(figures, images, frontend=True)
             logging.info(f'[app.py] The figures were parsed successfully!')
 
         except Exception as e:
@@ -357,11 +393,12 @@ def process_classifier(xml_input, pdf_file):
             st.error(f"An error occured while parsing the figures.")
 
         # Update progress bar
-        st.session_state.progress_bar.progress(percent_complete + 67, text="Parsing formulas and updating XML file... 🔄")
+        st.session_state.progress_bar.progress(percent_complete + 67, 
+                                               text="Parsing formulas and updating XML file... 🔄")
         
         try:
-            # Parse the formulas by calling 'processFormulas' from the classifier module
-            classifier.processFormulas(formulas, images, mode="regex", frontend=True)
+            # Parse the formulas by calling 'process_formulas' from the classifier module
+            classifier.process_formulas(formulas, images, mode="regex", frontend=True)
             logging.info(f'[app.py] The formulas were parsed successfully!')
 
         except Exception as e:
@@ -446,7 +483,7 @@ def process_pdf(file, params=None):
         st.error(f"An error occured while communicating with GROBID.")
         return None  # Return None on error
 
-def parse_coords_for_figures(xml_content):
+def parse_coordinates(xml_content):
     """
     Extract and parse the 'coords' attribute for <figure> and <formula> elements
     from the GROBID XML output while counting the number of occurrences.
@@ -577,9 +614,10 @@ def main():
     3. Sends the PDF to GROBID for metadata extraction and parsing.
     4. Displays the GROBID output both as a rendered PDF and an editable XML text.
     5. Allows the user to modify the XML, if necessary.
-    6. Processes the XML by invoking the process_classifier, which classifies and interprets the document's structure.
-    7. Displays the interpreted results in views for each element type as well an editable XML text.
-    8. Enables the user to refine and download the final XML file.
+    6. Allows the user to include description of formulas, if desirable.
+    7. Processes the XML by invoking the process_classifier, which classifies and interprets the document's structure.
+    8. Displays the interpreted results in views for each element type as well an editable XML text.
+    9. Enables the user to refine and download the final XML file.
     """
     st.set_page_config(layout="wide") # Configure the page layout to be wide
     logging.info("[app.py] Streamlit page configuration set successfully.")
@@ -591,6 +629,7 @@ def main():
         # Opens the CSS file in read mode and store its content
         with open(css_path, "r") as f: 
             css_content = f.read() # Reads the content of the CSS file
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[app.py] CSS file '{css_path}' read successfully.")
 
         # Render the CSS content in the Streamlit app using Markdown with HTML support enabled
@@ -615,7 +654,11 @@ def main():
         logging.info("[app.py] pdf_ref was missing in session state and has now been initialized.")
 
     # Access the uploaded ref via a key
-    uploaded_pdf = st.file_uploader("Upload PDF", type='pdf', key='pdf', accept_multiple_files=False, label_visibility="hidden")
+    uploaded_pdf = st.file_uploader("Upload PDF", 
+                                    type='pdf', 
+                                    key='pdf', 
+                                    accept_multiple_files=False, 
+                                    label_visibility="hidden")
     
     if uploaded_pdf:
         @st.fragment
@@ -667,12 +710,15 @@ def main():
 
                             # If result is not empty, parse the coordinates for figures and store in session state
                             if result:
-                                st.session_state.rectangles = parse_coords_for_figures(result)
+                                st.session_state.rectangles = parse_coordinates(result)
+
                             else:
                                 # If no result, reset rectangles in session state and clear the result
                                 st.session_state.rectangles = []
                                 result = ""
-                            status.update(label="The PDF file was processed successfully by GROBID ✅", state="complete", expanded=False)
+                            status.update(label="The PDF file was processed successfully by GROBID ✅", 
+                                          state="complete", 
+                                          expanded=False)
                             logging.info("[app.py] The PDF file was processed by GROBID successfully!")
 
                         except Exception as e:
@@ -707,14 +753,22 @@ def main():
                             st.session_state.grobid_results_view_option = "PDF 📄" # Deault to PDF View
 
                         # Create radio buttons to switch between views
-                        st.session_state.grobid_results_view_option = st.radio("Select View", ["PDF 📄", "XML 📝"], horizontal=True, key='view_toggle', label_visibility="collapsed")
+                        st.session_state.grobid_results_view_option = st.radio("Select View", 
+                                                                               ["PDF 📄", "XML 📝"], 
+                                                                               horizontal=True, 
+                                                                               key='view_toggle', 
+                                                                               label_visibility="collapsed")
 
                         # Display PDF view with annotations
                         if st.session_state.grobid_results_view_option == "PDF 📄":
                             # Show the PDF with annotations (rectangles) and rendered text
                             try:
                                 logging.info("[app.py] Calling the PDF Viewer")
-                                pdf_viewer(input=st.session_state.pdf_ref.getvalue(), height=775, annotations=st.session_state.rectangles, render_text=True, annotation_outline_size=2)
+                                pdf_viewer(input=st.session_state.pdf_ref.getvalue(), 
+                                           height=775, 
+                                           annotations=st.session_state.rectangles, 
+                                           render_text=True, 
+                                           annotation_outline_size=2)
                                 logging.info("[app.py] The PDF file was processed by PDF Viewer successfully!")
 
                             except Exception as e:
@@ -771,7 +825,8 @@ def main():
                         """
                         # Checkbox to set environment variable NLFORMULA 
                         # If true, a NL description for formulas will be included
-                        checkbox = st.checkbox("Include description of formulas", help="Including descriptions will delay processing and may result in inaccuracies.")
+                        checkbox = st.checkbox("Include description of formulas", 
+                                               help="Including descriptions will delay processing and may result in inaccuracies.")
 
                         if checkbox:
                             # Get variable from .env file:
@@ -779,6 +834,7 @@ def main():
                             if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
                                 with open("/content/.env", "a") as f:
                                     f.write("nl_formula=False\n")
+                            # File is automatically closed after exiting the 'with' block
                             envdict = get_envdict()
                             envdict["nl_formula"] = "True" # Set new value
                             write_envdict(envdict) # Write new value to file
@@ -790,6 +846,7 @@ def main():
                             if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
                                 with open("/content/.env", "a") as f:
                                     f.write("nl_formula=False\n")
+                                # File is automatically closed after exiting the 'with' block
                             envdict = get_envdict()
                             envdict["nl_formula"] = "False" # Set new value
                             write_envdict(envdict) # Write new value to file
@@ -822,7 +879,8 @@ def main():
                                 with container_placeholder.container(height=775, border=True):
                                     try:
                                         # Process the PDF file and XML file by calling the classifier and parsers
-                                        process_classifier(st.session_state.xml_text, st.session_state.pdf_ref)  # Use PDF file and updated XML file from session state
+                                        # Use PDF file and updated XML file from session state
+                                        process_classifier(st.session_state.xml_text, st.session_state.pdf_ref) 
                                         logging.info("[app.py] The PDF file and XML file were processed by the classifier and parsers successfully!")
 
                                     except Exception as e:
@@ -841,8 +899,12 @@ def main():
                                             """
 
                                             # Create radio buttons to switch between views
-                                            st.session_state.interpretation_results_view_option = st.radio("Select Non-Textual Element", ["XML 📝", "Formulas 🔢", "Figures 🖼️", "Charts 📊", "Tables 📋"], horizontal=True, key='interpretation_toggle', label_visibility="collapsed")
-
+                                            st.session_state.interpretation_results_view_option = st.radio("Select Non-Textual Element", 
+                                                                                                           ["XML 📝", "Formulas 🔢", "Figures 🖼️", "Charts 📊", "Tables 📋"], 
+                                                                                                            horizontal=True, 
+                                                                                                            key='interpretation_toggle', 
+                                                                                                            label_visibility="collapsed")
+                                            
                                             # If 'XML' is chosen, display XML result
                                             if st.session_state.interpretation_results_view_option == "XML 📝":
                                                 st.text_area(
@@ -859,21 +921,29 @@ def main():
                                                 with st.container(height=775, border=True):
                                                     if len(st.session_state.formulas_results_array) > 0:
                                                         for formula in st.session_state.formulas_results_array:  # Use session state variable
-                                                            st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}") # Display page number and formula number as the header
+
+                                                            # Display page number and formula number as the header
+                                                            st.subheader(f"Page {formula.get('page_number', 'N/A')}: Formula #{formula.get('element_number', 'N/A')}")
                                                             
                                                             if latex_validity(clean_latex(formula.get('formula', 'N/A'))):
-                                                                st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$") # Display the formula itself if on valid LaTeX format
-                                                            
+                                                                # Display the formula itself if on valid LaTeX format
+                                                                st.markdown(rf"$$ {clean_latex(formula.get('formula', 'N/A'))} $$")
                                                             else:
-                                                                st.write('Invalid LaTeX format') # Display 'Invalid LaTeX format' if not on valid LaTeX format
+                                                                # Display 'Invalid LaTeX format' if not on valid LaTeX format
+                                                                st.write('Invalid LaTeX format')
+                                                            
                                                             envdict = get_envdict()
-                                                            if ("nl_formula" not in envdict): # If key doesnt exist, create it with default value 'False':
+                                                            # If key doesnt exist, create it with default value 'False':
+                                                            if ("nl_formula" not in envdict):
                                                                 with open("/content/.env", "a") as f:
                                                                     f.write("nl_formula=False\n")
+                                                                # File is automatically closed after exiting the 'with' block
+                                                            
                                                             envdict = get_envdict()
-                                                            if (envdict["nl_formula"] == "True"): # Check to see if environment variable for NL generation of formula is set and true:
-                                                                st.write(f"{formula.get('NL', 'No description available.')}") # Display the description of the formula                                                                                                              
-                                                    
+                                                            # Check to see if environment variable for NL generation of formula is set and true:
+                                                            if (envdict["nl_formula"] == "True"):
+                                                                # Display the description of the formula 
+                                                                st.write(f"{formula.get('NL', 'No description available.')}")                                                                                                             
                                                     else:
                                                         st.warning("No formulas detected in PDF file.")
 
@@ -882,9 +952,11 @@ def main():
                                                 with st.container(height=775, border=True):
                                                     if len(st.session_state.figures_results_array) > 0:
                                                         for figure in st.session_state.figures_results_array:  # Use session state variable
-                                                            st.subheader(f"Page {figure.get('page_number', 'N/A')}: Figure #{figure.get('element_number', 'N/A')}") # Display page number and figure number as the header
-                                                            st.write(f"{figure.get('NL', 'No description available.')}") # Display the description of the figure
-                                                    
+                                                            # Display page number and figure number as the header
+                                                            st.subheader(f"Page {figure.get('page_number', 'N/A')}: Figure #{figure.get('element_number', 'N/A')}")
+                                                            
+                                                            # Display the description of the figure
+                                                            st.write(f"{figure.get('NL', 'No description available.')}")
                                                     else:
                                                         st.warning("No figures detected in PDF file.")
 
@@ -893,9 +965,11 @@ def main():
                                                 with st.container(height=775, border=True):
                                                     if len(st.session_state.charts_results_array) > 0:
                                                         for chart in st.session_state.charts_results_array:  # Use session state variable
-                                                            st.subheader(f"Page {chart.get('page_number', 'N/A')}: Chart #{chart.get('element_number', 'N/A')}") # Display page number and chart number as the header
-                                                            st.write(f"{chart.get('NL', 'No description available.')}") # Display the description of the chart
-                                                    
+                                                            # Display page number and chart number as the header
+                                                            st.subheader(f"Page {chart.get('page_number', 'N/A')}: Chart #{chart.get('element_number', 'N/A')}")
+                                                            
+                                                            # Display the description of the chart
+                                                            st.write(f"{chart.get('NL', 'No description available.')}")
                                                     else:
                                                         st.warning("No charts detected in PDF file.")
 
@@ -905,17 +979,19 @@ def main():
                                                     if len(st.session_state.tables_results_array) > 0:
                                                         for table in st.session_state.tables_results_array:
                                                             table_data = table.get("table_data", [])
-                                                            st.subheader(f"Page {table.get('page_number', 'N/A')}: Table #{table.get('table_number', 'N/A')}") # Display page number and table number as the header
-                                                            st.write(f"{table.get('table_context', 'No description available.')}") # Display the context of the table
+
+                                                            # Display page number and table number as the header
+                                                            st.subheader(f"Page {table.get('page_number', 'N/A')}: Table #{table.get('table_number', 'N/A')}")
+                                                            
+                                                            # Display the context of the table
+                                                            st.write(f"{table.get('table_context', 'No description available.')}")
                                                             
                                                             if table_data:
                                                                 # Convert table data to DataFrame
                                                                 df = pd.DataFrame(table_data)
                                                                 st.dataframe(df) # Display the table itself
-                                                            
                                                             else:
                                                                 st.write(f"No data found in table #{table.get('table_number', 'N/A')} on page {table.get('page_number', 'N/A')}.")
-                                                    
                                                     else:
                                                         st.warning("No tables detected in PDF file.")
 

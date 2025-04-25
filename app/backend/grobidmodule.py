@@ -16,7 +16,7 @@ logging.basicConfig(
     ]
 )
 
-def loadGrobidPythonway():
+def load_grobid_python_way():
   logging.info(f"[grobidmodule.py] Loading GROBID.")
 
   # First, check if a GROBID server is already running:

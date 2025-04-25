@@ -45,6 +45,7 @@ def run_ocr_and_compare(img_path, txt_path, ocr_model):
     # Read the correct LaTeX from the corresponding .txt file
     with open(txt_path, "r") as file:
         correct_latex = file.read().strip()
+    # File is automatically closed after exiting the 'with' block
 
     # Compare the LaTeX strings
     similarity_score = compare_latex(correct_latex, ocr_latex)
@@ -121,6 +122,7 @@ def process_dataset(dataset_dir, ocr_model, output_file):
         f.write(f"Percentage of passed comparisons: {passed_count/total_comparisons}\n")
         f.write(f"Average similarity score: {avg_sim_score}\n")
         f.write(f"Average OCR response time: {avg_time:.4f} seconds\n")
+    # File is automatically closed after exiting the 'with' block
 
 # Initialize the OCR model
 model = LatexOCR()

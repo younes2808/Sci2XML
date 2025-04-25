@@ -74,6 +74,7 @@ def run_ocr_and_compare(img_path, txt_path, model, tokenizer, latex_processor, d
     # Read the correct LaTeX from the corresponding .txt file
     with open(txt_path, "r") as file:
         correct_latex = file.read().strip()
+    # File is automatically closed after exiting the 'with' block
 
     # Compare the LaTeX strings
     similarity_score = compare_latex(correct_latex, ocr_latex)
@@ -152,7 +153,7 @@ def process_dataset(dataset_dir, model, tokenizer, latex_processor, device, outp
         f.write(f"Percentage of passed comparisons: {passed_count/total_comparisons:.2%}\n")
         f.write(f"Average similarity score: {avg_sim_score:.4f}\n")
         f.write(f"Average OCR response time: {avg_time:.4f} seconds\n")
-
+    # File is automatically closed after exiting the 'with' block
 
 # Initialize the Nougat model and processor
 model_name = "Norm/nougat-latex-base"

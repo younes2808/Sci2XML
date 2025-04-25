@@ -4,7 +4,6 @@ import re
 import getpass
 from flask import Flask, jsonify, make_response, request
 from pyngrok import ngrok, conf
-import time
 import logging
 import sys
 
@@ -18,7 +17,7 @@ logging.basicConfig(
     ]
 )
 
-def startLocaltunnel(port):
+def start_localtunnel(port):
   """
   Starts a localtunnel instance and returns the public URL and password.
 
@@ -51,7 +50,7 @@ def startLocaltunnel(port):
 
   return public_url, passw
 
-def startNgrok(port):
+def start_ngrok(port):
   """
   Starts a ngrok instance and returns the public URL and password.
 
@@ -67,6 +66,7 @@ def startNgrok(port):
   if ("authtoken" not in envdict): # If key doesnt exist, create it with default value 'None':
       with open("/content/.env", "a") as f:
           f.write("authtoken=None\n")
+      # File is automatically closed after exiting the 'with' block
   envdict = get_envdict()
   if (envdict["authtoken"] != "None"): # Check to see if authtoken is set
     conf.get_default().auth_token = envdict["authtoken"]
@@ -86,7 +86,7 @@ def startNgrok(port):
   
   return public_url, "no password needed"
 
-def startStreamlit(tunnel, portnr):
+def start_streamlit(tunnel, portnr):
   """
   Starts a Streamlit application. Then calls on function to start localtunnel.
 
@@ -105,22 +105,23 @@ def startStreamlit(tunnel, portnr):
   # Exposing localhost through tunnel, depending on which tunnel is selected at launch:
   if (tunnel == "localtunnel"):
     ## Launch Localtunnel ##
-    url, passw = startLocaltunnel("8501")
+    url, passw = start_localtunnel("8501")
   elif (tunnel == "ngrok"):
     ## Launch Ngrok ##
-    url, passw = startNgrok("8501")
+    url, passw = start_ngrok("8501")
   
   # Save url and password to file, in case it doesnt print to console.
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")
     file.write(passw)
+  # File is automatically closed after exiting the 'with' block
 
   print("\n############################################################")
   print(f"----> Public URL: {url} \n----> Password: {passw}")
   print("############################################################\n")
 
-def startAPI(tunnel, portnr):
+def start_API(tunnel, portnr):
   """
   Starts only the API. Then calls on function to start localtunnel.
 
@@ -136,22 +137,21 @@ def startAPI(tunnel, portnr):
   # Exposing localhost through tunnel, depending on which tunnel is selected at launch:
   if (tunnel == "localtunnel"):
     ## Localtunnel ##
-    url, passw = startLocaltunnel(portnr)
+    url, passw = start_localtunnel(portnr)
   elif (tunnel == "ngrok"):
     ## Ngrok ##
-    url, passw = startNgrok(portnr)
+    url, passw = start_ngrok(portnr)
 
   # Save url and password to file, in case it doesnt print to console.
   with open("urlpasslog.txt", "w") as file:
     file.write(url)
     file.write("\n")
     file.write(passw)
+  # File is automatically closed after exiting the 'with' block
 
   print("\n############################################################")
   print(f"----> Public URL: {url} \n----> Password: {passw}")
   print("############################################################\n")
-
-
 
 def get_envdict():
     """
@@ -167,6 +167,7 @@ def get_envdict():
     try:
         with open("/content/.env", "r") as f:
             env = f.read()
+        # File is automatically closed after exiting the 'with' block
         logging.info(f"[frontendmodule.py] Successfully opened .env file.")
     except Exception as e:
         logging.error(f"[frontendmodule.py] An error occurred while opening .env file: {e}", exc_info=True)

@@ -7,31 +7,33 @@ from io import BytesIO
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load():
-  """
-  Load the Moondream2 model and tokenizer.
+    """
+    Load the Moondream2 model and tokenizer.
 
-  Moondream2 is a vision-language model designed for multimodal tasks.
-  
-  Returns:
-  model (torch.nn.Module): The pre-trained Moondream2 model.
-  tokenizer (transformers.PreTrainedTokenizer): Tokenizer corresponding to Moondream2.
-  """
+    Moondream2 is a vision-language model designed for multimodal tasks.
 
-  # Inform the user that the model is being loaded
-  print("\n#-------------------- # Loading Moondream2 model # -----------------#\n")
+    Returns:
+        model (torch.nn.Module or None): The pre-trained Moondream2 model, or None if loading failed.
+        tokenizer (transformers.PreTrainedTokenizer or None): Tokenizer corresponding to Moondream2, or None if loading failed.
+    """
 
-  # Load the Moondream2 model from the Hugging Face repository
-  model = AutoModelForCausalLM.from_pretrained(
-      "vikhyatk/moondream2",
-      revision="2025-01-09",
-      trust_remote_code=True,
-      device_map={"": "cuda" if torch.cuda.is_available() else "cpu"}  # Assigns model to GPU if available
-  ).eval()  # Set the model to evaluation mode (disables training-specific behavior)
+    print("\n#-------------------- # Loading Moondream2 model # -----------------#\n")
 
-  # Load the corresponding tokenizer
-  tokenizer = AutoTokenizer.from_pretrained("vikhyatk/moondream2", trust_remote_code=True)
+    try:
+        # Load the model
+        model = AutoModelForCausalLM.from_pretrained(
+            "vikhyatk/moondream2",
+            revision="2025-01-09",
+            trust_remote_code=True,
+            device_map={"": "cuda" if torch.cuda.is_available() else "cpu"}
+        ).eval()  # Set model to eval mode
 
-  # Confirm successful loading
-  print("\n----> Moondream2 model loaded successfully!\n")
+        # Load the tokenizer
+        tokenizer = AutoTokenizer.from_pretrained("vikhyatk/moondream2", trust_remote_code=True)
 
-  return model, tokenizer  # Return both the model and tokenizer for use in inference
+        print("\n----> Moondream2 model loaded successfully!\n")
+        return model, tokenizer
+
+    except Exception as e:
+        print(f"\n[ERROR] Failed to load Moondream2 model or tokenizer: {e}")
+        return None, None
