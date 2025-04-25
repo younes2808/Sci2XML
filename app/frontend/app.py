@@ -158,7 +158,7 @@ def clean_latex(latex_str):
 
     return latex_str.strip()  # Trim any extra spaces
 
-def processClassifierResponse(element):
+def process_classifier_response(element):
     """
     Processes the response from the classifier and adds it to the correct array.
 
@@ -351,7 +351,7 @@ def process_classifier(xml_input, pdf_file):
                             table_data.append(row_data)  # Append the row data to the table
 
                         # The parsed data will be stored in a results array and displayed to the user
-                        processClassifierResponse({
+                        process_classifier_response({
                             "element_type": 'table',
                             "page_number": page_number,
                             "table_number": table_number,
@@ -375,8 +375,8 @@ def process_classifier(xml_input, pdf_file):
             sys.modules["classifiermodule"] = classifier  # Register the module in sys.modules
             spec.loader.exec_module(classifier)  # Execute the module
 
-            # Classify the figures and formulas by calling 'openXMLfile' from the classifier module
-            images, figures, formulas = classifier.openXMLfile(xml_input, pdf_file, frontend=True)
+            # Classify the figures and formulas by calling 'open_XML_file' from the classifier module
+            images, figures, formulas = classifier.open_XML_file(xml_input, pdf_file, frontend=True)
             logging.info(f'[app.py] The non-textual elements were classified successfully!')
 
         except Exception as e:
@@ -384,8 +384,8 @@ def process_classifier(xml_input, pdf_file):
             st.error(f"An error occured while classifying the non-textual elements.")
 
         try:
-            # Parse the figures by calling 'processFigures' from the classifier module
-            classifier.processFigures(figures, images, frontend=True)
+            # Parse the figures by calling 'process_figures' from the classifier module
+            classifier.process_figures(figures, images, frontend=True)
             logging.info(f'[app.py] The figures were parsed successfully!')
 
         except Exception as e:
@@ -397,8 +397,8 @@ def process_classifier(xml_input, pdf_file):
                                                text="Parsing formulas and updating XML file... 🔄")
         
         try:
-            # Parse the formulas by calling 'processFormulas' from the classifier module
-            classifier.processFormulas(formulas, images, mode="regex", frontend=True)
+            # Parse the formulas by calling 'process_formulas' from the classifier module
+            classifier.process_formulas(formulas, images, mode="regex", frontend=True)
             logging.info(f'[app.py] The formulas were parsed successfully!')
 
         except Exception as e:
@@ -483,7 +483,7 @@ def process_pdf(file, params=None):
         st.error(f"An error occured while communicating with GROBID.")
         return None  # Return None on error
 
-def parse_coords_for_figures(xml_content):
+def parse_coordinates(xml_content):
     """
     Extract and parse the 'coords' attribute for <figure> and <formula> elements
     from the GROBID XML output while counting the number of occurrences.
@@ -710,7 +710,7 @@ def main():
 
                             # If result is not empty, parse the coordinates for figures and store in session state
                             if result:
-                                st.session_state.rectangles = parse_coords_for_figures(result)
+                                st.session_state.rectangles = parse_coordinates(result)
 
                             else:
                                 # If no result, reset rectangles in session state and clear the result

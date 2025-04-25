@@ -72,7 +72,7 @@ except Exception as e:
     logging.error(f"[classifier.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
 
 
-def openXMLfile(XMLfile, PDFfile, frontend):
+def open_XML_file(XMLfile, PDFfile, frontend):
     """
     Opens the XML file and converts it to a python dict, and extracts all formulas and figures. Also turns each page of the PDF into an image.
 
@@ -87,7 +87,7 @@ def openXMLfile(XMLfile, PDFfile, frontend):
     formulas: The formulas from the XML file.
     """
 
-    logging.info("[classifier.py] Starting function openXMLfile()")
+    logging.info("[classifier.py] Starting function open_XML_file()")
 
     # Opening XML file and storing it in variable.
     try:
@@ -493,12 +493,12 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
             sys.modules["appmodule"] = app
             spec.loader.exec_module(app)
             ## Calls frontend:
-            app.processClassifierResponse(APIresponse)
-            logging.info(f"[classifier.py] Successfully called frontend function processClassifierResponse().")
+            app.process_classifier_response(APIresponse)
+            logging.info(f"[classifier.py] Successfully called frontend function process_classifier_response().")
     except Exception as e:
-        logging.error(f"[classifier.py] An error occurred while calling frontend function processClassifierResponse(): {e}", exc_info=True)
+        logging.error(f"[classifier.py] An error occurred while calling frontend function process_classifier_response(): {e}", exc_info=True)
 
-def processFigures(figures, images, frontend):
+def process_figures(figures, images, frontend):
     """
     Crops the figures from the PDF file into images, finds correct element number, gets figure description and coordinates and sends them to the classifier (ML model) for classification.
 
@@ -510,7 +510,7 @@ def processFigures(figures, images, frontend):
     Returns:
     None
     """
-    logging.info("[classifier.py] Starting function processFigures()")
+    logging.info("[classifier.py] Starting function process_figures()")
 
     figurnr = 0 # The number which GROBID gave this figure. Will be used when putting processed content back into the figure tag.
     ## Iterate through all figures:
@@ -599,7 +599,7 @@ def processFigures(figures, images, frontend):
 
         figurnr+=1
 
-def processFormulas(formulas, images, mode, frontend):
+def process_formulas(formulas, images, mode, frontend):
     """
     Crops the formulas from the PDF file into images, finds correct element number, gets coordinates and sends them to the classifier (ML model) for classification.
 
@@ -612,7 +612,7 @@ def processFormulas(formulas, images, mode, frontend):
     Returns:
     None
     """
-    logging.info("[classifier.py] Starting function processFormulas()")
+    logging.info("[classifier.py] Starting function process_formulas()")
 
     formulanr = 0 # The number which GROBID gave this formula. Will be used when putting processed content back into the formula tag.
     for formula in formulas:

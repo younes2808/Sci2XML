@@ -43,9 +43,9 @@ print("\n#---------------------- ## Loading models ## -----------------------#\n
 logging.info(f"[APIcode.py] Loading models.")
 try:
     # Loading the various parsing models by calling the load function in their module.
-    ML = classifierML.loadML()
-    charter.load_UniChart()
-    formula.load_Sumen()
+    ML = classifierML.load_ml()
+    charter.load_unichart()
+    formula.load_sumen()
     figureParserModel, figureParserTokenizer = figure.load()
     logging.info(f"[APIcode.py] Finished loading models.")
 except Exception as e:
@@ -89,7 +89,7 @@ def API(portnr):
 
       # Process image:
       try:
-        processedFormulaLaTex, processedFormulaNL = processFormula(file)
+        processedFormulaLaTex, processedFormulaNL = process_formula(file)
         logging.info(f"[APIcode.py] Successfully processed formula.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while processing formula: {e}", exc_info=True)
@@ -174,7 +174,7 @@ def API(portnr):
 
       # Process image:
       try:
-        processedFigureNL = processFigure(file, string_data_prompt)
+        processedFigureNL = process_figures(file, string_data_prompt)
         logging.info(f"[APIcode.py] Successfully processed figure.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while processing figure: {e}", exc_info=True)
@@ -217,7 +217,7 @@ def API(portnr):
           headers={"Content-Disposition": "attachment; filename=updated_grobid.xml"}
       )
 
-  def processFormula(file):
+  def process_formula(file):
       """
       Processes the formula. More specifically redirects to the OCR model.
 
@@ -228,7 +228,7 @@ def API(portnr):
       latex_code: The generated LaTeX code.
       NLdata: The generated NL data.
       """
-      logging.info(f"[APIcode.py] processFormula - processing formula...")
+      logging.info(f"[APIcode.py] process_formula - processing formula...")
       
       # Ensure proper file
       if file.filename == '':
@@ -315,7 +315,7 @@ def API(portnr):
       
       return structured_table_data, summary
 
-  def processFigure(file, promptContext):
+  def process_figures(file, promptContext):
       """
       Processes the figure. More specifically redirects to the VLM model.
 
@@ -326,7 +326,7 @@ def API(portnr):
       Returns:
       NLdata: The generated NL data.
       """
-      logging.info(f"[APIcode.py] processFigure - processing figure...")
+      logging.info(f"[APIcode.py] process_figures - processing figure...")
       
       # Ensure proper file
       if file.filename == '':
@@ -445,7 +445,7 @@ def API(portnr):
 
       # Process image:
       try:
-        response = classifierML.callML(ML, image)
+        response = classifierML.call_ml(ML, image)
         logging.info(f"[APIcode.py] Successfully classified image.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while classifying image: {e}", exc_info=True)
@@ -537,19 +537,19 @@ def API(portnr):
       logging.info(f"[APIcode.py] process - Initiating Classifier.")
       try:
         # Open the XML file and extract all figures and formulas, as well as getting each page of the PDF as an image.
-        images, figures, formulas = classifier.openXMLfile(string_data_XML, byte_data_PDF, frontend=False)
+        images, figures, formulas = classifier.open_XML_file(string_data_XML, byte_data_PDF, frontend=False)
         logging.info(f'[APIcode.py] Successfully opened XML file.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while opening the XML file: {e}", exc_info=True)
       try:
         # Process each figure. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
-        classifier.processFigures(figures, images, frontend=False)
+        classifier.process_figures(figures, images, frontend=False)
         logging.info(f'[APIcode.py] Successfully processed the figures.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while processeing figures: {e}", exc_info=True)
       try:
         # Process each formula. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
-        classifier.processFormulas(formulas, images, mode="regex", frontend=False)
+        classifier.process_formulas(formulas, images, mode="regex", frontend=False)
         logging.info(f'[APIcode.py] Successfully processed the formulas.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while processing formulas: {e}", exc_info=True)

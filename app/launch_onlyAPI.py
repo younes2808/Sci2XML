@@ -15,7 +15,7 @@ logging.basicConfig(
     ]
 )
 
-def startEverything():
+def launch():
   start_time = time.time()
   time_array = []
   """
@@ -32,7 +32,7 @@ def startEverything():
   print("#----------------------- ################### -----------------------#")
   print("#----------------------- ##### Sci2XML ##### -----------------------#")
   print("#----------------------- ################### -----------------------#\n")
-  logging.info("[launch_onlyAPI.py] Starting function startEverything()")
+  logging.info("[launch_onlyAPI.py] Starting function launch()")
   # Parsing arguments from terminal:
   parser = argparse.ArgumentParser()
   parser.add_argument('--authtoken', dest='authtoken', type=str, help='Set authtoken for Ngrok.', default ="None")
@@ -101,7 +101,7 @@ def startEverything():
   try:
       # Import GROBID module. This will also automatically download, install and launch GROBID server.
       import backend.grobidmodule as grobidmod
-      grobidmod.loadGrobidPythonway()
+      grobidmod.load_grobid_python_way()
       logging.info(f"[launch_onlyAPI.py] Finished loading and launching GROBID.")
   except Exception as e:
     logging.error(f"[launch_onlyAPI.py] An error occurred while trying to load and launch GROBID: {e}", exc_info=True)
@@ -120,7 +120,7 @@ def startEverything():
       # Import frontendmodule, which will be used to expose localhost to internet.
       import frontend.frontendmodule as front
       # Host frontend through streamlit
-      front.startAPI(tunnel, args.port)
+      front.start_API(tunnel, args.port)
       logging.info(f"[launch_onlyAPI.py] Finished starting API through tunnel.")
   except Exception as e:
     logging.error(f"[launch_onlyAPI.py] An error occurred while trying to start API through tunnel: {e}", exc_info=True)
@@ -138,4 +138,4 @@ def startEverything():
 
   print("\n#--------------------- ### User Interaction ### --------------------#\n")
 
-startEverything()
+launch()

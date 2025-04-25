@@ -13,7 +13,7 @@ import numpy as np
 
 # This code is adapted from ---> https://www.kaggle.com/code/sunedition/classification-of-graphs <---
 
-def loadML():
+def load_ml():
   """
   Load the ML model used for classification.
 
@@ -97,7 +97,7 @@ def loadML():
   print("\n----> ML classifier model loaded successfully")
   return densenet
 
-def callML(model, image):
+def call_ml(model, image):
   """
   Calls the ML model that will classify the image.
 

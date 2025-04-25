@@ -6,7 +6,7 @@ from collections import Counter
 # Determine the computation device: use GPU (CUDA) if available; otherwise, default to CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def load_UniChart():
+def load_unichart():
     """
     Load the UniChart model and processor.
 

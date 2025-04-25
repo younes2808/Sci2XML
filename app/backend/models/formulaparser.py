@@ -4,7 +4,7 @@ from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcesso
 # Determine the computation device: use GPU (CUDA) if available; otherwise, default to CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def load_Sumen():
+def load_sumen():
     """
     Load the Sumen model and processor.
 
@@ -43,7 +43,7 @@ def run_sumen_ocr(image):
     """
     try:
         if sumen_model is None or sumen_processor is None:
-            raise RuntimeError("Sumen model and processor are not loaded. Please call load_Sumen() first.")
+            raise RuntimeError("Sumen model and processor are not loaded. Please call load_sumen() first.")
 
         # Preprocess the image
         pixel_values = sumen_processor.image_processor(image, return_tensors="pt").pixel_values.to(device)

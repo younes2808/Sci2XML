@@ -17,7 +17,7 @@ logging.basicConfig(
     ]
 )
 
-def startLocaltunnel(port):
+def start_localtunnel(port):
   """
   Starts a localtunnel instance and returns the public URL and password.
 
@@ -50,7 +50,7 @@ def startLocaltunnel(port):
 
   return public_url, passw
 
-def startNgrok(port):
+def start_ngrok(port):
   """
   Starts a ngrok instance and returns the public URL and password.
 
@@ -86,7 +86,7 @@ def startNgrok(port):
   
   return public_url, "no password needed"
 
-def startStreamlit(tunnel, portnr):
+def start_streamlit(tunnel, portnr):
   """
   Starts a Streamlit application. Then calls on function to start localtunnel.
 
@@ -105,10 +105,10 @@ def startStreamlit(tunnel, portnr):
   # Exposing localhost through tunnel, depending on which tunnel is selected at launch:
   if (tunnel == "localtunnel"):
     ## Launch Localtunnel ##
-    url, passw = startLocaltunnel("8501")
+    url, passw = start_localtunnel("8501")
   elif (tunnel == "ngrok"):
     ## Launch Ngrok ##
-    url, passw = startNgrok("8501")
+    url, passw = start_ngrok("8501")
   
   # Save url and password to file, in case it doesnt print to console.
   with open("urlpasslog.txt", "w") as file:
@@ -121,7 +121,7 @@ def startStreamlit(tunnel, portnr):
   print(f"----> Public URL: {url} \n----> Password: {passw}")
   print("############################################################\n")
 
-def startAPI(tunnel, portnr):
+def start_API(tunnel, portnr):
   """
   Starts only the API. Then calls on function to start localtunnel.
 
@@ -137,10 +137,10 @@ def startAPI(tunnel, portnr):
   # Exposing localhost through tunnel, depending on which tunnel is selected at launch:
   if (tunnel == "localtunnel"):
     ## Localtunnel ##
-    url, passw = startLocaltunnel(portnr)
+    url, passw = start_localtunnel(portnr)
   elif (tunnel == "ngrok"):
     ## Ngrok ##
-    url, passw = startNgrok(portnr)
+    url, passw = start_ngrok(portnr)
 
   # Save url and password to file, in case it doesnt print to console.
   with open("urlpasslog.txt", "w") as file:

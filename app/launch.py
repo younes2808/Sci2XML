@@ -15,7 +15,7 @@ logging.basicConfig(
     ]
 )
 
-def startEverything():
+def launch():
   start_time = time.time()
   time_array = []
   """
@@ -32,7 +32,7 @@ def startEverything():
   print("#----------------------- ################### -----------------------#")
   print("#----------------------- ##### Sci2XML ##### -----------------------#")
   print("#----------------------- ################### -----------------------#\n")
-  logging.info("[launch.py] Starting function startEverything()")
+  logging.info("[launch.py] Starting function launch()")
   # Parsing arguments from terminal:
   parser = argparse.ArgumentParser()
   parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
@@ -101,7 +101,7 @@ def startEverything():
   try:
     # Import GROBID module. This will also automatically download, install and launch GROBID server.
     import backend.grobidmodule as grobidmod
-    grobidmod.loadGrobidPythonway()
+    grobidmod.load_grobid_python_way()
     logging.info(f"[launch.py] Finished loading and launching GROBID.")
   except Exception as e:
     logging.error(f"[launch.py] An error occurred while trying to load and launch GROBID: {e}", exc_info=True)
@@ -121,7 +121,7 @@ def startEverything():
     # Import frontendmodule, which will be used to expose localhost to internet.
     import frontend.frontendmodule as front
     # Host frontend through streamlit
-    front.startStreamlit(args.tunnel, args.port)
+    front.start_streamlit(args.tunnel, args.port)
     logging.info(f"[launch.py] Finished starting Streamlit through tunnel.")
   except Exception as e:
     logging.error(f"[launch.py] An error occurred while trying to start Streamlit through tunnel: {e}", exc_info=True)
@@ -133,4 +133,4 @@ def startEverything():
 
   print("\n#--------------------- ### User Interaction ### --------------------#\n")
   
-startEverything()
+launch()
