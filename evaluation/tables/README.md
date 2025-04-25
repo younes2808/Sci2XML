@@ -43,4 +43,4 @@ pip install pdfplumber requests
 
 ## Results
 
-![Table Results](https://github.com/user-attachments/assets/3da0a462-15a6-4a32-9de2-34dfdd12a649)
+![Table Results](https://github.com/user-attachments/assets/5b92967f-9521-44fa-90c8-64b63e92f3d0)
