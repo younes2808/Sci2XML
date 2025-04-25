@@ -1,4 +1,4 @@
-# Evaluating Table Extraction: pdfplumber vs. GROBID
+# Evaluating Table Extraction: pdfplumber vs. grobid
 
 This repository contains evaluation scripts to assess two tools, [pdfplumber](https://github.com/jsvine/pdfplumber) and [grobid](https://github.com/kermitt2/grobid), for extracting tables from PDF documents. The evaluation is performed on a small dataset of 20 PDFs where the number of tables in each document has been manually annotated.
 
@@ -12,7 +12,7 @@ The dataset is organized in a folder called `Dataset`, which contains 20 subfold
 
 ## Purpose
 
-The goal of this project is to benchmark and compare the performance of pdfplumber and GROBID in extracting tables from PDF documents. The evaluation consists of:
+The goal of this project is to benchmark and compare the performance of pdfplumber and grobid in extracting tables from PDF documents. The evaluation consists of:
 
 - Extracting tables along with metadata such as coordinates and surrounding context.
 - Comparing the extracted table counts with manual annotations.
