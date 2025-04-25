@@ -3,8 +3,8 @@ Folder 001, PDF 001.pdf:
 GROBID tables: 1
 Total tables: 30
 Accuracy = 3.33%
-Time taken for processing: 15.2162 seconds
-Time per table: 15.2162 seconds
+Time taken for processing: 46.4923 seconds
+Time per table: 46.4923 seconds
 
 --------------------------------------------------
 Processing folder: 002
@@ -12,8 +12,8 @@ Folder 002, PDF 002.pdf:
 GROBID tables: 14
 Total tables: 18
 Accuracy = 77.78%
-Time taken for processing: 12.8696 seconds
-Time per table: 0.9193 seconds
+Time taken for processing: 20.2966 seconds
+Time per table: 1.4498 seconds
 
 --------------------------------------------------
 Processing folder: 003
@@ -21,8 +21,8 @@ Folder 003, PDF 003.pdf:
 GROBID tables: 2
 Total tables: 2
 Accuracy = 100.00%
-Time taken for processing: 2.3299 seconds
-Time per table: 1.1650 seconds
+Time taken for processing: 3.5722 seconds
+Time per table: 1.7861 seconds
 
 --------------------------------------------------
 Processing folder: 004
@@ -30,8 +30,8 @@ Folder 004, PDF 004.pdf:
 GROBID tables: 1
 Total tables: 2
 Accuracy = 50.00%
-Time taken for processing: 1.3084 seconds
-Time per table: 1.3084 seconds
+Time taken for processing: 1.1959 seconds
+Time per table: 1.1959 seconds
 
 --------------------------------------------------
 Processing folder: 005
@@ -39,8 +39,8 @@ Folder 005, PDF 005.pdf:
 GROBID tables: 1
 Total tables: 1
 Accuracy = 100.00%
-Time taken for processing: 1.3500 seconds
-Time per table: 1.3500 seconds
+Time taken for processing: 1.2053 seconds
+Time per table: 1.2053 seconds
 
 --------------------------------------------------
 Processing folder: 006
@@ -48,8 +48,8 @@ Folder 006, PDF 006.pdf:
 GROBID tables: 13
 Total tables: 7
 Accuracy = 53.85%
-Time taken for processing: 13.8570 seconds
-Time per table: 1.0659 seconds
+Time taken for processing: 24.5749 seconds
+Time per table: 1.8904 seconds
 
 --------------------------------------------------
 Processing folder: 007
@@ -57,8 +57,8 @@ Folder 007, PDF 007.pdf:
 GROBID tables: 2
 Total tables: 5
 Accuracy = 40.00%
-Time taken for processing: 1.3584 seconds
-Time per table: 0.6792 seconds
+Time taken for processing: 1.4338 seconds
+Time per table: 0.7169 seconds
 
 --------------------------------------------------
 Processing folder: 008
@@ -66,8 +66,8 @@ Folder 008, PDF 008.pdf:
 GROBID tables: 23
 Total tables: 29
 Accuracy = 79.31%
-Time taken for processing: 1.2518 seconds
-Time per table: 0.0544 seconds
+Time taken for processing: 1.2471 seconds
+Time per table: 0.0542 seconds
 
 --------------------------------------------------
 Processing folder: 009
@@ -75,8 +75,8 @@ Folder 009, PDF 009.pdf:
 GROBID tables: 2
 Total tables: 3
 Accuracy = 66.67%
-Time taken for processing: 1.3065 seconds
-Time per table: 0.6533 seconds
+Time taken for processing: 1.2873 seconds
+Time per table: 0.6436 seconds
 
 --------------------------------------------------
 Processing folder: 010
@@ -84,8 +84,8 @@ Folder 010, PDF 010.pdf:
 GROBID tables: 5
 Total tables: 4
 Accuracy = 80.00%
-Time taken for processing: 13.5438 seconds
-Time per table: 2.7088 seconds
+Time taken for processing: 19.6289 seconds
+Time per table: 3.9258 seconds
 
 --------------------------------------------------
 Processing folder: 011
@@ -93,8 +93,8 @@ Folder 011, PDF 011.pdf:
 GROBID tables: 12
 Total tables: 13
 Accuracy = 92.31%
-Time taken for processing: 14.3393 seconds
-Time per table: 1.1949 seconds
+Time taken for processing: 19.0055 seconds
+Time per table: 1.5838 seconds
 
 --------------------------------------------------
 Processing folder: 012
@@ -102,8 +102,8 @@ Folder 012, PDF 012.pdf:
 GROBID tables: 8
 Total tables: 11
 Accuracy = 72.73%
-Time taken for processing: 13.9694 seconds
-Time per table: 1.7462 seconds
+Time taken for processing: 14.6332 seconds
+Time per table: 1.8292 seconds
 
 --------------------------------------------------
 Processing folder: 013
@@ -111,8 +111,8 @@ Folder 013, PDF 013.pdf:
 GROBID tables: 11
 Total tables: 9
 Accuracy = 81.82%
-Time taken for processing: 26.1965 seconds
-Time per table: 2.3815 seconds
+Time taken for processing: 31.7186 seconds
+Time per table: 2.8835 seconds
 
 --------------------------------------------------
 Processing folder: 014
@@ -120,8 +120,8 @@ Folder 014, PDF 014.pdf:
 GROBID tables: 31
 Total tables: 32
 Accuracy = 96.88%
-Time taken for processing: 1.6168 seconds
-Time per table: 0.0522 seconds
+Time taken for processing: 1.7763 seconds
+Time per table: 0.0573 seconds
 
 --------------------------------------------------
 Processing folder: 015
@@ -129,7 +129,7 @@ Folder 015, PDF 015.pdf:
 GROBID tables: 0
 Total tables: 2
 Accuracy = 0.00%
-Time taken for processing: 1.1526 seconds
+Time taken for processing: 1.2031 seconds
 Time per table: 0.0000 seconds
 
 --------------------------------------------------
@@ -138,8 +138,8 @@ Folder 016, PDF 016.pdf:
 GROBID tables: 3
 Total tables: 4
 Accuracy = 75.00%
-Time taken for processing: 12.6155 seconds
-Time per table: 4.2052 seconds
+Time taken for processing: 12.8338 seconds
+Time per table: 4.2779 seconds
 
 --------------------------------------------------
 Processing folder: 017
@@ -147,8 +147,8 @@ Folder 017, PDF 017.pdf:
 GROBID tables: 1
 Total tables: 4
 Accuracy = 25.00%
-Time taken for processing: 1.7812 seconds
-Time per table: 1.7812 seconds
+Time taken for processing: 2.2537 seconds
+Time per table: 2.2537 seconds
 
 --------------------------------------------------
 Processing folder: 018
@@ -156,7 +156,7 @@ Folder 018, PDF 018.pdf:
 GROBID tables: 0
 Total tables: 1
 Accuracy = 0.00%
-Time taken for processing: 1.2286 seconds
+Time taken for processing: 1.2758 seconds
 Time per table: 0.0000 seconds
 
 --------------------------------------------------
@@ -165,7 +165,7 @@ Folder 019, PDF 019.pdf:
 GROBID tables: 0
 Total tables: 1
 Accuracy = 0.00%
-Time taken for processing: 12.1867 seconds
+Time taken for processing: 14.7423 seconds
 Time per table: 0.0000 seconds
 
 --------------------------------------------------
@@ -174,7 +174,7 @@ Folder 020, PDF 020.pdf:
 GROBID tables: 0
 Total tables: 1
 Accuracy = 0.00%
-Time taken for processing: 1.3392 seconds
+Time taken for processing: 1.5147 seconds
 Time per table: 0.0000 seconds
 
 --------------------------------------------------
@@ -184,9 +184,10 @@ Total number of comparisons: 20
 Total tables in all PDFs: 179
 Total tables found by GROBID: 130
 Overall accuracy: 72.63%
-Average accuracy per document: 54.73%
-Average processing time: 7.5409 seconds
+Average accuracy per PDF-document: 54.73%
+Average processing time per PDF-document: 11.0946 seconds
+Average processing time per table: 1.7069 seconds
 
 # Accuracy explanation:
-# Overall accuracy: Measures accuracy by comparing the total number of found tables with the total number of true tables across the entire dataset as one combined metric.
-# Average accuracy per document: The average of the individual accuracy percentages calculated for each PDF, where each file is weighted equally.
+# Overall accuracy: Compares all tables found versus all actual tables in the dataset.
+# Average accuracy per PDF-document: Calculates accuracy for each PDF separately, then averages those results.
