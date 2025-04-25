@@ -1,6 +1,6 @@
 # Evaluating Table Extraction: pdfplumber vs. GROBID
 
-This repository contains evaluation scripts to assess two tools, [pdfplumber](https://github.com/jsvine/pdfplumber) and [GROBID](https://github.com/kermitt2/grobid), for extracting tables from PDF documents. The evaluation is performed on a small dataset of 20 PDFs where the number of tables in each document has been manually annotated.
+This repository contains evaluation scripts to assess two tools, [pdfplumber](https://github.com/jsvine/pdfplumber) and [grobid](https://github.com/kermitt2/grobid), for extracting tables from PDF documents. The evaluation is performed on a small dataset of 20 PDFs where the number of tables in each document has been manually annotated.
 
 ## Dataset Description
 
