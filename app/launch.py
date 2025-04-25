@@ -3,7 +3,6 @@ import argparse
 import subprocess
 import logging
 import sys
-import os
 
 logging.basicConfig(
     level=logging.INFO,
@@ -131,6 +130,18 @@ def launch():
     minutes, seconds = divmod(time_object["time"], 60)
     logging.info(f"[launch.py] {time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")
 
+  try:
+    import frontend.frontendmodule as front # Import frontendmodule
+    # Retrieve URL and password
+    url, passw = front.start_streamlit()
+    logging.info(f"[launch.py] Successfully retrieved URL and password from frontendmodule.")
+  except Exception as e:
+    logging.error(f"[launch.py] An error occurred while trying to retrieve URL and password from frontendmodule: {e}", exc_info=True)
+  
+  print("\n############################################################")
+  print(f"----> Public URL: {url} \n----> Password: {passw}")
+  print("############################################################\n")
+  
   print("\n#--------------------- ### User Interaction ### --------------------#\n")
   
 launch()

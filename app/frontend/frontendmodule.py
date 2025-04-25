@@ -116,10 +116,8 @@ def start_streamlit(tunnel, portnr):
     file.write("\n")
     file.write(passw)
   # File is automatically closed after exiting the 'with' block
-
-  print("\n############################################################")
-  print(f"----> Public URL: {url} \n----> Password: {passw}")
-  print("############################################################\n")
+    
+  return url, passw
 
 def start_API(tunnel, portnr):
   """
@@ -148,10 +146,8 @@ def start_API(tunnel, portnr):
     file.write("\n")
     file.write(passw)
   # File is automatically closed after exiting the 'with' block
-
-  print("\n############################################################")
-  print(f"----> Public URL: {url} \n----> Password: {passw}")
-  print("############################################################\n")
+    
+  return url, passw
 
 def get_envdict():
     """
