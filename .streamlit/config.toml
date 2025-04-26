@@ -1,6 +1,6 @@
 [theme]
-primaryColor="#31333F" # Dark slate gray
-backgroundColor="#FEE7E1" # Light peach
-secondaryBackgroundColor="#E4CfCA" # Pale pink
-textColor="#31333F" # Charcoal gray
+primaryColor="#31333F" # Dark slate gray, , hsl(231°, 13%, 22%)
+backgroundColor="#FEE7E1" # Light peach, hsl(12°, 94%, 94%)
+secondaryBackgroundColor="#E4CfCA" # Pale pink, hsl(12°, 33%, 84%)
+textColor="#31333F" # Charcoal gray, hsl(231°, 13%, 22%)
 font="sans serif"
