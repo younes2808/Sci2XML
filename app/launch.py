@@ -133,7 +133,7 @@ def launch():
   try:
     import frontend.frontendmodule as front # Import frontendmodule
     # Retrieve URL and password
-    url, passw = front.start_streamlit()
+    url, passw = front.start_streamlit(args.tunnel, args.port)
     logging.info(f"[launch.py] Successfully retrieved URL and password from frontendmodule.")
   except Exception as e:
     logging.error(f"[launch.py] An error occurred while trying to retrieve URL and password from frontendmodule: {e}", exc_info=True)
