@@ -252,13 +252,13 @@ def API(portnr):
             # File is automatically closed after exiting the 'with' block
         envdict = get_envdict()
         if (envdict["nl_formula"] == "True"):
-          logging.info(f"[APIcode.py] Environment variable NLFORMULA is true, will be generating NL content.")
+          logging.info(f"[APIcode.py] Environment variable nl_formula is true, will be generating NL content.")
           prompt = "Describe how the variables in this formula interacts with eachother."
           NLdata = figureParserModel.query(image, prompt)["answer"]
           logging.info(f"[APIcode.py] Successfully called moondream and generated NL.")
         
         else:
-          logging.info(f"[APIcode.py] Environment variable NLFORMULA is false, will not be generating NL content.")
+          logging.info(f"[APIcode.py] Environment variable nl_formula is false, will not be generating NL content.")
           NLdata = ""
       
       except Exception as e:

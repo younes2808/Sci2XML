@@ -823,7 +823,7 @@ def main():
                         """
                         Sends the PDF file and XML file to the classifier when "Process file"-button is clicked.
                         """
-                        # Checkbox to set environment variable NLFORMULA 
+                        # Checkbox to set environment variable nl_formula 
                         # If true, a NL description for formulas will be included
                         checkbox = st.checkbox("Include description of formulas", 
                                                help="Including descriptions will delay processing and may result in inaccuracies.")
@@ -838,7 +838,7 @@ def main():
                             envdict = get_envdict()
                             envdict["nl_formula"] = "True" # Set new value
                             write_envdict(envdict) # Write new value to file
-                            logging.info("[app.py] NLFORMULA sat to true.")
+                            logging.info("[app.py] nl_formula sat to true.")
 
                         elif not checkbox:
                             # Get variable from .env file:
@@ -850,18 +850,23 @@ def main():
                             envdict = get_envdict()
                             envdict["nl_formula"] = "False" # Set new value
                             write_envdict(envdict) # Write new value to file
-                            logging.info("[app.py] NLFORMULA sat to false.")
+                            logging.info("[app.py] nl_formula sat to false.")
 
                         if st.button("Process file"):
                             # Display Interpretated results in col3
                             with col3:
                                 if 'results_placeholder' not in st.session_state or st.session_state.results_placeholder == None:
                                     # Create header, as well as progress bar and container in session state first time a PDF is processed
-                                    st.header("Interpretation Results", divider="gray") 
-                                    st.session_state.progress_bar = st.progress(0, text="Parsing tables... 🔄") # Progress bar for user transparency
-                                    st.session_state.results_placeholder = st.empty() # Container that can be emptied if the user processes another file
+                                    st.header("Interpretation Results", divider="gray")
+
+                                    # Progress bar for user transparency 
+                                    st.session_state.progress_bar = st.progress(0, text="Parsing tables... 🔄")
+
+                                    # Container that can be emptied if the user processes another file
+                                    st.session_state.results_placeholder = st.empty()
                                 else:
-                                    # If it not the first time a PDF is processed, do not create header, progress bar and container as they already exist
+                                    # If it not the first time a PDF is processed, do not create header, 
+                                    # progress bar and container as they already exist
                                     st.session_state.results_placeholder.empty() # Empty earlier results
 
                                 # Create container with the different views for Interpreted Results
