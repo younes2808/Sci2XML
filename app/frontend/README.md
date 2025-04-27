@@ -17,6 +17,6 @@ This folder contains the files related to the frontend of the project.
 
 - **css.html:** This file is a block of custom CSS designed to style and modify the appearance of a Streamlit web app. It uses Streamlit’s internal data-testid attributes to target specific UI components and override their default styles.
 
-- **frontendmodule.py:** This Python file is a script designed to interact with various web services (like Localtunnel, Ngrok, and Streamlit) to expose local applications or APIs to the public internet. It includes logging and environment variable handling for secure configuration. The script primarily performs two key tasks:
-    1. Starting Streamlit: Runs a Streamlit app and tunnels the local port (8501) using either Localtunnel or Ngrok.    
+- **frontendmodule.py:** This Python file is a script designed to interact with various web services (like Localtunnel, ngrok, and Streamlit) to expose local applications or APIs to the public internet. It includes logging and environment variable handling for secure configuration. The script primarily performs two key tasks:
+    1. Starting Streamlit: Runs a Streamlit app and tunnels the local port (8501) using either Localtunnel or ngrok.    
     2. Starting API: Starts a backend API service and exposes it to the public internet via the selected tunnel provider.

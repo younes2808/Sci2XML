@@ -60,7 +60,7 @@ def start_ngrok(port):
   Returns:
   tuple: A tuple containing the public URL and password.
   """
-  logging.info(f"[frontendmodule.py] Starting Ngrok.")
+  logging.info(f"[frontendmodule.py] Starting ngrok.")
 
   envdict = get_envdict()
   if ("authtoken" not in envdict): # If key doesnt exist, create it with default value 'None':
@@ -72,14 +72,14 @@ def start_ngrok(port):
     conf.get_default().auth_token = envdict["authtoken"]
   else:
     # Lets user write their auth token:
-    print("Enter your Ngrok Authtoken. Token can be found here: https://dashboard.ngrok.com/get-started/your-authtoken")
-    print("Please note: You may need to enter the token and press Enter twice before Ngrok responds.")
+    print("\nEnter your ngrok Authtoken. Token can be found here: https://dashboard.ngrok.com/get-started/your-authtoken")
+    print("Please note: You may need to enter the token and press Enter twice before ngrok responds.")
     conf.get_default().auth_token = getpass.getpass()
 
   # Open a ngrok tunnel to the localhost:
   try:
       public_url = ngrok.connect(port).public_url
-      print(f" * ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:{port}\"")
+      print(f"\n----> ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:{port}\"")
       logging.info(f"[frontendmodule.py] Successfully opened ngrok tunnel.")
   except Exception as e:
       logging.error(f"[frontendmodule.py] An error occurred while trying to open ngrok tunnel: {e}", exc_info=True)
@@ -91,7 +91,7 @@ def start_streamlit(tunnel, portnr):
   Starts a Streamlit application. Then calls on function to start localtunnel.
 
   Paramaters:
-  tunnel: which tunnel provider. Either Localtunnel or Ngrok
+  tunnel: which tunnel provider. Either Localtunnel or ngrok
   portnr: port number
 
   Returns:
@@ -107,7 +107,7 @@ def start_streamlit(tunnel, portnr):
     ## Launch Localtunnel ##
     url, passw = start_localtunnel("8501")
   elif (tunnel == "ngrok"):
-    ## Launch Ngrok ##
+    ## Launch ngrok ##
     url, passw = start_ngrok("8501")
   
   # Save url and password to file, in case it doesnt print to console.
@@ -124,7 +124,7 @@ def start_API(tunnel, portnr):
   Starts only the API. Then calls on function to start localtunnel.
 
   Paramaters:
-  tunnel: which tunnel provider. Either Localtunnel or Ngrok
+  tunnel: which tunnel provider. Either Localtunnel or ngrok
   portnr: port number
 
   Returns:
@@ -137,7 +137,7 @@ def start_API(tunnel, portnr):
     ## Localtunnel ##
     url, passw = start_localtunnel(portnr)
   elif (tunnel == "ngrok"):
-    ## Ngrok ##
+    ## ngrok ##
     url, passw = start_ngrok(portnr)
 
   # Save url and password to file, in case it doesnt print to console.

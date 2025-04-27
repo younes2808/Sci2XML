@@ -35,7 +35,7 @@ Developed as part of our **bachelor’s project in collaboration with SINTEF** f
 
 - GPU with CUDA support  
   In Google Colab: go to `Runtime > Change runtime type > GPU (T4)`
-- Ngrok Authtoken  
+- ngrok Authtoken  
   Get yours from: https://dashboard.ngrok.com/get-started/your-authtoken
 
 ### Clone the Repository
@@ -50,7 +50,7 @@ python Sci2XML/app/launch.py --authtoken YOUR_AUTHTOKEN
 ``` 
 Wait 5 to 15 minutes for the models and dependencies (like GROBID) to load.
 
-After launch, you will receive a public Ngrok URL. You can open it to access the interface.
+After launch, you will receive a public ngrok URL. You can open it to access the interface.
 
 > **Note**: If you see an error about model loading, wait 10 minutes and try again. This can happen due to Hugging Face connection issues.
 
