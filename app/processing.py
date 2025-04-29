@@ -21,7 +21,7 @@ def main():
     First, it reads the uploaded PDF and then sends it to the GROBID server.
     Then, it calls the table parser and classifier functions, which handle all
     formulas, charts, and figures.
-    In the end, it calls getXML() and returns the result.
+    In the end, it calls get_XML() and returns the result.
 
     Parameters:
     --pdf: Path to a single PDF file.
@@ -118,7 +118,7 @@ def start_processing(pdfPath, pathToSave):
       First reads the uploaded PDF, then sends it to GROBID server.
       Then calls on tableparser. Then calls the classifier functions, which handles all
        formulas, charts and figures.
-      In the end it calls on getXML() and returns the result.
+      In the end it calls on get_XML() and returns the result.
 
       Paramaters:
       pdfPath: Path to the PDF.
@@ -201,7 +201,7 @@ def start_processing(pdfPath, pathToSave):
       try:
         # Open the XML file and extract all figures and formulas, as well as getting each page of the PDF as an image.
         print_update("Opening XML file and extracting figures and formulas.")
-        images, figures, formulas = classifier.open_XML_file(string_data_XML, byte_data_PDF, frontend=False)
+        images, figures, formulas = classifier.open_XML(string_data_XML, byte_data_PDF, frontend=False)
         logging.info(f'[processing.py] Successfully opened XML file.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while opening the XML file: {e}", exc_info=True)
@@ -221,7 +221,7 @@ def start_processing(pdfPath, pathToSave):
         logging.error(f"An error occurred while processing formulas: {e}", exc_info=True)
       print_update("Processing is finished.")
 
-      altered_xml = str(classifier.getXML(frontend=False))
+      altered_xml = str(classifier.get_XML(frontend=False))
 
       with open(pathToSave, "w") as f:
         f.write(altered_xml)

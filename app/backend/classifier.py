@@ -72,7 +72,7 @@ except Exception as e:
     logging.error(f"[classifier.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
 
 
-def open_XML_file(XMLfile, PDFfile, frontend):
+def open_XML(XMLfile, PDFfile, frontend):
     """
     Opens the XML file and converts it to a python dict, and extracts all formulas and figures. Also turns each page of the PDF into an image.
 
@@ -87,7 +87,7 @@ def open_XML_file(XMLfile, PDFfile, frontend):
     formulas: The formulas from the XML file.
     """
 
-    logging.info("[classifier.py] Starting function open_XML_file()")
+    logging.info("[classifier.py] Starting function open_XML()")
 
     # Opening XML file and storing it in variable.
     try:
@@ -119,7 +119,7 @@ def open_XML_file(XMLfile, PDFfile, frontend):
 
     return images, figures, formulas
 
-def addToXMLfile(type, name, newContent, frontend):
+def add_to_XML(type, name, newContent, frontend):
     """
     Adds a new element to the XML file. When a non-textual element has been processed it should be placed back into the XML file at the correct location.
 
@@ -132,7 +132,7 @@ def addToXMLfile(type, name, newContent, frontend):
     Returns:
     None
     """
-    logging.info("[classifier.py] Starting function addToXMLfile()")
+    logging.info("[classifier.py] Starting function add_to_XML()")
 
     ## Find parent tag, and the text content of that:
     try:
@@ -203,7 +203,7 @@ def addToXMLfile(type, name, newContent, frontend):
     
     logging.info(f"[classifier.py] New parentTag: {parentTag}")
 
-def getXML(frontend):
+def get_XML(frontend):
    """
    Get function which returns the XML file stored in the variable Bs_data. 
 
@@ -213,7 +213,7 @@ def getXML(frontend):
    Returns:
    Bs_data: The XML file in python dict format.
    """
-   logging.info("[classifier.py] Starting function getXML()")
+   logging.info("[classifier.py] Starting function get_XML()")
    if (frontend):
       return st.session_state.Bs_data
    else:
@@ -242,7 +242,7 @@ def saveXMLfile(pathToXML):
 def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, promptContext=""):
     """
     Classifies a given element as either a formula, chart, figure or other. Based on what the element is classified as 
-    it gets redirected to the correct API endpoint for processing. When it gets a response it calls on addToXMLfile() to 
+    it gets redirected to the correct API endpoint for processing. When it gets a response it calls on add_to_XML() to 
     add the generated content back into the XML. If the frontend tag is set, it also sends the API response to the frontend (app.py)
     so that it can be displayed there.
 
@@ -471,16 +471,16 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
       logging.info(f"[classifier.py] Element identified as 'other'/unknown. Exiting...")
       return
 
-    # Call on addToXMLfile() to add the processed content back into the XML file.
+    # Call on add_to_XML() to add the processed content back into the XML file.
     logging.info(f"[classifier.py] Received response about image nr {elementNr}. Will now paste response back into the XML-file.")
     try:
         if (XMLtype == "figure"):
-            addToXMLfile(XMLtype, "fig_" + str(elementNr), APIresponse, frontend)
+            add_to_XML(XMLtype, "fig_" + str(elementNr), APIresponse, frontend)
         elif (XMLtype == "formula"):
-            addToXMLfile(XMLtype, "formula_" + str(elementNr), APIresponse, frontend)
+            add_to_XML(XMLtype, "formula_" + str(elementNr), APIresponse, frontend)
         logging.info(f"[classifier.py] Successfully added content to XML file.")
     except Exception as e:
-        logging.error(f"[classifier.py] An error occurred while calling addToXMLfile(): {e}", exc_info=True)
+        logging.error(f"[classifier.py] An error occurred while calling add_to_XML(): {e}", exc_info=True)
 
     # If the frontend tag is set, the processed content should be returned to the frontend as well:
     try: 

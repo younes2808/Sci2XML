@@ -375,8 +375,8 @@ def process_classifier(xml_input, pdf_file):
             sys.modules["classifiermodule"] = classifier  # Register the module in sys.modules
             spec.loader.exec_module(classifier)  # Execute the module
 
-            # Classify the figures and formulas by calling 'open_XML_file' from the classifier module
-            images, figures, formulas = classifier.open_XML_file(xml_input, pdf_file, frontend=True)
+            # Classify the figures and formulas by calling 'open_XML' from the classifier module
+            images, figures, formulas = classifier.open_XML(xml_input, pdf_file, frontend=True)
             logging.info(f'[app.py] The non-textual elements were classified successfully!')
 
         except Exception as e:

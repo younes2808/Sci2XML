@@ -132,7 +132,7 @@ def API(portnr):
 
       # Process image:
       try:
-        processedChartCSV, processedChartNL = processChart(file, string_data_prompt)
+        processedChartCSV, processedChartNL = process_chart(file, string_data_prompt)
         logging.info(f"[APIcode.py] Successfully processed chart.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while processing chart: {e}", exc_info=True)
@@ -205,7 +205,7 @@ def API(portnr):
 
       # Process image:
       try:
-        processedTablesXML = processTable(pdf_file, grobid_xml_file)
+        processedTablesXML = process_table(pdf_file, grobid_xml_file)
         logging.info(f"[APIcode.py] Successfully processed table.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while processing table: {e}", exc_info=True)
@@ -267,7 +267,7 @@ def API(portnr):
       
       return latex_code, NLdata
 
-  def processChart(file, promptContext):
+  def process_chart(file, promptContext):
       """
       Processes the chart. More specifically redirects to the chart model for extracting tabledata, and call moondream(figureparser) to generate summary.
 
@@ -279,7 +279,7 @@ def API(portnr):
       summary: The generated summary.
       table_data: The generated table data.
       """
-      logging.info(f"[APIcode.py] processChart - processing chart...")
+      logging.info(f"[APIcode.py] process_chart - processing chart...")
       
       # Ensure proper file
       if file.filename == '':
@@ -354,7 +354,7 @@ def API(portnr):
       NLdata = answer
       return NLdata
 
-  def processTable(pdf_file, grobid_xml_file):
+  def process_table(pdf_file, grobid_xml_file):
         """
         API endpoint that expects two files:
         - 'pdf': A PDF file to be processed with PDFplumber.
@@ -370,7 +370,7 @@ def API(portnr):
         Returns:
             Response: A Flask Response object with the updated GROBID XML, served as an XML file.
         """
-        logging.info(f"[APIcode.py] processTable - processing table...")
+        logging.info(f"[APIcode.py] process_table - processing table...")
         
         # Save the PDF file temporarily
         with NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
@@ -461,7 +461,7 @@ def API(portnr):
       First reads the uploaded PDF, then sends it to GROBID server.
       Then calls on tableparser. Then calls the classifier functions, which handles all
        formulas, charts and figures.
-      In the end it calls on getXML() and returns the result.
+      In the end it calls on get_XML() and returns the result.
 
       Paramaters:
       None
@@ -537,7 +537,7 @@ def API(portnr):
       logging.info(f"[APIcode.py] process - Initiating Classifier.")
       try:
         # Open the XML file and extract all figures and formulas, as well as getting each page of the PDF as an image.
-        images, figures, formulas = classifier.open_XML_file(string_data_XML, byte_data_PDF, frontend=False)
+        images, figures, formulas = classifier.open_XML(string_data_XML, byte_data_PDF, frontend=False)
         logging.info(f'[APIcode.py] Successfully opened XML file.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while opening the XML file: {e}", exc_info=True)
@@ -554,7 +554,7 @@ def API(portnr):
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while processing formulas: {e}", exc_info=True)
 
-      return str(classifier.getXML(frontend=False))
+      return str(classifier.get_XML(frontend=False))
   
   def get_envdict():
     """
