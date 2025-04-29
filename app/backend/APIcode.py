@@ -67,7 +67,7 @@ def API(portnr):
   def hello():
       return "I am alive!"
 
-  @app.route('/parseFormula', methods=['POST'])
+  @app.route('/parse_formula', methods=['POST'])
   def handle_formula():
       """
       Endpoint for parsing formulas. It accepts an image file in POST body.
@@ -79,7 +79,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"[APIcode.py] parseFormula - You have reached endpoint for formula.")
+      logging.info(f"[APIcode.py] parse_formula - You have reached endpoint for formula.")
       
       # Make sure an image is present:
       if 'image' not in request.files:
@@ -97,7 +97,7 @@ def API(portnr):
       # Return parsed content
       return jsonify({'element_type':"formula", 'formula': processedFormulaLaTex, "NL": processedFormulaNL, "preferred": processedFormulaLaTex})
 
-  @app.route('/parseChart', methods=['POST'])
+  @app.route('/parse_chart', methods=['POST'])
   def handle_chart():
       """
       Endpoint for parsing charts. It accepts an image file in POST body.
@@ -109,7 +109,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"[APIcode.py] parseChart - You have reached endpoint for chart.")
+      logging.info(f"[APIcode.py] parse_chart - You have reached endpoint for chart.")
 
       # Make sure an image is present:
       if 'image' not in request.files:
@@ -126,7 +126,7 @@ def API(portnr):
         # Fetch string value from bytestream
         stringio = StringIO(prompt.getvalue().decode("utf-8"), newline=None)
         string_data_prompt = stringio.read()
-        logging.info(f"[APIcode.py] parseFigure - prompt: {string_data_prompt}.")
+        logging.info(f"[APIcode.py] parse_figure - prompt: {string_data_prompt}.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while fetching string value from bytestream: {e}", exc_info=True)
 
@@ -139,7 +139,7 @@ def API(portnr):
 
       return jsonify({'element_type':"chart", 'NL': processedChartNL, "csv": processedChartCSV, "preferred": processedChartNL})
 
-  @app.route('/parseFigure', methods=['POST'])
+  @app.route('/parse_figure', methods=['POST'])
   def handle_figure():
       """
       Endpoint for parsing figures. It accepts an image file in POST body.
@@ -151,7 +151,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"[APIcode.py] parseFigure - You have reached endpoint for figure.")
+      logging.info(f"[APIcode.py] parse_figure - You have reached endpoint for figure.")
 
       # Make sure an image is present:
       if 'image' not in request.files:
@@ -168,7 +168,7 @@ def API(portnr):
         # Fetch string value from bytestream
         stringio = StringIO(prompt.getvalue().decode("utf-8"), newline=None)
         string_data_prompt = stringio.read()
-        logging.info(f"[APIcode.py] parseFigure - prompt: {string_data_prompt}.")
+        logging.info(f"[APIcode.py] parse_figure - prompt: {string_data_prompt}.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while fetching string value from bytestream: {e}", exc_info=True)
 
@@ -181,7 +181,7 @@ def API(portnr):
 
       return jsonify({'element_type':"figure", 'NL': processedFigureNL, "preferred": processedFigureNL})
 
-  @app.route('/parseTable', methods=['POST'])
+  @app.route('/parse_table', methods=['POST'])
   def handle_table():
       """
       Endpoint for parsing tables. It accepts an image file in POST body.
@@ -193,7 +193,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"[APIcode.py] parseTable - You have reached endpoint for table.")
+      logging.info(f"[APIcode.py] parse_table - You have reached endpoint for table.")
 
       # Check if both required files are provided
       if 'pdf' not in request.files or 'grobid_xml' not in request.files:
@@ -506,7 +506,7 @@ def API(portnr):
         logging.error(f"[APIcode.py] An error occurred while calling GROBID server: {e}", exc_info=True)
 
       ## Table Parser ##
-      logging.info(f"[APIcode.py] process - Initiating Table parser.")
+      logging.info(f"[APIcode.py] process - Initiating table parser.")
       ## Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
       # Ready the files:
       files = {"grobid_xml": ("xmlfile.xml", string_data_XML, "application/json"), "pdf": ("pdffile.pdf", byte_data_PDF)}
@@ -527,7 +527,7 @@ def API(portnr):
             apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
             logging.error(f"[APIcode.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
         
-        response = requests.post(f"{apiURL}parseTable", files=files)
+        response = requests.post(f"{apiURL}parse_table", files=files)
         string_data_XML = response.text
         logging.info(f'[APIcode.py] Response from table parser: {response}')
       except requests.exceptions.RequestException as e:

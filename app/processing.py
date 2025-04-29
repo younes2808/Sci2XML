@@ -182,7 +182,7 @@ def start_processing(pdfPath, pathToSave):
             apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
             logging.error(f"[processing.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
         
-        response = requests.post(f"{apiURL}parseTable", files=files)
+        response = requests.post(f"{apiURL}parse_table", files=files)
         string_data_XML = response.text
         logging.info(f'[processing.py] Response from table parser: {response}')
       except requests.exceptions.RequestException as e:

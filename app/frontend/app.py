@@ -298,7 +298,7 @@ def process_classifier(xml_input, pdf_file):
                 apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
                 logging.error(f"[app.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
             
-            response = requests.post(f"{apiURL}parseTable", files=files)
+            response = requests.post(f"{apiURL}parse_table", files=files)
             response.raise_for_status()  # Raise exception if status is not 200
             logging.info(f'Response from table parser: {response}')
 
