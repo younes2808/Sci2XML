@@ -119,7 +119,7 @@ def launch():
       # Import frontendmodule, which will be used to expose localhost to internet.
       import frontend.frontendmodule as front
       # Host frontend through streamlit and retrieve URL and password
-      url, passw = front.start_API(args.tunnel, args.port)
+      url, passw = front.start_API(tunnel, args.port)
       logging.info(f"[launch_onlyAPI.py] Finished starting API through tunnel.")
   except Exception as e:
     logging.error(f"[launch_onlyAPI.py] An error occurred while trying to start API through tunnel: {e}", exc_info=True)
@@ -134,6 +134,10 @@ def launch():
   for time_object in time_array:
     minutes, seconds = divmod(time_object["time"], 60)
     logging.info(f"[launch_onlyAPI.py] {time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")
+
+  print("\n############################################################")
+  print(f"----> Public URL: {url} \n----> Password: {passw}")
+  print("############################################################\n")
 
   print("\n#--------------------- ### User Interaction ### --------------------#\n")
 
