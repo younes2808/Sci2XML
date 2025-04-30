@@ -135,10 +135,6 @@ def launch():
     minutes, seconds = divmod(time_object["time"], 60)
     logging.info(f"[launch_onlyAPI.py] {time_object['name']} time: {int(minutes)} minutes and {int(seconds)} seconds")
 
-  print("\n############################################################")
-  print(f"----> Public URL: {url} \n----> Password: {passw}")
-  print("############################################################\n")
-
   print("\n#--------------------- ### User Interaction ### --------------------#\n")
 
 launch()
