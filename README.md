@@ -48,7 +48,7 @@ git clone https://github.com/younes2808/Sci2XML.git
 ```bash
 python Sci2XML/app/launch.py --authtoken YOUR_AUTHTOKEN
 ``` 
-Wait 5 to 15 minutes for the models and dependencies (like GROBID) to load.
+Wait 5 to 10 minutes for the models and dependencies (like GROBID) to load.
 
 After launch, you will receive a public ngrok URL. You can open it to access the interface.
 
@@ -58,7 +58,7 @@ After launch, you will receive a public ngrok URL. You can open it to access the
 ```bash
 python Sci2XML/app/run_pipeline.py --authtoken YOUR_AUTHTOKEN --nl_formula True/False(Default set to False)
 ```
-Wait 5 to 15 minutes for setup
+Wait 5 to 10 minutes for setup
 
 **Once ready**, an interactive CLI will appear.
 
