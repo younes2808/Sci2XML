@@ -267,13 +267,13 @@ def API(portnr):
       
       return latex_code, NLdata
 
-  def process_chart(file, promptContext):
+  def process_chart(file, prompt_context):
       """
       Processes the chart. More specifically redirects to the chart model for extracting tabledata, and call moondream(figureparser) to generate summary.
 
       Paramaters:
       file: The file/image to be processed.
-      promptContext: A string with the figure description. Can be used to give context to the prompt for the VLM.
+      prompt_context: A string with the figure description. Can be used to give context to the prompt for the VLM.
 
       Returns:
       summary: The generated summary.
@@ -297,9 +297,9 @@ def API(portnr):
       # Send to Moondream to get summary of chart:
       try:
         query = f"Describe this chart deeply. Caption it."
-        queryWcontext = f"{query} Here is the figure description for context: {promptContext}"
+        queryWcontext = f"{query} Here is the figure description for context: {prompt_context}"
         
-        if (0 < len(promptContext) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
+        if (0 < len(prompt_context) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
           prompt = queryWcontext
         
         else: # If extracted prompt-context is of length 0 or very long then simply do not give the model additional context:
@@ -315,13 +315,13 @@ def API(portnr):
       
       return structured_table_data, summary
 
-  def process_figures(file, promptContext):
+  def process_figures(file, prompt_context):
       """
       Processes the figure. More specifically redirects to the VLM model.
 
       Paramaters:
       image: The file/image to be processed.
-      promptContext: A string with the figure description. Can be used to give context to the prompt for the VLM.
+      prompt_context: A string with the figure description. Can be used to give context to the prompt for the VLM.
 
       Returns:
       NLdata: The generated NL data.
@@ -341,8 +341,8 @@ def API(portnr):
         return jsonify({"error": f"Invalid image file: {str(e)}"}), 400
 
       try:
-        if (0 < len(promptContext) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
-          answer = figureParserModel.query(image, f"Describe and explain this figure with you own words. Here is the figure description for context: '{promptContext}'")["answer"]
+        if (0 < len(prompt_context) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
+          answer = figureParserModel.query(image, f"Describe and explain this figure with you own words. Here is the figure description for context: '{prompt_context}'")["answer"]
         
         else: # If extracted prompt-context is of length 0 or very long then simply do not give the model additional context:
           answer = figureParserModel.query(image, f"Describe this image deeply. Caption it.")["answer"]
