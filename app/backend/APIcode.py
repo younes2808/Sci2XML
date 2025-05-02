@@ -33,20 +33,20 @@ sys.modules["classifiermodule"] = classifier
 spec.loader.exec_module(classifier)
 
 # Models:
-import backend.models.classifiermodel as classifierML
+import backend.models.classifiermodel as classifier_ML
 import backend.models.chartparser as charter
 import backend.models.formulaparser as formula
 import backend.models.figureparser as figure
-import backend.models.tableparser as tableParser
+import backend.models.tableparser as table
 
 print("\n#---------------------- ## Loading models ## -----------------------#\n")
 logging.info(f"[APIcode.py] Loading models.")
 try:
     # Loading the various parsing models by calling the load function in their module.
-    ML = classifierML.load_ml()
+    ML = classifier_ML.load_ml()
     charter.load_unichart()
     formula.load_sumen()
-    figureParserModel, figureParserTokenizer = figure.load()
+    figure_parser_model, figure_parser_tokenizer = figure.load()
     logging.info(f"[APIcode.py] Finished loading models.")
 except Exception as e:
     logging.error(f"[APIcode.py] An error occurred while loading the models: {e}", exc_info=True)
@@ -174,12 +174,12 @@ def API(portnr):
 
       # Process image:
       try:
-        processedFigureNL = process_figures(file, string_data_prompt)
+        processed_figure_NL = process_figures(file, string_data_prompt)
         logging.info(f"[APIcode.py] Successfully processed figure.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while processing figure: {e}", exc_info=True)
 
-      return jsonify({'element_type':"figure", 'NL': processedFigureNL, "preferred": processedFigureNL})
+      return jsonify({'element_type':"figure", 'NL': processed_figure_NL, "preferred": processed_figure_NL})
 
   @app.route('/parse_table', methods=['POST'])
   def handle_table():
@@ -205,14 +205,14 @@ def API(portnr):
 
       # Process image:
       try:
-        processedTablesXML = process_table(pdf_file, grobid_xml_file)
+        processed_tables_XML = process_table(pdf_file, grobid_xml_file)
         logging.info(f"[APIcode.py] Successfully processed table.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while processing table: {e}", exc_info=True)
 
       #Return the final GROBID XML as a downloadable file (with content type "application/xml")
       return Response(
-          processedTablesXML,
+          processed_tables_XML,
           mimetype="application/xml",
           headers={"Content-Disposition": "attachment; filename=updated_grobid.xml"}
       )
@@ -226,7 +226,7 @@ def API(portnr):
 
       Returns:
       latex_code: The generated LaTeX code.
-      NLdata: The generated NL data.
+      NL_data: The generated NL data.
       """
       logging.info(f"[APIcode.py] process_formula - processing formula...")
       
@@ -254,18 +254,18 @@ def API(portnr):
         if (envdict["nl_formula"] == "True"):
           logging.info(f"[APIcode.py] Environment variable nl_formula is true, will be generating NL content.")
           prompt = "Describe how the variables in this formula interacts with eachother."
-          NLdata = figureParserModel.query(image, prompt)["answer"]
+          NL_data = figure_parser_model.query(image, prompt)["answer"]
           logging.info(f"[APIcode.py] Successfully called moondream and generated NL.")
         
         else:
           logging.info(f"[APIcode.py] Environment variable nl_formula is false, will not be generating NL content.")
-          NLdata = ""
+          NL_data = ""
       
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while calling moondream and generating NL: {e}", exc_info=True)
-        NLdata = ""
+        NL_data = ""
       
-      return latex_code, NLdata
+      return latex_code, NL_data
 
   def process_chart(file, prompt_context):
       """
@@ -297,16 +297,16 @@ def API(portnr):
       # Send to Moondream to get summary of chart:
       try:
         query = f"Describe this chart deeply. Caption it."
-        queryWcontext = f"{query} Here is the figure description for context: {prompt_context}"
+        query_with_context = f"{query} Here is the figure description for context: {prompt_context}"
         
         if (0 < len(prompt_context) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
-          prompt = queryWcontext
+          prompt = query_with_context
         
         else: # If extracted prompt-context is of length 0 or very long then simply do not give the model additional context:
           prompt = query
 
         logging.info(f"[APIcode.py] Prompt for moonchart used for describing chart: {prompt}.")
-        summary = figureParserModel.query(image, prompt)["answer"]
+        summary = figure_parser_model.query(image, prompt)["answer"]
         logging.info(f"[APIcode.py] Successfully called moondream.")
       
       except Exception as e:
@@ -324,7 +324,7 @@ def API(portnr):
       prompt_context: A string with the figure description. Can be used to give context to the prompt for the VLM.
 
       Returns:
-      NLdata: The generated NL data.
+      NL_data: The generated NL data.
       """
       logging.info(f"[APIcode.py] process_figures - processing figure...")
       
@@ -342,17 +342,17 @@ def API(portnr):
 
       try:
         if (0 < len(prompt_context) < 700): # If the extracted prompt-context is of acceptable length then pass it to model:
-          answer = figureParserModel.query(image, f"Describe and explain this figure with you own words. Here is the figure description for context: '{prompt_context}'")["answer"]
+          answer = figure_parser_model.query(image, f"Describe and explain this figure with you own words. Here is the figure description for context: '{prompt_context}'")["answer"]
         
         else: # If extracted prompt-context is of length 0 or very long then simply do not give the model additional context:
-          answer = figureParserModel.query(image, f"Describe this image deeply. Caption it.")["answer"]
+          answer = figure_parser_model.query(image, f"Describe this image deeply. Caption it.")["answer"]
       
       except Exception as e:
         
         return jsonify({"error": f"Model query failed: {str(e)}"}), 500
 
-      NLdata = answer
-      return NLdata
+      NL_data = answer
+      return NL_data
 
   def process_table(pdf_file, grobid_xml_file):
         """
@@ -388,15 +388,15 @@ def API(portnr):
         # File is automatically closed after exiting the 'with' block
         
         # Remove existing table figures from the GROBID XML and get the insert position
-        grobid_updated, insert_position = tableParser.remove_tables_from_grobid_xml(grobid_path)
+        grobid_updated, insert_position = table.remove_tables_from_grobid_xml(grobid_path)
         
         # Extract tables from the PDF and obtain the XML content and table count
-        pdfplumber_xml, table_count = tableParser.extract_tables_from_pdf(pdf_path)
+        pdfplumber_xml, table_count = table.extract_tables_from_pdf(pdf_path)
         
         # Insert the pdfplumber XML content into the GROBID XML content
-        final_grobid_xml = tableParser.insert_pdfplumber_content(grobid_updated, pdfplumber_xml, insert_position)
+        final_grobid_xml = table.insert_pdfplumber_content(grobid_updated, pdfplumber_xml, insert_position)
         # Remove any empty lines from the final XML
-        final_grobid_xml = tableParser.remove_empty_lines(final_grobid_xml)
+        final_grobid_xml = table.remove_empty_lines(final_grobid_xml)
         
         # Remove the temporary files
         os.remove(pdf_path)
@@ -405,7 +405,7 @@ def API(portnr):
         data = final_grobid_xml
         return data
 
-  def callVLM(pipe, image, query):
+  def call_VLM(pipe, image, query):
     """
     Calls the InternVL2 VLM model. Not used in current deployment, as we have chosen to use ML model for the classifier and another VLM for the figure parser.
 
@@ -445,7 +445,7 @@ def API(portnr):
 
       # Process image:
       try:
-        response = classifierML.call_ml(ML, image)
+        response = classifier_ML.call_ml(ML, image)
         logging.info(f"[APIcode.py] Successfully classified image.")
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while classifying image: {e}", exc_info=True)
@@ -459,7 +459,7 @@ def API(portnr):
       """
       Endpoint for initiating the entire process, without the use of frontend.
       First reads the uploaded PDF, then sends it to GROBID server.
-      Then calls on tableparser. Then calls the classifier functions, which handles all
+      Then calls on table parser. Then calls the classifier functions, which handles all
        formulas, charts and figures.
       In the end it calls on get_XML() and returns the result.
 
@@ -521,13 +521,13 @@ def API(portnr):
                 # File is automatically closed after exiting the 'with' block
             envdict = get_envdict()
             port = envdict["port"] # Either what the user selected at launch, or default 8000
-            apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
-            logging.info(f"[APIcode.py] Set URL for api to: {apiURL}")
+            api_url = f"http://172.28.0.12:{port}/" # The URL for the local API.
+            logging.info(f"[APIcode.py] Set URL for api to: {api_url}")
         except Exception as e:
-            apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
+            api_url = "http://172.28.0.12:8000/" # The URL for the local API.
             logging.error(f"[APIcode.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
         
-        response = requests.post(f"{apiURL}parse_table", files=files)
+        response = requests.post(f"{api_url}parse_table", files=files)
         string_data_XML = response.text
         logging.info(f'[APIcode.py] Response from table parser: {response}')
       except requests.exceptions.RequestException as e:

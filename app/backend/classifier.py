@@ -65,10 +65,10 @@ try:
         # File is automatically closed after exiting the 'with' block
     envdict = get_envdict()
     port = envdict["port"] # Either what the user selected at launch, or default 8000
-    apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
-    logging.info(f"[classifier.py] Set URL for api to: {apiURL}")
+    api_url = f"http://172.28.0.12:{port}/" # The URL for the local API.
+    logging.info(f"[classifier.py] Set URL for api to: {api_url}")
 except Exception as e:
-    apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
+    api_url = "http://172.28.0.12:8000/" # The URL for the local API.
     logging.error(f"[classifier.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
 
 
@@ -279,7 +279,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
         spec.loader.exec_module(processing_launch_code)
         processing_launch_code.print_update(f"Processing {XML_type} {element_nr}")
 
-        logging.info(f"[classifier.py] Set URL for api to: {apiURL}")
+        logging.info(f"[classifier.py] Set URL for api to: {api_url}")
 
     subtype = "unknown" # The type of element. Will be updated after classification.
 
@@ -311,7 +311,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
           
             # Send image of formula to API endpoint where it should be processed by a formula parser:
             try:
-                API_response = requests.post(apiURL+"parse_formula", files={'image': img_byte_arr})
+                API_response = requests.post(api_url+"parse_formula", files={'image': img_byte_arr})
                 # Check that the response is positive:
                 if (API_response.status_code != 200):
                     logging.error(f"[classifier.py] Something went wrong in the API: {API_response.content}")
@@ -350,7 +350,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
         # Sending image of element to API endpoint for classification:
         try:
             files = {"image": ("image1.png", img_byte_arr)}
-            response = requests.post(apiURL+"call_classifier", files=files)
+            response = requests.post(api_url+"call_classifier", files=files)
             # Check that the response is positive:
             if (response.status_code != 200):
                 logging.error(f"[classifier.py] Something went wrong in the API: {response.content}")
@@ -387,7 +387,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
 
             # Send image of figure to API endpoint where it should be processed by a chart parser:
             try:
-                API_response = requests.post(apiURL+"parse_chart", files={'image': img_byte_arr, 'prompt': prompt_context})
+                API_response = requests.post(api_url+"parse_chart", files={'image': img_byte_arr, 'prompt': prompt_context})
                 # Check that the response is positive:
                 if (API_response.status_code != 200):
                     logging.error(f"[classifier.py] Something went wrong in the API: {API_response.content}")
@@ -418,7 +418,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
 
             # Send image of figure to API endpoint where it should be processed by a figure parser:
             try:
-                API_response = requests.post(apiURL+"parse_figure", files={'image': img_byte_arr, 'prompt': prompt_context})
+                API_response = requests.post(api_url+"parse_figure", files={'image': img_byte_arr, 'prompt': prompt_context})
                 # Check that the response is positive:
                 if (API_response.status_code != 200):
                     logging.error(f"[classifier.py] Something went wrong in the API: {API_response.content}")
@@ -450,7 +450,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
 
             # Send image of formula to API endpoint where it should be processed by a formula parser:
             try:
-                API_response = requests.post(apiURL+"parse_formula", files={'image': img_byte_arr})
+                API_response = requests.post(api_url+"parse_formula", files={'image': img_byte_arr})
                 # Check that the response is positive:
                 if (API_response.status_code != 200):
                     logging.error(f"[classifier.py] Something went wrong in the API: {API_response.content}")

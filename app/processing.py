@@ -37,14 +37,14 @@ def main():
 
     # Arguments
     parser.add_argument('--pdf', dest='pdf', type=str, help='Set path to PDF file.', default="")
-    parser.add_argument('--output', dest='pathToSave', type=str, help='Set path to save processed XML file.', default="")
+    parser.add_argument('--output', dest='path_to_save', type=str, help='Set path to save processed XML file.', default="")
     parser.add_argument('--folder', dest='folder', type=str, help='Set path to a folder containing PDFs.', default="")
     parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['True', 'False', None], default="False")
 
     args = parser.parse_args()
 
     # Ensure the user doesn't provide both --folder and --output; they are mutually exclusive
-    if args.folder and args.pathToSave:
+    if args.folder and args.path_to_save:
         parser.error("You cannot use --folder and --output together.")
 
     # Ensure the user provides at least one input source: a single PDF or a folder
@@ -95,11 +95,11 @@ def main():
     
     # Single PDF mode
     else:
-        pdfPath = args.pdf
-        pathToSave = args.pathToSave
-        base, ext = os.path.splitext(pathToSave)
+        pdf_path = args.pdf
+        path_to_save = args.path_to_save
+        base, ext = os.path.splitext(path_to_save)
         count = 1
-        final_path = pathToSave
+        final_path = path_to_save
     
         # If the output file already exists, keep adding (1), (2), etc. until it's unique
         while os.path.exists(final_path):
@@ -107,21 +107,21 @@ def main():
             count += 1
     
         print(f"\nProcessing single file:")
-        print(f"PDF path: {pdfPath}")
+        print(f"PDF path: {pdf_path}")
         print(f"Output path: {final_path}")
-        start_processing(pdfPath, final_path)
+        start_processing(pdf_path, final_path)
 
-def start_processing(pdfPath, pathToSave):
+def start_processing(pdf_path, path_to_save):
       print("Starting processing")
       """
       Function for initiating the entire process, without the use of frontend.
       First reads the uploaded PDF, then sends it to GROBID server.
-      Then calls on tableparser. Then calls the classifier functions, which handles all
+      Then calls on table parser. Then calls the classifier functions, which handles all
       formulas, charts and figures.
       In the end it calls on get_XML() and returns the result.
 
       Paramaters:
-      pdfPath: Path to the PDF.
+      pdf_path: Path to the PDF.
 
       Returns:
       The processed XML file.
@@ -129,7 +129,7 @@ def start_processing(pdfPath, pathToSave):
       print("\n")
       logging.info(f"[processing.py] process - You have reached function for full processing.")
 
-      with open(pdfPath, "rb") as f:
+      with open(pdf_path, "rb") as f:
         byte_data_PDF = f.read()
       # File is automatically closed after exiting the 'with' block
 
@@ -162,7 +162,7 @@ def start_processing(pdfPath, pathToSave):
       ## Table Parser ##
       print_update("Received response from GROBID, will not initiate Table parser.")
       logging.info(f"[processing.py] process - Initiating Table parser.")
-      # Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
+      # Run the xml and pdf through the table parser before processing further. Could also be done after the processing of the other elements instead.
       # Ready the files:
       files = {"grobid_xml": ("xml_file.xml", string_data_XML, "application/json"), "pdf": ("pdf_file.pdf", byte_data_PDF)}
 
@@ -176,13 +176,13 @@ def start_processing(pdfPath, pathToSave):
                 # File is automatically closed after exiting the 'with' block
             envdict = get_envdict()
             port = envdict["port"] # Either what the user selected at launch, or default 8000
-            apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
-            logging.info(f"[processing.py] Set URL for api to: {apiURL}")
+            api_url = f"http://172.28.0.12:{port}/" # The URL for the local API.
+            logging.info(f"[processing.py] Set URL for api to: {api_url}")
         except Exception as e:
-            apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
+            api_url = "http://172.28.0.12:8000/" # The URL for the local API.
             logging.error(f"[processing.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
         
-        response = requests.post(f"{apiURL}parse_table", files=files)
+        response = requests.post(f"{api_url}parse_table", files=files)
         string_data_XML = response.text
         logging.info(f'[processing.py] Response from table parser: {response}')
       except requests.exceptions.RequestException as e:
@@ -223,7 +223,7 @@ def start_processing(pdfPath, pathToSave):
 
       altered_xml = str(classifier.get_XML(frontend=False))
 
-      with open(pathToSave, "w") as f:
+      with open(path_to_save, "w") as f:
         f.write(altered_xml)
       # File is automatically closed after exiting the 'with' block
       return altered_xml

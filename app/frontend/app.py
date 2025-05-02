@@ -291,14 +291,14 @@ def process_classifier(xml_input, pdf_file):
                     # File is automatically closed after exiting the 'with' block
                 envdict = get_envdict()
                 port = envdict["port"] # Either what the user selected at launch, or default 8000
-                apiURL = f"http://172.28.0.12:{port}/" # The URL for the local API.
-                logging.info(f"[app.py] Set URL for api to: {apiURL}")
+                api_url = f"http://172.28.0.12:{port}/" # The URL for the local API.
+                logging.info(f"[app.py] Set URL for api to: {api_url}")
             
             except Exception as e:
-                apiURL = "http://172.28.0.12:8000/" # The URL for the local API.
+                api_url = "http://172.28.0.12:8000/" # The URL for the local API.
                 logging.error(f"[app.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
             
-            response = requests.post(f"{apiURL}parse_table", files=files)
+            response = requests.post(f"{api_url}parse_table", files=files)
             response.raise_for_status()  # Raise exception if status is not 200
             logging.info(f'Response from table parser: {response}')
 
