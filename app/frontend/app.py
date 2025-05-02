@@ -278,8 +278,8 @@ def process_classifier(xml_input, pdf_file):
     for percent_complete in range(1):
         try:
             # Prepare the files dict to be sent in the request.
-            files = {"grobid_xml": ("xmlfile.xml", xml_input, "application/json"), 
-                     "pdf": ("pdffile.pdf", pdf_file.getvalue())}
+            files = {"grobid_xml": ("xml_file.xml", xml_input, "application/json"), 
+                     "pdf": ("pdf_file.pdf", pdf_file.getvalue())}
 
             logging.info(f"[app.py] Call the table parser API endpoint")
             # Send to API endpoint for processing of tables

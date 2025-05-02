@@ -370,7 +370,7 @@ def API(portnr):
         Returns:
             Response: A Flask Response object with the updated GROBID XML, served as an XML file.
         """
-        logging.info(f"[APIcode.py] process_table - processing table...")
+        logging.info(f"[APIcode.py] process_table - Processing table...")
         
         # Save the PDF file temporarily
         with NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
@@ -422,7 +422,7 @@ def API(portnr):
     response = pipe((query, image))
     return response.text
   
-  @app.route('/callClassifier', methods=['POST'])
+  @app.route('/call_classifier', methods=['POST'])
   def call_ml():
       """
       Endpoint for classifying images. It accepts an image file in POST body.
@@ -434,7 +434,7 @@ def API(portnr):
       JSON response object
       """
       print("\n")
-      logging.info(f"[APIcode.py] callClassifier - You have reached endpoint for classifier ML.")
+      logging.info(f"[APIcode.py] call_classifier - You have reached endpoint for classifier ML.")
 
       # Make sure an image is present:
       if 'image' not in request.files:
@@ -450,9 +450,9 @@ def API(portnr):
       except Exception as e:
         logging.error(f"[APIcode.py] An error occurred while classifying image: {e}", exc_info=True)
 
-      logging.info(f"[APIcode.py] callClassifier - Predicted class: {response}")
+      logging.info(f"[APIcode.py] call_classifier - Predicted class: {response}")
 
-      return jsonify({'ClassifierResponse':response})
+      return jsonify({'classifier_response':response})
   
   @app.route('/process', methods=['POST'])
   def initiate_processing():
@@ -473,11 +473,11 @@ def API(portnr):
       logging.info(f"[APIcode.py] process - You have reached endpoint for full processing.")
             
       # Make sure an PDF file is present:
-      if 'pdffile' not in request.files:
+      if 'pdf_file' not in request.files:
           return jsonify({"error": "No file uploaded"}), 400
 
       # Opening PDF file:
-      file = request.files['pdffile']
+      file = request.files['pdf_file']
       byte_data_PDF = file.read()
 
       ## Calling GROBID ##
@@ -507,9 +507,9 @@ def API(portnr):
 
       ## Table Parser ##
       logging.info(f"[APIcode.py] process - Initiating table parser.")
-      ## Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
+      # Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
       # Ready the files:
-      files = {"grobid_xml": ("xmlfile.xml", string_data_XML, "application/json"), "pdf": ("pdffile.pdf", byte_data_PDF)}
+      files = {"grobid_xml": ("xml_file.xml", string_data_XML, "application/json"), "pdf": ("pdf_file.pdf", byte_data_PDF)}
 
       try:
         # Send to API endpoint for processing of tables

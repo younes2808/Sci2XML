@@ -3,7 +3,7 @@ import requests
 import sys
 import logging
 import os
-from glob import glob ##Used to find *.pdf files in folder
+from glob import glob # Used to find *.pdf files in folder
 
 logging.basicConfig(
     level=logging.INFO,
@@ -162,9 +162,9 @@ def start_processing(pdfPath, pathToSave):
       ## Table Parser ##
       print_update("Received response from GROBID, will not initiate Table parser.")
       logging.info(f"[processing.py] process - Initiating Table parser.")
-      ## Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
+      # Run the xml and pdf through the tableparser before processing further. Could also be done after the processing of the other elements instead.
       # Ready the files:
-      files = {"grobid_xml": ("xmlfile.xml", string_data_XML, "application/json"), "pdf": ("pdffile.pdf", byte_data_PDF)}
+      files = {"grobid_xml": ("xml_file.xml", string_data_XML, "application/json"), "pdf": ("pdf_file.pdf", byte_data_PDF)}
 
       try:
         # Send to API endpoint for processing of tables

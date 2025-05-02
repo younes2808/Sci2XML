@@ -72,13 +72,13 @@ except Exception as e:
     logging.error(f"[classifier.py] An error occurred while setting the port and URL for api: {e}", exc_info=True)
 
 
-def open_XML(XMLfile, PDFfile, frontend):
+def open_XML(xml_file, pdf_file, frontend):
     """
     Opens the XML file and converts it to a python dict, and extracts all formulas and figures. Also turns each page of the PDF into an image.
 
     Paramaters:
-    XMLfile: The XML file as stringio object.
-    PDFfile: The PDF file as bytes object.
+    xml_file: The XML file as stringio object.
+    pdf_file: The PDF file as bytes object.
     frontend (bool): Tag stating if frontend is used or not. 
 
     Returns:
@@ -93,11 +93,11 @@ def open_XML(XMLfile, PDFfile, frontend):
     try:
         global Bs_data
         if (frontend):
-            PDFfile = PDFfile.getvalue()
-            st.session_state.Bs_data = BeautifulSoup(XMLfile, "xml") # Store XML string data in session state variable which the frontend can access later.
+            pdf_file = pdf_file.getvalue()
+            st.session_state.Bs_data = BeautifulSoup(xml_file, "xml") # Store XML string data in session state variable which the frontend can access later.
             Bs_data = st.session_state.Bs_data 
         else:
-            Bs_data = BeautifulSoup(XMLfile, "xml") # Store XML string data in global variable.
+            Bs_data = BeautifulSoup(xml_file, "xml") # Store XML string data in global variable.
         logging.info(f"[classifier.py] Opened and stored XML and PDF file.")
     except Exception as e:
         logging.error(f"[classifier.py] An error occurred while opening XML and PDF file: {e}", exc_info=True)
@@ -111,7 +111,7 @@ def open_XML(XMLfile, PDFfile, frontend):
 
     # Converting the pages in the PDF file to images.
     try:
-        images = convert_from_bytes(PDFfile)
+        images = convert_from_bytes(pdf_file)
         logging.info(f"[classifier.py] Converted the pages in the PDF file to images. Found {len(images)} pages/images.")
     except Exception as e:
         images = []
@@ -134,7 +134,7 @@ def add_to_XML(type, name, newContent, frontend):
     """
     logging.info("[classifier.py] Starting function add_to_XML()")
 
-    ## Find parent tag, and the text content of that:
+    # Find parent tag, and the text content of that:
     try:
         # Find parent tag:
         if (frontend): # Search in session state variable.
@@ -219,7 +219,7 @@ def get_XML(frontend):
    else:
       return Bs_data
 
-def saveXMLfile(pathToXML):
+def save_XML(pathToXML):
     """
     Saves the XML file to path.
 
@@ -229,7 +229,7 @@ def saveXMLfile(pathToXML):
     Returns:
     Bs_data: The XML file in python dict format.
     """
-    logging.info("[classifier.py] Starting function saveXMLfile()")
+    logging.info("[classifier.py] Starting function save_XML()")
     try:
         with open(pathToXML, "w", encoding="utf-8") as file:
             file.write(str(Bs_data))
@@ -283,17 +283,17 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
 
     subtype = "unknown" # The type of element. Will be updated after classification.
 
-    ## API request header:
+    # API request header:
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     APIresponse = ""
 
-    ## Classifying formulas:
+    # Classifying formulas:
     if (XMLtype == "formula"):
         logging.info(f"[classifier.py] Classifies formula nr:{elementNr}, text: {regex}")
         pattern = r"^(?!\(+$)(?!\)+$).{3,}$"
-        ## ^ and $ ensures that the whole string matches.
-        ## (?!\(+$) is a negative lookahead that checks that the string doesnt only contain trailing "(".
-        ## .{3,} matches any character at least three times, and ensures the string is longer than 2 characters.
+        # ^ and $ ensures that the whole string matches.
+        # (?!\(+$) is a negative lookahead that checks that the string doesnt only contain trailing "(".
+        # .{3,} matches any character at least three times, and ensures the string is longer than 2 characters.
         # If the formula meets the criteria for being a formula:
         if (re.match(pattern, regex)):
             logging.info(f"[classifier.py] This formula is indeed a formula.")
@@ -333,9 +333,9 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
             logging.info(f"[classifier.py] This formula is NOT actually a formula.")
             return 
 
-    ## Classifying figures:
+    # Classifying figures:
     else:
-        ## Send to classifier model first:
+        # Send to classifier model first:
         logging.info(f"[classifier.py] Classifies figure nr:{elementNr}.")
 
         # Create a bytes object of the image of the element:
@@ -350,31 +350,31 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
         # Sending image of element to API endpoint for classification:
         try:
             files = {"image": ("image1.png", img_byte_arr)}
-            response = requests.post(apiURL+"callClassifier", files=files)
+            response = requests.post(apiURL+"call_classifier", files=files)
             # Check that the response is positive:
             if (response.status_code != 200):
                 logging.error(f"[classifier.py] Something went wrong in the API: {response.content}")
                 return # Error in API, a proper response is not received.
             response = response.json()
-            figureClass = response["ClassifierResponse"]
+            figureClass = response["classifier_response"]
             logging.info(f"[classifier.py] Received response from API classifier: {figureClass}. Sending it over to the correct API endpoint.")
         except Exception as e:
             logging.error(f"[classifier.py] An error occurred while calling API endpoint for classification: {e}", exc_info=True)
 
         # After classification the element is sent to the correct endpoint for further processing.
     
-        ## If the figure is of type 'other':
+        # If the figure is of type 'other':
         # That is, 'just_image' elements are likely elements mistaken as figures, 'table' elements are processed separately and not here, 
         # 'text_sentence' elements are mistakes from GROBID where it captures just raw text sentences or paragraphs as figures.
         if (figureClass.lower() in ["just_image", "table", "text_sentence"]):
             logging.info(f"[classifier.py] Element identified as 'other' or unknown. Likely a mistake from GROBID. Exiting...")
             return
 
-        ## If the figure is a 'chart':
+        # If the figure is a 'chart':
         if (figureClass.lower() in ['bar_chart', 'diagram', 'graph', 'pie_chart']):
             logging.info(f"[classifier.py] Element identified as 'chart', subtype: {figureClass.lower()}. Redirecting to chart parser API endpoint...")
             subtype = figureClass.lower() # Set type to what it was classified as.
-            ##### APIresponse = API.call("127.0.0.1/chartParser") #####
+            ##### APIresponse = API.call("127.0.0.1/parse_chart") #####
 
             # Create a bytes object of the image of the element:
             try:
@@ -396,13 +396,13 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
                 APIresponse["element_number"] = PDFelementNr
                 APIresponse["page_number"] = pagenr
                 APIresponse["tag"] = "tabledata"
-                logging.info(f"[classifier.py] Received response from chartParser in API.")
+                logging.info(f"[classifier.py] Received response from parse_chart in API.")
             except Exception as e:
                 logging.error(f"[classifier.py] An error occurred while calling API endpoint for chart parser: {e}", exc_info=True)
 
-            logging.info(f"[classifier.py] Response from chartParser: {APIresponse}")
+            logging.info(f"[classifier.py] Response from parse_chart: {APIresponse}")
 
-        ## If the figure is a 'figure':
+        # If the figure is a 'figure':
         if (figureClass.lower() in ['flow_chart', 'growth_chart']):
             logging.info(f"[classifier.py]  Element identified as 'figure', subtype: {figureClass.lower()}. Redirecting to figure parser API endpoint...")
             subtype = figureClass.lower()
@@ -433,7 +433,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
 
             logging.info(f"[classifier.py] Response from figureParser: {APIresponse}")
 
-        ## If the classifier thinks that this figure is a formula:
+        # If the classifier thinks that this figure is a formula:
         # Should not happen often. The main handling of formulas happens at the top of this (classify()) function.
         if ("formula" in figureClass.lower()):
             logging.warning(f"[classifier.py] Element identified as 'formula'. Redirecting to formula parser API endpoint...")
@@ -465,7 +465,7 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
 
             logging.info(f"[classifier.py] Response from formulaParser: {APIresponse}")
 
-    ## If subtype is unknown its better to abort and not add anything back into the XML.
+    # If subtype is unknown its better to abort and not add anything back into the XML.
     if (subtype == "unknown"):
       print("Identified as other/unknown. Aborting...")
       logging.info(f"[classifier.py] Element identified as 'other'/unknown. Exiting...")
@@ -485,14 +485,14 @@ def classify(XMLtype, image, elementNr, pagenr, regex, PDFelementNr, frontend, p
     # If the frontend tag is set, the processed content should be returned to the frontend as well:
     try: 
         if (frontend):
-            ## Uses importlib to find the frontend module:
+            # Uses importlib to find the frontend module:
             import importlib.util
             import sys
             spec = importlib.util.spec_from_file_location("appmodule", "/content/Sci2XML/app/frontend/app.py")
             app = importlib.util.module_from_spec(spec)
             sys.modules["appmodule"] = app
             spec.loader.exec_module(app)
-            ## Calls frontend:
+            # Calls frontend:
             app.process_classifier_response(APIresponse)
             logging.info(f"[classifier.py] Successfully called frontend function process_classifier_response().")
     except Exception as e:
@@ -513,10 +513,10 @@ def process_figures(figures, images, frontend):
     logging.info("[classifier.py] Starting function process_figures()")
 
     figurnr = 0 # The number which GROBID gave this figure. Will be used when putting processed content back into the figure tag.
-    ## Iterate through all figures:
+    # Iterate through all figures:
     for figure in figures:
 
-        ## Getting correct figure number:
+        # Getting correct figure number:
         correctFigureNr = 0 # The correct number for the figure, as it is in the PDF. Might not exist because GROBID finds un-numbered figures sometimes.
         try:
             # 1. Try to find <label> tag.
@@ -555,7 +555,7 @@ def process_figures(figures, images, frontend):
 
         logging.info(f"[classifier.py] Correct figure number is now set as: {correctFigureNr}")
 
-        ## Getting figure description (may be used as context for the prompt to figure parser):
+        # Getting figure description (may be used as context for the prompt to figure parser):
         promptContext = ""
         try:
             figureDesc = figure.find("figDesc") # Tries to find any occurance of <figDesc> tag in figure object.
@@ -568,7 +568,7 @@ def process_figures(figures, images, frontend):
         except Exception as e:
             logging.error(f"[classifier.py] An error occurred while trying to find figure description: {e}", exc_info=True)
 
-        ## Getting coordinates:
+        # Getting coordinates:
         coords = ""
         try:
             # If multiple coordinates are found, the last one in the list is used.
@@ -593,7 +593,7 @@ def process_figures(figures, images, frontend):
 
         logging.info(f"[classifier.py] Cropped element : {figurnr}. Sending it to classifier...")
 
-        ## Sending to classification:
+        # Sending to classification:
 
         classify("figure", imgFigur, figurnr, int(coords.split(",")[0]), None, correctFigureNr, frontend, promptContext)
 
