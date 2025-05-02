@@ -117,7 +117,7 @@ def start_processing(pdfPath, pathToSave):
       Function for initiating the entire process, without the use of frontend.
       First reads the uploaded PDF, then sends it to GROBID server.
       Then calls on tableparser. Then calls the classifier functions, which handles all
-       formulas, charts and figures.
+      formulas, charts and figures.
       In the end it calls on get_XML() and returns the result.
 
       Paramaters:

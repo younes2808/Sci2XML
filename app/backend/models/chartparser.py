@@ -1,6 +1,5 @@
 import torch
 from transformers import DonutProcessor, VisionEncoderDecoderModel
-import re
 from collections import Counter
 
 # Determine the computation device: use GPU (CUDA) if available; otherwise, default to CPU
