@@ -286,13 +286,13 @@ def API(portnr):
           return jsonify({"error": "No selected file"}), 400
       image = Image.open(BytesIO(file.read())).convert('RGB')
 
-      # Send to unichart to get parsed tabledata:
+      # Send to UniChart to get parsed tabledata:
       try:
         table_data = charter.generate_unichart_response(image, "<extract_data_table><s_answer>")
         structured_table_data = charter.parse_table_data(table_data)
-        logging.info(f"[APIcode.py] Successfully called unichart.")
+        logging.info(f"[APIcode.py] Successfully called UniChart.")
       except Exception as e:
-        logging.error(f"[APIcode.py] An error occurred while calling unichart: {e}", exc_info=True)
+        logging.error(f"[APIcode.py] An error occurred while calling UniChart: {e}", exc_info=True)
 
       # Send to Moondream to get summary of chart:
       try:
@@ -357,14 +357,14 @@ def API(portnr):
   def process_table(pdf_file, grobid_xml_file):
         """
         API endpoint that expects two files:
-        - 'pdf': A PDF file to be processed with PDFplumber.
+        - 'pdf': A PDF file to be processed with pdfplumber.
         - 'grobid_xml': A GROBID XML file in which the tables will be replaced.
 
         Process:
         1. Save the uploaded files temporarily.
-        2. Extract tables from the PDF file (using PDFplumber) and get the XML content directly.
+        2. Extract tables from the PDF file (using pdfplumber) and get the XML content directly.
         3. Remove existing table figures from the GROBID XML and get the position of the first removed table.
-        4. Insert the PDFplumber XML content into the GROBID XML at that position (or append if no tables are found).
+        4. Insert the pdfplumber XML content into the GROBID XML at that position (or append if no tables are found).
         5. Remove empty lines and return the updated GROBID XML as a downloadable file.
         
         Returns:
@@ -393,7 +393,7 @@ def API(portnr):
         # Extract tables from the PDF and obtain the XML content and table count
         pdfplumber_xml, table_count = tableParser.extract_tables_from_pdf(pdf_path)
         
-        # Insert the PDFplumber XML content into the GROBID XML content
+        # Insert the pdfplumber XML content into the GROBID XML content
         final_grobid_xml = tableParser.insert_pdfplumber_content(grobid_updated, pdfplumber_xml, insert_position)
         # Remove any empty lines from the final XML
         final_grobid_xml = tableParser.remove_empty_lines(final_grobid_xml)

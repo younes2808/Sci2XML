@@ -116,7 +116,7 @@ def calculate_accuracy(extracted_tables, total_tables):
     Computes accuracy of table extraction.
 
     Args:
-        extracted_tables (int): Number of tables extracted by PDFplumber.
+        extracted_tables (int): Number of tables extracted by pdfplumber.
         total_tables (int): Actual number of tables in the PDF.
 
     Returns:
@@ -138,8 +138,8 @@ def main(dataset_path):
         dataset_path (str): Path to the root dataset folder containing subfolders '001' to '020'.
     """
     current_dir = os.getcwd()
-    output_dir = os.path.join(current_dir, "Output_PDFplumber")
-    results_dir = os.path.join(current_dir, "Results", "PDFplumber")
+    output_dir = os.path.join(current_dir, "Output_pdfplumber")
+    results_dir = os.path.join(current_dir, "Results", "pdfplumber")
     os.makedirs(results_dir, exist_ok=True)
     log_file = os.path.join(results_dir, "pdfplumber_evaluation_log.txt")
 
@@ -202,7 +202,7 @@ def main(dataset_path):
         log.write("\nSummary:\n")
         log.write(f"Total comparisons: {total_comparisons}\n")
         log.write(f"Total tables in all PDFs: {total_tables_sum}\n")
-        log.write(f"Total tables found by PDFplumber: {extracted_tables_sum}\n")
+        log.write(f"Total tables found by pdfplumber: {extracted_tables_sum}\n")
         log.write(f"Overall accuracy: {overall_acc:.2f}%\n")
         log.write(f"Average accuracy per PDF-document: {avg_acc:.2f}%\n")
         log.write(f"Average processing time per PDF-document: {avg_time:.4f} seconds\n")

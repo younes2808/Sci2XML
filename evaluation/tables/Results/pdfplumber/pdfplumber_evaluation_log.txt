@@ -182,7 +182,7 @@ Time per table: 0.2002 seconds
 Summary:
 Total comparisons: 20
 Total tables in all PDFs: 179
-Total tables found by PDFplumber: 210
+Total tables found by pdfplumber: 210
 Overall accuracy: 85.24%
 Average accuracy per PDF-document: 66.58%
 Average processing time per PDF-document: 0.9208 seconds

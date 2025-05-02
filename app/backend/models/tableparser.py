@@ -143,22 +143,22 @@ def remove_tables_from_grobid_xml(grobid_file):
 
 def insert_pdfplumber_content(grobid_xml, pdfplumber_xml, insert_position):
     """
-    Inserts the PDFplumber XML content into the GROBID XML content at the specified position.
+    Inserts the pdfplumber XML content into the GROBID XML content at the specified position.
 
     Parameters:
         grobid_xml (str): The updated GROBID XML content.
         pdfplumber_xml (str): The XML content extracted from the PDF.
-        insert_position (int or None): The position at which to insert the PDFplumber content.
+        insert_position (int or None): The position at which to insert the pdfplumber content.
                                        If None, the content is appended at the end.
 
     Returns:
-        str: The final GROBID XML content with the PDFplumber tables inserted.
+        str: The final GROBID XML content with the pdfplumber tables inserted.
     """
     # Create a section to mark the beginning and end of the inserted tables
     table_section = (
-        "\n<!-- ======== START: Tables from PDFplumber ======== -->\n"
+        "\n<!-- ======== START: Tables from pdfplumber ======== -->\n"
         f"{pdfplumber_xml}\n"
-        "<!-- ======== END: Tables from PDFplumber ======== -->\n"
+        "<!-- ======== END: Tables from pdfplumber ======== -->\n"
     )
 
     # Insert the table section at the specified position or append if no position is provided
