@@ -32,6 +32,7 @@ def launch():
   print("#----------------------- ##### Sci2XML ##### -----------------------#")
   print("#----------------------- ################### -----------------------#\n")
   logging.info("[launch.py] Starting function launch()")
+  
   # Parsing arguments from terminal:
   parser = argparse.ArgumentParser()
   parser.add_argument('--tunnel', dest='tunnel', type=str, help='Set tunnel provider: either localtunnel or ngrok', choices=['localtunnel', 'ngrok', None], default ="ngrok")
@@ -39,6 +40,7 @@ def launch():
   parser.add_argument('--port', dest='port', type=int, help='Set port number', choices=range(8000, 8070), metavar="[8000-8069]", default =8000)
   args = parser.parse_args()
   logging.info("[launch.py] Arguments parsed.")
+  
   # Set environment variable based on what the user selected on launch
   args.port = str(args.port)
 
@@ -54,16 +56,20 @@ def launch():
   print("\n#-------------------------- ### Setup ### --------------------------#\n")
   print("#-------------------- # Installing requirements # ------------------#\n")
   logging.info("[launch.py] Installing requirements.")
+  
   try:
     # Using subprocess to install the pip, apt-get and npm requirements
     log = open("reqlog.txt", "a")
     print("\n----> pip installs...")
+    
     n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
     print("----> apt-get installs...")
+    
     n = subprocess.run(["apt", "update"], stdout=log, stderr=log, text=True)
     n = subprocess.run(["apt-get", "install", "poppler-utils"], stdout=log, stderr=log, text=True)
     n = subprocess.run(["apt-get", "install", "-y", "libvips"], stdout=log, stderr=log, text=True)
     print("----> npm installs...\n")
+    
     n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
     logging.info(f"[launch.py] Finished installing requirements.")
   except Exception as e:
@@ -79,6 +85,7 @@ def launch():
   ## Launch API ##
   print("\n#----------------- ### Launching API + Models ### ------------------#\n")
   logging.info("[launch.py] Launching API and models.")
+  
   try:
     # When importing the API code, the various models the system uses will also be loaded in now, as the API code is where these models are called on later. 
     import backend.APIcode as API
@@ -97,6 +104,7 @@ def launch():
   ## Load GROBID and launch GROBID server ##
   print("\n#------------------- ### Load & launch GROBID ### ------------------#\n")
   logging.info("[launch.py] Loading and launching GROBID.")
+  
   try:
     # Import GROBID module. This will also automatically download, install and launch GROBID server.
     import backend.grobidmodule as grobidmod
@@ -116,6 +124,7 @@ def launch():
   ## Start Streamlit and host using Localtunnel ##
   print("\n#------------ ### Starting Streamlit through tunnel ### ------------#\n")
   logging.info(f"[launch.py] Starting Streamlit through tunnel: {args.tunnel}.")
+  
   try:
     # Import frontendmodule, which will be used to expose localhost to internet.
     import frontend.frontendmodule as front

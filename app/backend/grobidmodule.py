@@ -37,6 +37,7 @@ def load_grobid_python_way():
     # No further actions needed, things are working and the server is up and running.
     logging.info(f"[grobidmodule.py] GROBID server is already running. No futher actions needed.")
     return
+  
   if (serverstatus == "false"):
     # Check if GROBID is installed.
     if (Path('grobid-0.8.1').is_dir()) and ((Path.cwd() / 'grobid-0.8.1' / 'gradlew').exists()):
@@ -71,18 +72,22 @@ def load_grobid_python_way():
     if clock == -1:
       print("\nChecking GROBID server status:")
       res = "false"
+      
       try:
         res = requests.get('http://172.28.0.12:8070/api/isalive')
       except:
         print("Could not reach GROBID server.")
       print("GROBID server status: Down")
+      
       if (res == "false"):
         print("----> GROBID server not up yet, trying again in 5 sec...")
         clock = 5
+      
       elif (res.content.decode('utf8') == "true"):
         print("GROBID server status: Up")
         logging.info(f"[grobidmodule.py] GROBID server is up.")
         break
+      
       else:
         print("----> GROBID server not up yet, trying again in 5 sec...")
         clock = 5

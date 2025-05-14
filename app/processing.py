@@ -153,6 +153,7 @@ def start_processing(pdf_path, path_to_save):
         response.raise_for_status()  # Raise exception if status is not 200
         string_data_XML = response.text
         logging.info(f"[processing.py] Successfully called GROBID server.")
+        
         # Check if coordinates are missing in the response
         if 'coords' not in response.text:
             logging.warning("[processing.py] No coordinates found in PDF file. Please check GROBID settings.")
@@ -170,10 +171,12 @@ def start_processing(pdf_path, path_to_save):
         # Send to API endpoint for processing of tables
         try:
             envdict = get_envdict()
+            
             if ("port" not in envdict): # If key doesnt exist, create it with default value '8000':
                 with open("/content/.env", "a") as f:
                     f.write("port=8000\n")
                 # File is automatically closed after exiting the 'with' block
+            
             envdict = get_envdict()
             port = envdict["port"] # Either what the user selected at launch, or default 8000
             api_url = f"http://172.28.0.12:{port}/" # The URL for the local API.
@@ -191,13 +194,16 @@ def start_processing(pdf_path, path_to_save):
       ##  Starting classifier ##
       print_update("Received response from Table parser, will not initiate classification and further processing.")
       logging.info(f"[processing.py] process - Initiating Classifier.")
+      
       # Classifier code:
       ## Our own modules ##
       import importlib.util
+      
       spec = importlib.util.spec_from_file_location("classifiermodule", "/content/Sci2XML/app/backend/classifier.py")
       classifier = importlib.util.module_from_spec(spec)
       sys.modules["classifiermodule"] = classifier
       spec.loader.exec_module(classifier)
+      
       try:
         # Open the XML file and extract all figures and formulas, as well as getting each page of the PDF as an image.
         print_update("Opening XML file and extracting figures and formulas.")
@@ -205,6 +211,7 @@ def start_processing(pdf_path, path_to_save):
         logging.info(f'[processing.py] Successfully opened XML file.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while opening the XML file: {e}", exc_info=True)
+      
       try:
         # Process each figure. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
         print_update("Processing figures:")
@@ -212,6 +219,7 @@ def start_processing(pdf_path, path_to_save):
         logging.info(f'[processing.py] Successfully processed the figures.')
       except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while processeing figures: {e}", exc_info=True)
+      
       try:
         # Process each formula. The classifier will classify it, send to correct endpoint for processing, and insert response back into XML file.
         print_update("Processing formulas:")

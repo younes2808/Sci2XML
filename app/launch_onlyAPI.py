@@ -32,6 +32,7 @@ def launch():
   print("#----------------------- ##### Sci2XML ##### -----------------------#")
   print("#----------------------- ################### -----------------------#\n")
   logging.info("[launch_onlyAPI.py] Starting function launch()")
+  
   # Parsing arguments from terminal:
   parser = argparse.ArgumentParser()
   parser.add_argument('--authtoken', dest='authtoken', type=str, help='Set authtoken for ngrok.', default ="None")
@@ -39,9 +40,11 @@ def launch():
   parser.add_argument('--nl_formula', dest='nlformula', type=str, help='Choose if you want NL generated for the formulas.', choices=['True', 'False', None], default ="False")
   args = parser.parse_args()
   logging.info("[launch_onlyAPI.py] Arguments parsed.")
+  
   # Set environment variable based on what the user selected on launch. 
   args.port = str(args.port)
   tunnel = "ngrok"
+  
   # Create .env file with the various environment variables:
   with open("/content/.env", "w") as f:
     f.write(f"port={args.port}\n")
@@ -54,16 +57,20 @@ def launch():
   print("\n#-------------------------- ### Setup ### --------------------------#\n")
   print("#-------------------- # Installing requirements # ------------------#\n")
   logging.info("[launch_onlyAPI.py] Installing requirements.")
+  
   try:
       # Using subprocess to install the pip, apt-get and npm requirements.
       log = open("reqlog.txt", "a")
       print("\n----> pip installs...")
+      
       n = subprocess.run(["pip", "install", '-r', "Sci2XML/app/requirements_final.txt"], stdout=log, stderr=log, text=True)
       print("----> apt-get installs...")
+      
       n = subprocess.run(["apt", "update"], stdout=log, stderr=log, text=True)
       n = subprocess.run(["apt-get", "install", "poppler-utils"], stdout=log, stderr=log, text=True)
       n = subprocess.run(["apt-get", "install", "-y", "libvips"], stdout=log, stderr=log, text=True)
       print("----> npm installs...\n")
+      
       n = subprocess.run(["npm", "install", "localtunnel"], stdout=log, stderr=log, text=True)
       logging.info(f"[launch_onlyAPI.py] Finished installing requirements.")
   except Exception as e:
@@ -97,6 +104,7 @@ def launch():
   ## Load GROBID and launch GROBID server ##
   print("\n#------------------- ### Load & launch GROBID ### ------------------#\n")
   logging.info("[launch_onlyAPI.py] Loading and launching GROBID.")
+  
   try:
       # Import GROBID module. This will also automatically download, install and launch GROBID server.
       import backend.grobidmodule as grobidmod
