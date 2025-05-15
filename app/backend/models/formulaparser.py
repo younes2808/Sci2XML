@@ -1,6 +1,19 @@
 import torch
 from transformers import DonutProcessor, VisionEncoderDecoderModel, AutoProcessor
 
+import sys
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s: %(message)s',
+    force=True,
+    handlers=[
+        logging.FileHandler("app.log"),  # Log to a file named 'app.log'
+        logging.StreamHandler(sys.stdout)  # Also log to console
+    ]
+)
+
 # Determine the computation device: use GPU (CUDA) if available; otherwise, default to CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -24,11 +37,12 @@ def load_sumen():
         sumen_model = VisionEncoderDecoderModel.from_pretrained("hoang-quoc-trung/sumen-base").to(device)
         sumen_processor = AutoProcessor.from_pretrained("hoang-quoc-trung/sumen-base")
 
+        logging.info(f"[formulaparser.py] Successfully loaded formulaparser, Sumen.")
         print("\n----> Sumen model loaded successfully!")
         return sumen_model, sumen_processor
 
     except Exception as e:
-        print(f"\n[ERROR] Failed to load Sumen model or processor: {e}")
+        logging.error(f"[formulaparser.py] Failed to load Sumen model or processor: {e}", exc_info=True)
         return None, None
 
 def run_sumen_ocr(image):
@@ -65,8 +79,9 @@ def run_sumen_ocr(image):
             )
 
         clean_latex = sumen_processor.tokenizer.batch_decode(outputs.sequences)[0]
+        logging.info(f"[formulaparser.py] Finished performing OCR with Sumen.")
         return clean_latex.replace("<s>", "").replace("</s>", "").strip()
 
     except Exception as e:
-        print(f"\n[ERROR] OCR failed: {e}")
+        logging.error(f"[formulaparser.py] An error occured while running Sumen OCR: {e}", exc_info=True)
         return ""
