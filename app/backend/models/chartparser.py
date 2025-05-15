@@ -2,6 +2,19 @@ import torch
 from transformers import DonutProcessor, VisionEncoderDecoderModel
 from collections import Counter
 
+import sys
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s: %(message)s',
+    force=True,
+    handlers=[
+        logging.FileHandler("app.log"),  # Log to a file named 'app.log'
+        logging.StreamHandler(sys.stdout)  # Also log to console
+    ]
+)
+
 # Determine the computation device: use GPU (CUDA) if available; otherwise, default to CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -20,12 +33,17 @@ def load_unichart():
     # Inform the user that the model is being loaded
     print("\n#-------------------- # Loading UniChart model # -------------------#\n")
     
-    # Load the pre-trained UniChart model and assign it to the appropriate device
-    global unichart_model, unichart_processor  # Declare global variables for model persistence
-    unichart_model = VisionEncoderDecoderModel.from_pretrained("ahmed-masry/unichart-base-960").to(device)
-    
-    # Load the corresponding processor for image and text handling
-    unichart_processor = DonutProcessor.from_pretrained("ahmed-masry/unichart-base-960")
+    try:
+        # Load the pre-trained UniChart model and assign it to the appropriate device
+        global unichart_model, unichart_processor  # Declare global variables for model persistence
+        unichart_model = VisionEncoderDecoderModel.from_pretrained("ahmed-masry/unichart-base-960").to(device)
+        
+        # Load the corresponding processor for image and text handling
+        unichart_processor = DonutProcessor.from_pretrained("ahmed-masry/unichart-base-960")
+        logging.info(f"[chartparser.py] Successfully loaded unichart.")
+    except Exception as e:
+        logging.error(f"[chartparser.py] An error occurred while loading unichart: {e}", exc_info=True)
+
     # Confirm successful model and processor loading
     print("\n----> UniChart model loaded successfully!")
 
@@ -42,13 +60,16 @@ def is_hallucinated(response, repetition_threshold=20):
     Returns:
         (bool): True if the response is considered unreliable, False otherwise.
     """
+    try:
+        # Convert response to lowercase and tokenize it into words
+        words = response.lower().split()
 
-    # Convert response to lowercase and tokenize it into words
-    words = response.lower().split()
+        # Count occurrences of each word
+        word_counts = Counter(words)
+        logging.info(f"[chartparser.py] Checked for hallucinations.")
+    except Exception as e:
+        logging.error(f"[chartparser.py] An error occurred while checking for hallucinations: {e}", exc_info=True)
 
-    # Count occurrences of each word
-    word_counts = Counter(words)
-    
     # Check if any word appears more times than the specified threshold
     return any(count > repetition_threshold for count in word_counts.values())
 
@@ -67,42 +88,51 @@ def generate_unichart_response(image, prompt):
     response (str): The generated response, post-processed to remove special tokens.
     If hallucination is detected, returns "Unreliable response".
     """
+    try:
+        # Convert the input image into pixel values compatible with the model
+        pixel_values = unichart_processor(image, return_tensors="pt").pixel_values.to(device)
+        
+        # Tokenize the input prompt for the model's decoder
+        decoder_input_ids = unichart_processor.tokenizer(prompt, add_special_tokens=False, return_tensors="pt").input_ids
+        
+        # Generate a response using beam search
+        outputs = unichart_model.generate(
+            pixel_values,  # Processed image input
+            decoder_input_ids=decoder_input_ids.to(device),  
+            max_length=unichart_model.decoder.config.max_position_embeddings,  
+            early_stopping=True,  
+            pad_token_id=unichart_processor.tokenizer.pad_token_id,  
+            eos_token_id=unichart_processor.tokenizer.eos_token_id,
+            use_cache=True,
+            num_beams=4,  # Use beam search with 4 beams for better decoding accuracy
+            bad_words_ids=[[unichart_processor.tokenizer.unk_token_id]],  # Prevent unknown tokens from appearing
+            return_dict_in_generate=True,  # Return structured output
+        )
 
-    # Convert the input image into pixel values compatible with the model
-    pixel_values = unichart_processor(image, return_tensors="pt").pixel_values.to(device)
+        # Decode the generated sequence into a human-readable response
+        response = unichart_processor.batch_decode(outputs.sequences)[0]
+        logging.info(f"[chartparser.py] Successfully generated response by unichart.")
+    except Exception as e:
+        logging.error(f"[chartparser.py] An error occurred while generating response by unichart: {e}", exc_info=True)
+
+
+    try:
+        # Remove special tokens from the output
+        response = response.replace(unichart_processor.tokenizer.eos_token, "").replace(unichart_processor.tokenizer.pad_token, "").strip()
+        
+        # Extract only the answer portion if applicable
+        response = response.split("<s_answer>")[1].strip() if "<s_answer>" in response else response
+
+        # Debugging output (optional)
+        # print(f"Generated response: {response}")
+
+        # Apply hallucination filter before returning
+        if is_hallucinated(response):
+            return "Unreliable response"
     
-    # Tokenize the input prompt for the model's decoder
-    decoder_input_ids = unichart_processor.tokenizer(prompt, add_special_tokens=False, return_tensors="pt").input_ids
-    
-    # Generate a response using beam search
-    outputs = unichart_model.generate(
-        pixel_values,  # Processed image input
-        decoder_input_ids=decoder_input_ids.to(device),  
-        max_length=unichart_model.decoder.config.max_position_embeddings,  
-        early_stopping=True,  
-        pad_token_id=unichart_processor.tokenizer.pad_token_id,  
-        eos_token_id=unichart_processor.tokenizer.eos_token_id,
-        use_cache=True,
-        num_beams=4,  # Use beam search with 4 beams for better decoding accuracy
-        bad_words_ids=[[unichart_processor.tokenizer.unk_token_id]],  # Prevent unknown tokens from appearing
-        return_dict_in_generate=True,  # Return structured output
-    )
-
-    # Decode the generated sequence into a human-readable response
-    response = unichart_processor.batch_decode(outputs.sequences)[0]
-
-    # Remove special tokens from the output
-    response = response.replace(unichart_processor.tokenizer.eos_token, "").replace(unichart_processor.tokenizer.pad_token, "").strip()
-    
-    # Extract only the answer portion if applicable
-    response = response.split("<s_answer>")[1].strip() if "<s_answer>" in response else response
-
-    # Debugging output (optional)
-    # print(f"Generated response: {response}")
-
-    # Apply hallucination filter before returning
-    if is_hallucinated(response):
-        return "Unreliable response"
+        logging.info(f"[chartparser.py] Cleaned response from unichart.")
+    except Exception as e:
+        logging.error(f"[chartparser.py] An error occurred while cleaning the response from unichart: {e}", exc_info=True)
     
     return response
 
@@ -134,7 +164,8 @@ def parse_table_data(table_data):
     
     # Handle potential parsing errors
     except Exception as e:
-        print(f"Error parsing table: {e}")
+        logging.error(f"[chartparser.py] An error occurred while parsing table: {e}", exc_info=True)
+
         parsed_data = []
 
     return parsed_data # Return the structured table data
