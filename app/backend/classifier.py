@@ -54,15 +54,16 @@ def get_envdict():
             continue
         # Map correct value to key:
         envdict[env.split("=")[0]] = env.split("=")[1]
-
     return envdict
 
 try:
     envdict = get_envdict()
+    
     if ("port" not in envdict): # If key doesnt exist, create it with default value '8000':
         with open("/content/.env", "a") as f:
             f.write("port=8000\n")
         # File is automatically closed after exiting the 'with' block
+    
     envdict = get_envdict()
     port = envdict["port"] # Either what the user selected at launch, or default 8000
     api_url = f"http://172.28.0.12:{port}/" # The URL for the local API.
@@ -92,10 +93,12 @@ def open_XML(xml_file, pdf_file, frontend):
     # Opening XML file and storing it in variable.
     try:
         global Bs_data
+        
         if (frontend):
             pdf_file = pdf_file.getvalue()
             st.session_state.Bs_data = BeautifulSoup(xml_file, "xml") # Store XML string data in session state variable which the frontend can access later.
             Bs_data = st.session_state.Bs_data 
+        
         else:
             Bs_data = BeautifulSoup(xml_file, "xml") # Store XML string data in global variable.
         logging.info(f"[classifier.py] Opened and stored XML and PDF file.")
@@ -139,13 +142,16 @@ def add_to_XML(type, name, new_content, frontend):
         # Find parent tag:
         if (frontend): # Search in session state variable.
             parent_tag = st.session_state.Bs_data.find(type, {"xml:id": name})
+        
         else: # Search in global variable.
             parent_tag = Bs_data.find(type, {"xml:id": name})
         logging.info(f"[classifier.py] Old parent_tag: {parent_tag}")
+        
         # If there is no parent tag, then there is nowhere to place the content.
         if (parent_tag == None):
             logging.error("[classifier.py] Could not find tag to place element back into...")
             return
+        
         # Try to find all preexisting text in the parent tag, but not counting text in child tags:        
         text_without_tag = parent_tag.find_all(string=True, recursive=False)
         logging.info(f"[classifier.py] Find text in tag: {text_without_tag}")
@@ -158,8 +164,10 @@ def add_to_XML(type, name, new_content, frontend):
     try:
         if ("formula" in new_content): # Check to see if new_content object has formula key
             new_tag = Bs_data.new_tag("latex") # Create new tag
+            
             if (len(text_without_tag) == 0): # If no preexisting text content in tag:
                 parent_tag.append(new_tag) # Add the new tag to parent_tag
+            
             else: # If there already is some text in tag (like the GROBID's attempt at capturing formula):
                 for text in text_without_tag:
                     if (text in parent_tag.contents): # Find the text
@@ -173,8 +181,10 @@ def add_to_XML(type, name, new_content, frontend):
     try:
         if ("NL" in new_content): # Check to see if new_content object has natural language key
             new_tag = Bs_data.new_tag("llmgenerated")
+            
             if (len(text_without_tag) == 0): # If no preexisting text content in tag:
                 parent_tag.append(new_tag)
+            
             else:  # If there already is some text in tag (like the GROBID's attempt at capturing formula):
                 for text in text_without_tag:
                     if (text in parent_tag.contents):
@@ -188,8 +198,10 @@ def add_to_XML(type, name, new_content, frontend):
     try:
         if ("csv" in new_content): # Check to see if newCnew_contentontent object has CSV key
             new_tag = Bs_data.new_tag("tabledata")
+            
             if (len(text_without_tag) == 0): # If no preexisting text content in tag:
                 parent_tag.append(new_tag)
+            
             else: # If there already is some text in tag (like the GROBID's attempt at capturing formula):
                 for text in text_without_tag:
                     if (text in parent_tag.contents):
@@ -216,6 +228,7 @@ def get_XML(frontend):
    logging.info("[classifier.py] Starting function get_XML()")
    if (frontend):
       return st.session_state.Bs_data
+   
    else:
       return Bs_data
 
@@ -269,6 +282,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
         # File is automatically closed after exiting the 'with' block
     envdict = get_envdict()
     runmode = envdict["runmode"] # Either what the user selected at launch, or default 8000
+    
     if runmode == "code":
         # Code-Launch-processing code:
         import importlib.util
@@ -289,11 +303,12 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
 
     # Classifying formulas:
     if (XML_type == "formula"):
-        logging.info(f"[classifier.py] Classifies formula nr:{element_nr}, text: {regex}")
-        pattern = r"^(?!\(+$)(?!\)+$).{3,}$"
         # ^ and $ ensures that the whole string matches.
         # (?!\(+$) is a negative lookahead that checks that the string doesnt only contain trailing "(".
         # .{3,} matches any character at least three times, and ensures the string is longer than 2 characters.
+        logging.info(f"[classifier.py] Classifies formula nr:{element_nr}, text: {regex}")
+        pattern = r"^(?!\(+$)(?!\)+$).{3,}$"
+
         # If the formula meets the criteria for being a formula:
         if (re.match(pattern, regex)):
             logging.info(f"[classifier.py] This formula is indeed a formula.")
@@ -312,6 +327,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
             # Send image of formula to API endpoint where it should be processed by a formula parser:
             try:
                 API_response = requests.post(api_url+"parse_formula", files={'image': img_byte_arr})
+                
                 # Check that the response is positive:
                 if (API_response.status_code != 200):
                     logging.error(f"[classifier.py] Something went wrong in the API: {API_response.content}")
@@ -351,6 +367,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
         try:
             files = {"image": ("image1.png", img_byte_arr)}
             response = requests.post(api_url+"call_classifier", files=files)
+            
             # Check that the response is positive:
             if (response.status_code != 200):
                 logging.error(f"[classifier.py] Something went wrong in the API: {response.content}")
@@ -388,10 +405,12 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
             # Send image of figure to API endpoint where it should be processed by a chart parser:
             try:
                 API_response = requests.post(api_url+"parse_chart", files={'image': img_byte_arr, 'prompt': prompt_context})
+                
                 # Check that the response is positive:
                 if (API_response.status_code != 200):
                     logging.error(f"[classifier.py] Something went wrong in the API: {API_response.content}")
                     return # Error in API, a proper response is not received.
+                
                 API_response = API_response.json()
                 API_response["element_number"] = pdf_element_nr
                 API_response["page_number"] = pagenr
@@ -419,10 +438,12 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
             # Send image of figure to API endpoint where it should be processed by a figure parser:
             try:
                 API_response = requests.post(api_url+"parse_figure", files={'image': img_byte_arr, 'prompt': prompt_context})
+                
                 # Check that the response is positive:
                 if (API_response.status_code != 200):
                     logging.error(f"[classifier.py] Something went wrong in the API: {API_response.content}")
                     return # Error in API, a proper response is not received.
+                
                 API_response = API_response.json()
                 API_response["element_number"] = pdf_element_nr
                 API_response["page_number"] = pagenr
@@ -451,10 +472,12 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
             # Send image of formula to API endpoint where it should be processed by a formula parser:
             try:
                 API_response = requests.post(api_url+"parse_formula", files={'image': img_byte_arr})
+                
                 # Check that the response is positive:
                 if (API_response.status_code != 200):
                     logging.error(f"[classifier.py] Something went wrong in the API: {API_response.content}")
                     return # Error in API, a proper response is not received.
+                
                 API_response = API_response.json()
                 API_response["element_number"] = pdf_element_nr
                 API_response["page_number"] = pagenr
@@ -476,6 +499,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
     try:
         if (XML_type == "figure"):
             add_to_XML(XML_type, "fig_" + str(element_nr), API_response, frontend)
+        
         elif (XML_type == "formula"):
             add_to_XML(XML_type, "formula_" + str(element_nr), API_response, frontend)
         logging.info(f"[classifier.py] Successfully added content to XML file.")
@@ -492,6 +516,7 @@ def classify(XML_type, image, element_nr, pagenr, regex, pdf_element_nr, fronten
             app = importlib.util.module_from_spec(spec)
             sys.modules["appmodule"] = app
             spec.loader.exec_module(app)
+            
             # Calls frontend:
             app.process_classifier_response(API_response)
             logging.info(f"[classifier.py] Successfully called frontend function process_classifier_response().")
@@ -521,30 +546,37 @@ def process_figures(figures, images, frontend):
         try:
             # 1. Try to find <label> tag.
             label = figure.find("label")
+            
             if label is not None:
                 if (re.sub("\D", "", label.text) != ""):
                     correct_figure_nr = int(re.sub("\D", "", label.text))
                     logging.info(f"[classifier.py] Found number in <label> tag.")
+                
                 else:
                     # Bad/empty label
                     label = None
+            
             # 2. If the element has no label:
             if label is None:
                 #print("NO LABEL")
                 logging.info(f"[classifier.py] There is no <label> tag.")
                 # 3. If no label tag, look first for (figure_nr) in figure.text:
                 compare = re.search(r"\(\d+\)$", figure.text)
+                
                 if compare:
                     #print("yay, found figure_nr in figuretext using regex")
                     logging.info(f"[classifier.py] Found figure number in figure text.")
                     correct_figure_nr = int(re.sub("\D", "", compare[0]))
+                
                 else:
                     # 4. If no label or figure_nr in text, try to use <xml:id> tag:
                     #print("nay, could not find figure_nr in label or figuretext, using GROBID's number instead...")
                     logging.info(f"[classifier.py] No figure number in figure text.")
+                    
                     if (figure.get("xml:id") != None):
                         correct_figure_nr = int(re.sub("\D", "", figure.get("xml:id"))) + 1
                         logging.info(f"[classifier.py] Found figure nr in <xml:id> tag.")
+                    
                     else:
                         # 5. If there is no <label> tag, figure_nr in text or a <xml:id> tag, use the self-made self-updated figure_nr variable.
                         correct_figure_nr = figure_nr + 1
@@ -594,7 +626,6 @@ def process_figures(figures, images, frontend):
         logging.info(f"[classifier.py] Cropped element : {figure_nr}. Sending it to classifier...")
 
         # Sending to classification:
-
         classify("figure", img_figure, figure_nr, int(coords.split(",")[0]), None, correct_figure_nr, frontend, prompt_context)
 
         figure_nr+=1
@@ -622,28 +653,36 @@ def process_formulas(formulas, images, mode, frontend):
         try:
             # 1. Try to find <label> tag.
             label = formula.find("label")
+            
             if label is not None:
+                
                 if (re.sub("\D", "", label.text) != ""):
                     correct_figure_nr = int(re.sub("\D", "", label.text))
                     logging.info(f"[classifier.py] Found number in <label> tag.")
+                
                 else:
                     # Bad/empty label
                     label = None
+            
             # 2. If the element has no label:
             if label is None:
                 # print("NO LABEL")
                 logging.info(f"[classifier.py] There is no <label> tag.")
                 # 3. If no label tag, look first for (formula_nr) in formula.text
                 compare = re.search(r"\(\d+\)$", formula.text)
+                
                 if compare:
                     logging.info(f"[classifier.py] Found formula number in formula text.")
                     correct_figure_nr = int(re.sub("\D", "", compare[0]))
+                
                 else:
                     # 4. If no label or formula_nr in text, try to use <xml:id> tag:
                     logging.info(f"[classifier.py] No formula number in formula text.")
+                    
                     if (formula.get("xml:id") != None):
                         correct_figure_nr = int(re.sub("\D", "", formula.get("xml:id"))) + 1
                         logging.info(f"[classifier.py] Found formula nr in <xml:id> tag.")
+                    
                     else:
                         # 5. If there is no <label> tag, formula_nr in text or a <xml:id> tag, use the self-made self-updated formula_nr variable.
                         correct_figure_nr = formula_nr + 1
@@ -680,9 +719,9 @@ def process_formulas(formulas, images, mode, frontend):
         logging.info(f"[classifier.py] Cropped element : {formula_nr}. Sending it to classifier...")
 
         ## Sending to classification:
-
         if (mode == "VLM"): # If a VLM is used for classifying the formula:
           classify("formula", img_formula, formula_nr, int(coords.split(",")[0]), None, "Answer with only one word (Yes OR No), is this a formula?", correct_figure_nr, frontend)
+        
         elif (mode == "regex"): # If regex is used. Preferred.
           classify("formula", img_formula, formula_nr, int(coords.split(",")[0]), formula.text, correct_figure_nr, frontend)
 
