@@ -747,7 +747,7 @@ def main():
                         """
                         Render the GROBID results in either PDF View with annotations or raw XML View.
                         """
-                        st.header("GROBID Results", divider="gray")
+                        st.header("GROBID Results", divider="grey")
 
                         if 'grobid_results_view_option' not in st.session_state:
                             st.session_state.grobid_results_view_option = "PDF 📄" # Deault to PDF View
@@ -857,7 +857,7 @@ def main():
                             with col3:
                                 if 'results_placeholder' not in st.session_state or st.session_state.results_placeholder == None:
                                     # Create header, as well as progress bar and container in session state first time a PDF is processed
-                                    st.header("Interpretation Results", divider="gray")
+                                    st.header("Interpretation Results", divider="grey")
 
                                     # Progress bar for user transparency 
                                     st.session_state.progress_bar = st.progress(0, text="Parsing tables... 🔄")
